@@ -1,4 +1,7 @@
-﻿namespace DigitalDepartment.Extensions
+﻿using Contracts;
+using Repository;
+
+namespace DigitalDepartment.Extensions
 {
     public static class ServiceExtensions
     {
@@ -15,6 +18,9 @@
             services.Configure<IISOptions>(options =>
             {
             });
+
+        public static void ConfigureRepositoryManager(this IServiceCollection services) =>
+            services.AddScoped<IRepositoryManager, RepositoryManager>();
 
     }
 
