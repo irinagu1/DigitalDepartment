@@ -20,7 +20,7 @@ namespace Entities.Models
 
         [ForeignKey(nameof(DocumentStatus))]
         public int DocumentStatusId { get; set; }
-        public DocumentCategory? DocumentStatus { get; set; }
+        public DocumentStatus? DocumentStatus { get; set; }
 
 
         [ForeignKey(nameof(DocumentCategory))]

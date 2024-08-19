@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Contracts
+namespace Contracts.RepositoryCore
 {
     public interface IRepositoryBase<T>
     {

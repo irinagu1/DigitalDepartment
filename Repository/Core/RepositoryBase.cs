@@ -1,4 +1,4 @@
-﻿using Contracts;
+﻿using Contracts.RepositoryCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Repository.Core
 {
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {

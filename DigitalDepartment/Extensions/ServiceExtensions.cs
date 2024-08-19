@@ -1,5 +1,5 @@
-﻿using Contracts;
-using Repository;
+﻿using Contracts.RepositoryCore;
+using Repository.Core;
 
 namespace DigitalDepartment.Extensions
 {

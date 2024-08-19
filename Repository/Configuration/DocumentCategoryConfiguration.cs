@@ -12,18 +12,18 @@ namespace Repository.Configuration
         {
             builder.HasData
             (
-            new DocumentCategory
-            {
-                Id = 1,
-                Name = "Schedule",
-                isEnable = true
-            },
-            new DocumentCategory
-            {
-                Id = 2,
-                Name = "Report",
-                isEnable = true
-            }
+                new DocumentCategory
+                {
+                    Id = 1,
+                    Name = "Schedule",
+                    isEnable = true
+                },
+                new DocumentCategory
+                {
+                    Id = 2,
+                    Name = "Report",
+                    isEnable = true
+                }
             );
         }
     }

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-namespace Repository
+namespace Repository.Core
 {
     public class RepositoryContext : DbContext
     {
@@ -23,5 +23,8 @@ namespace Repository
         }
 
         public DbSet<DocumentCategory>? DocumentCategories { get; set; }
+        public DbSet<DocumentStatus>? DocumentStatuses { get; set; }
+        public DbSet<Document>? Documents { get; set; }
+        public DbSet<Letter> Letters { get; set; }
     }
 }
