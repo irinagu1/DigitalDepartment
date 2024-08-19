@@ -22,3 +22,4 @@ namespace Entities.Models
         //  public ICollection<Docs>? Docs { get; set; }
     }
 }
+
