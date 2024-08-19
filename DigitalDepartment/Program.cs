@@ -9,7 +9,9 @@ builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureSqlContext(builder.Configuration);
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+.AddApplicationPart(
+    typeof(DigitalDepartment.Presentation.AssemblyReference).Assembly);
 
 var app = builder.Build();
 

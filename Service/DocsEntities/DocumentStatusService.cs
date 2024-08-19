@@ -1,4 +1,6 @@
 ﻿using Contracts.RepositoryCore;
+using Entities.Models;
+
 using Service.Contracts.DocsEntities;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,5 @@ namespace Service.DocsEntities
         {
             _repository = repository;
         }
-    {
     }
 }
