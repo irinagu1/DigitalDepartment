@@ -21,15 +21,9 @@ namespace DigitalDepartment.Presentation.Controllers
         [HttpGet]
         public IActionResult GetDocumentStatuses()
         {
-            try
-            {
-                var dc = _service.DocumentStatusService.GetAllDocumentStatuses(trackChanges: false);
-                return Ok(dc);
-            }
-            catch 
-            {
-                return StatusCode(500, "internal Server eroor");
-            }
+            throw new Exception("Myex");
+            var dc = _service.DocumentStatusService.GetAllDocumentStatuses(trackChanges: false);
+            return Ok(dc);
         }
     }
 }

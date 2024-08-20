@@ -16,9 +16,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-    app.UseDeveloperExceptionPage();
-else
+app.ConfigureExceptionHandler();
+
+if (app.Environment.IsProduction())
     app.UseHsts();
 
 app.UseHttpsRedirection();
