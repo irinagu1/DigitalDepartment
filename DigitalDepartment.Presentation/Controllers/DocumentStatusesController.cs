@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Service.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,24 @@ namespace DigitalDepartment.Presentation.Controllers
     [ApiController]
     public class DocumentStatusesController
     {
+        private readonly IServiceManager _service;
+        public DocumentStatusesController(IServiceManager service)
+        {
+            _service = service;
+        }
+
+        [HttpGet]
+        public IActionResult GetDocumentStatuses()
+        {
+            try
+            {
+                var dc = _service.DocumentStatusService.GetAllDocumentStatuses(trackChanges: false);
+                return Ok(dc);
+            }
+            catch 
+            {
+                return StatusCode(500, "internal Server eroor");
+            }
+        }
     }
 }

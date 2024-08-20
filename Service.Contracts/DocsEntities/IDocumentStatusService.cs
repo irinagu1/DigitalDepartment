@@ -9,5 +9,6 @@ namespace Service.Contracts.DocsEntities
 {
     public interface IDocumentStatusService
     {
+        IEnumerable<DocumentStatus> GetAllDocumentStatuses(bool trackChanges);
     }
 }

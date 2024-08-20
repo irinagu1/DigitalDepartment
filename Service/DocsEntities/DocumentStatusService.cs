@@ -17,5 +17,11 @@ namespace Service.DocsEntities
         {
             _repository = repository;
         }
+
+        public IEnumerable<DocumentStatus> 
+            GetAllDocumentStatuses(bool trackChanges)
+        {
+            return _repository.DocumentStatus.GetAllDocumentStatuses(trackChanges);
+        }
     }
 }
