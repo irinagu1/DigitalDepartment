@@ -23,5 +23,7 @@ namespace Service.DocsEntities
         {
             return _repository.DocumentStatus.GetAllDocumentStatuses(trackChanges);
         }
+
+        //
     }
 }
