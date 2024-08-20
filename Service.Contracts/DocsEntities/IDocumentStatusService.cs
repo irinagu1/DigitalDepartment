@@ -10,7 +10,7 @@ namespace Service.Contracts.DocsEntities
 {
     public interface IDocumentStatusService
     {
-        IEnumerable<DocumentStatusDto> GetAllDocumentStatuses(bool trackChanges);
-        DocumentStatusDto GetDocumentStatus(int Id,  bool trackChanges);
+        Task<IEnumerable<DocumentStatusDto>> GetAllDocumentStatusesAsync(bool trackChanges);
+        Task<DocumentStatusDto> GetDocumentStatusAsync(int Id,  bool trackChanges);
     }
 }

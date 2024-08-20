@@ -1,5 +1,6 @@
 ﻿using Contracts.DocsEntities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 using Repository.Core;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,14 @@ namespace Repository.DocsEntities
 
         }
 
-        public IEnumerable<DocumentStatus> GetAllDocumentStatuses(bool trackChanges)
-            => FindAll(trackChanges)
+        public async Task<IEnumerable<DocumentStatus>> GetAllDocumentStatuses(bool trackChanges)
+            => await FindAll(trackChanges)
                 .OrderBy(dc => dc.Name)
-                .ToList();
+                .ToListAsync();
 
-        public DocumentStatus GetDocumentStatus(int documentStatusId, bool trackChanges) =>
-            FindByCondition(dc => dc.Id.Equals(documentStatusId), trackChanges)
-            .SingleOrDefault();
+        public async Task<DocumentStatus> GetDocumentStatus(int documentStatusId, bool trackChanges)
+            => await FindByCondition(dc => dc.Id.Equals(documentStatusId), trackChanges)
+            .SingleOrDefaultAsync();
   
     }
 }

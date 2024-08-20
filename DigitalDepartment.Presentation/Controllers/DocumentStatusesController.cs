@@ -19,16 +19,18 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetDocumentStatuses()
+        public async Task<IActionResult> GetDocumentStatuses()
         {
-            var dc = _service.DocumentStatusService.GetAllDocumentStatuses(trackChanges: false);
+            var dc = await
+                _service.DocumentStatusService.GetAllDocumentStatusesAsync(trackChanges: false);
             return Ok(dc);
         }
 
         [HttpGet("{id:int}")]
-        public IActionResult GetDocumentStatuss(int id) 
+        public async Task<IActionResult> GetDocumentStatus(int id) 
         {
-            var dc = _service.DocumentStatusService.GetDocumentStatus(id, trackChanges: false);
+            var dc = await 
+                _service.DocumentStatusService.GetDocumentStatusAsync(id, trackChanges: false);
             return Ok(dc);
         }
     }

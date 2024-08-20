@@ -14,6 +14,6 @@ namespace Contracts.RepositoryCore
         IDocumentCategoryRepository DocumentCategory { get; }
         IDocumentStatusRepository DocumentStatus { get; }
 
-        void Save();
+        Task SaveAsync();
     }
 }

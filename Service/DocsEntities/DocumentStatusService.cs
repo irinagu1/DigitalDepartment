@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Contracts.RepositoryCore;
+using Entities.Exceptions;
 using Entities.Models;
 
 using Service.Contracts.DocsEntities;
@@ -22,21 +23,23 @@ namespace Service.DocsEntities
             _mapper = mapper;
         }
 
-        public IEnumerable<DocumentStatusDto> 
-            GetAllDocumentStatuses(bool trackChanges)
+        public async Task <IEnumerable<DocumentStatusDto>> 
+            GetAllDocumentStatusesAsync(bool trackChanges)
         {
-            var dc = _repository.DocumentStatus.GetAllDocumentStatuses(trackChanges);
+            var dc = await _repository.DocumentStatus.GetAllDocumentStatuses(trackChanges);
             var dcDto = _mapper.Map<IEnumerable<DocumentStatusDto>>(dc);
             return dcDto;
         }
 
-        public DocumentStatusDto GetDocumentStatus(int id, bool trackChanges) 
+        public async Task<DocumentStatusDto> GetDocumentStatusAsync(int id, bool trackChanges) 
         {
-            var dc = _repository.DocumentStatus.GetDocumentStatus(id, trackChanges);
-            //check null
+            var dc = await _repository.DocumentStatus.GetDocumentStatus(id, trackChanges);
+            if (dc is null)
+                throw new DocumentStatusNotFoundException(id);
             var dcDto = _mapper.Map<DocumentStatusDto>(dc);
             return dcDto;
         }
+        //but here we will do create and other async
 
     }
 }

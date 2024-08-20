@@ -9,7 +9,9 @@ namespace Contracts.DocsEntities
 {
     public interface IDocumentStatusRepository
     {
-        IEnumerable<DocumentStatus> GetAllDocumentStatuses(bool trackChanges);
-        DocumentStatus GetDocumentStatus(int documentStatusId, bool trackChanges);
+        Task<IEnumerable<DocumentStatus>> GetAllDocumentStatuses(bool trackChanges);
+        Task<DocumentStatus> GetDocumentStatus(int documentStatusId, bool trackChanges);
+        //leave reate and delete senchronous
+
     }
 }

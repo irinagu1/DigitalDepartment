@@ -41,8 +41,8 @@ namespace Repository.Core
             _documentStatusRepository.Value;
         public IDocumentRepository Document => _documentRepository.Value;
         public ILetterRepository Letter => _letterRepository.Value;
+        public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
 
-        public void Save() => _repositoryContext.SaveChanges();
     }
 
 }
