@@ -11,5 +11,6 @@ namespace Service.Contracts.DocsEntities
     public interface IDocumentStatusService
     {
         IEnumerable<DocumentStatusDto> GetAllDocumentStatuses(bool trackChanges);
+        DocumentStatusDto GetDocumentStatus(int Id,  bool trackChanges);
     }
 }

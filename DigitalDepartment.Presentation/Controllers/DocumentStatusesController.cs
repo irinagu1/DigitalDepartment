@@ -21,8 +21,14 @@ namespace DigitalDepartment.Presentation.Controllers
         [HttpGet]
         public IActionResult GetDocumentStatuses()
         {
-            throw new Exception("Myex");
             var dc = _service.DocumentStatusService.GetAllDocumentStatuses(trackChanges: false);
+            return Ok(dc);
+        }
+
+        [HttpGet("{id:int}")]
+        public IActionResult GetDocumentStatuss(int id) 
+        {
+            var dc = _service.DocumentStatusService.GetDocumentStatus(id, trackChanges: false);
             return Ok(dc);
         }
     }

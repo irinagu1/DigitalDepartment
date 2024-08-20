@@ -22,6 +22,9 @@ namespace Repository.DocsEntities
                 .OrderBy(dc => dc.Name)
                 .ToList();
 
+        public DocumentStatus GetDocumentStatus(int documentStatusId, bool trackChanges) =>
+            FindByCondition(dc => dc.Id.Equals(documentStatusId), trackChanges)
+            .SingleOrDefault();
   
     }
 }

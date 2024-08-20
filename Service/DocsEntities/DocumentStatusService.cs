@@ -30,5 +30,13 @@ namespace Service.DocsEntities
             return dcDto;
         }
 
+        public DocumentStatusDto GetDocumentStatus(int id, bool trackChanges) 
+        {
+            var dc = _repository.DocumentStatus.GetDocumentStatus(id, trackChanges);
+            //check null
+            var dcDto = _mapper.Map<DocumentStatusDto>(dc);
+            return dcDto;
+        }
+
     }
 }
