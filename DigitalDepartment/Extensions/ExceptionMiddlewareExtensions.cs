@@ -8,6 +8,8 @@ namespace DigitalDepartment.Extensions
 {
     public static class ExceptionMiddlewareExtensions
     {
+        //some new comment
+        //for checking
         public static void ConfigureExceptionHandler(this WebApplication app)
         {
             app.UseExceptionHandler(appError =>
