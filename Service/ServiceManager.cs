@@ -1,4 +1,5 @@
-﻿using Contracts.RepositoryCore;
+﻿using AutoMapper;
+using Contracts.RepositoryCore;
 using Service.Contracts;
 using Service.Contracts.DocsEntities;
 using Service.DocsEntities;
@@ -17,16 +18,16 @@ namespace Service
         private readonly Lazy<IDocumentService> _documentService;
         private readonly Lazy<ILetterService> _letterService;
 
-        public ServiceManager(IRepositoryManager repositoryManager)
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
         {
             _documentStatusService = new Lazy<IDocumentStatusService>
-                (() => new DocumentStatusService(repositoryManager));
+                (() => new DocumentStatusService(repositoryManager, mapper));
             _documentCategoryService = new Lazy<IDocumentCategoryService>
-                (() => new DocumentCategoryService(repositoryManager));
+                (() => new DocumentCategoryService(repositoryManager, mapper));
             _documentService = new Lazy<IDocumentService>
-                (() => new DocumentService(repositoryManager));
+                (() => new DocumentService(repositoryManager, mapper));
             _letterService = new Lazy<ILetterService>
-                (() => new LetterService(repositoryManager));
+                (() => new LetterService(repositoryManager, mapper));
         }
 
         public IDocumentStatusService DocumentStatusService 

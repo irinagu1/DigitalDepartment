@@ -1,7 +1,9 @@
-﻿using Contracts.RepositoryCore;
+﻿using AutoMapper;
+using Contracts.RepositoryCore;
 using Entities.Models;
 
 using Service.Contracts.DocsEntities;
+using Shared.DataTransferObjects.DocumentStatuses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +15,19 @@ namespace Service.DocsEntities
     internal sealed class DocumentStatusService : IDocumentStatusService
     {
         private readonly IRepositoryManager _repository;
-        public DocumentStatusService(IRepositoryManager repository)
+        private readonly IMapper _mapper;
+        public DocumentStatusService(IRepositoryManager repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
-        public IEnumerable<DocumentStatus> 
+        public IEnumerable<DocumentStatusDto> 
             GetAllDocumentStatuses(bool trackChanges)
         {
-            return _repository.DocumentStatus.GetAllDocumentStatuses(trackChanges);
+            var dc = _repository.DocumentStatus.GetAllDocumentStatuses(trackChanges);
+            var dcDto = _mapper.Map<IEnumerable<DocumentStatusDto>>(dc);
+            return dcDto;
         }
 
     }

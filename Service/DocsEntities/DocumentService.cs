@@ -1,4 +1,5 @@
-﻿using Contracts.RepositoryCore;
+﻿using AutoMapper;
+using Contracts.RepositoryCore;
 using Service.Contracts.DocsEntities;
 using System;
 using System.Collections.Generic;
@@ -11,9 +12,11 @@ namespace Service.DocsEntities
     internal sealed class DocumentService : IDocumentService
     {
         private readonly IRepositoryManager _repository;
-        public DocumentService(IRepositoryManager repository)
+        private readonly IMapper _mapper;
+        public DocumentService(IRepositoryManager repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
     }
 }

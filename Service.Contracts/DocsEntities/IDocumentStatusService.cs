@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Shared.DataTransferObjects.DocumentStatuses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Service.Contracts.DocsEntities
 {
     public interface IDocumentStatusService
     {
-        IEnumerable<DocumentStatus> GetAllDocumentStatuses(bool trackChanges);
+        IEnumerable<DocumentStatusDto> GetAllDocumentStatuses(bool trackChanges);
     }
 }
