@@ -10,7 +10,7 @@ namespace DigitalDepartment.Presentation.Controllers
 {
     [Route("api/documentstatuses")]
     [ApiController]
-    public class DocumentStatusesController
+    public class DocumentStatusesController : ControllerBase
     {
         private readonly IServiceManager _service;
         public DocumentStatusesController(IServiceManager service)

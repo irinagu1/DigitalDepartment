@@ -15,6 +15,5 @@ namespace Service.DocsEntities
         {
             _repository = repository;
         }
-    {
     }
 }
