@@ -29,6 +29,8 @@ namespace DigitalDepartment.Presentation.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetDocumentStatus(int id) 
         {
+            //new test comment 
+            //for check sth on github
             var dc = await 
                 _service.DocumentStatusService.GetDocumentStatusAsync(id, trackChanges: false);
             return Ok(dc);

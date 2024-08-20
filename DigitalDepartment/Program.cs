@@ -1,4 +1,5 @@
 using DigitalDepartment.Extensions;
+using DigitalDepartment.Presentation.ActionFilters;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,7 @@ builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureSqlContext(builder.Configuration);
+builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddControllers()
 .AddApplicationPart(
     typeof(DigitalDepartment.Presentation.AssemblyReference).Assembly);
