@@ -5,6 +5,7 @@ using Entities.Models;
 using Service.Contracts;
 using Service.Contracts.DocsEntities;
 using Shared.DataTransferObjects.DocumentStatuses;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,12 +26,17 @@ namespace Service.DocsEntities
             _checkerService = checker;
         }
 
-        public async Task <IEnumerable<DocumentStatusDto>> 
-            GetAllDocumentStatusesAsync(bool trackChanges)
+        public async Task <(IEnumerable<DocumentStatusDto> documentStatuses, 
+                            MetaData metaData)> 
+            GetAllDocumentStatusesAsync(
+                DocumentStatusParameters documentStatusParameters, 
+                bool trackChanges)
         {
-            var dc = await _repository.DocumentStatus.GetAllDocumentStatusesAsync(trackChanges);
-            var dcDto = _mapper.Map<IEnumerable<DocumentStatusDto>>(dc);
-            return dcDto;
+            var dcWithMetaData =
+                await _repository.DocumentStatus.GetAllDocumentStatusesAsync(
+                documentStatusParameters, trackChanges);
+            var dcDto = _mapper.Map<IEnumerable<DocumentStatusDto>>(dcWithMetaData);
+            return (documentStatuses: dcDto, metaData: dcWithMetaData.MetaData);
         }
 
         public async Task<DocumentStatusDto> GetDocumentStatusAsync(int id, bool trackChanges) 

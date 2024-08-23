@@ -2,6 +2,7 @@
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Core;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,20 @@ namespace Repository.DocsEntities
 
         //все
         //фильтр сюда же ( активно-не активно)
-        public async Task<IEnumerable<DocumentStatus>> GetAllDocumentStatusesAsync(bool trackChanges)
-            => await FindAll(trackChanges)
-                .OrderBy(dc => dc.Name)
-                .ToListAsync();
-
+        public async Task<PagedList<DocumentStatus>> GetAllDocumentStatusesAsync(
+             DocumentStatusParameters documentStatusParameters, bool trackChanges)
+        {
+            var documentStatuses = await FindAll(trackChanges)
+                                     .OrderBy(dc => dc.Name)
+                                     .Skip((documentStatusParameters.PageNumber-1)* documentStatusParameters.PageSize)
+                                     .Take(documentStatusParameters.PageSize)
+                                     .ToListAsync();
+            var count = await FindAll(trackChanges).CountAsync();
+            return new PagedList<DocumentStatus>(documentStatuses,
+                                                count,
+                                                documentStatusParameters.PageNumber,
+                                                documentStatusParameters.PageSize);
+        }
         //один конкретный
         public async Task<DocumentStatus> GetDocumentStatusAsync(int documentStatusId, bool trackChanges)
             => await FindByCondition(dc => dc.Id.Equals(documentStatusId), trackChanges)

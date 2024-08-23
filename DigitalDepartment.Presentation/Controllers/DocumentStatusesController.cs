@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects.DocumentStatuses;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DigitalDepartment.Presentation.Controllers
@@ -21,11 +23,15 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDocumentStatuses()
+        public async Task<IActionResult> GetDocumentStatuses(
+            [FromQuery] DocumentStatusParameters documentStatusParameters)
         {
-            var dc = await
-                _service.DocumentStatusService.GetAllDocumentStatusesAsync(trackChanges: false);
-            return Ok(dc);
+            var pagedResult = await
+                _service.DocumentStatusService.GetAllDocumentStatusesAsync(
+                    documentStatusParameters, trackChanges: false);
+            Response.Headers.Add("X-Pagination",
+                JsonSerializer.Serialize(pagedResult.metaData));
+            return Ok(pagedResult.documentStatuses);
         }
 
         [HttpGet("{id:int}", Name = "DocumentStatusById")]
