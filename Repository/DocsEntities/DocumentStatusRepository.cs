@@ -18,14 +18,20 @@ namespace Repository.DocsEntities
 
         }
 
-        public async Task<IEnumerable<DocumentStatus>> GetAllDocumentStatuses(bool trackChanges)
+        //все
+        //фильтр сюда же ( активно-не активно)
+        public async Task<IEnumerable<DocumentStatus>> GetAllDocumentStatusesAsync(bool trackChanges)
             => await FindAll(trackChanges)
                 .OrderBy(dc => dc.Name)
                 .ToListAsync();
 
-        public async Task<DocumentStatus> GetDocumentStatus(int documentStatusId, bool trackChanges)
+        //один конкретный
+        public async Task<DocumentStatus> GetDocumentStatusAsync(int documentStatusId, bool trackChanges)
             => await FindByCondition(dc => dc.Id.Equals(documentStatusId), trackChanges)
             .SingleOrDefaultAsync();
-  
+
+        public void CreateDocumentStatus(DocumentStatus documentStatus) => Create(documentStatus);
+
+        public void DeleteDocumentStatus(DocumentStatus documentStatus) => Delete(documentStatus);
     }
 }

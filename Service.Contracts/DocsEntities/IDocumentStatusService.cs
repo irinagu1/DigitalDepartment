@@ -12,5 +12,8 @@ namespace Service.Contracts.DocsEntities
     {
         Task<IEnumerable<DocumentStatusDto>> GetAllDocumentStatusesAsync(bool trackChanges);
         Task<DocumentStatusDto> GetDocumentStatusAsync(int Id,  bool trackChanges);
+
+        Task<DocumentStatusDto> CreateDocumentStatusAsync(DocumentStatusDto documentStatus);
+
     }
 }
