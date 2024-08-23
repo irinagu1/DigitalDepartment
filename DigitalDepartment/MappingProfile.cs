@@ -9,6 +9,8 @@ namespace DigitalDepartment
         public MappingProfile() 
         {
             CreateMap<DocumentStatus, DocumentStatusDto>();
+            CreateMap<DocumentStatusForCreationDto, DocumentStatus>();
+            CreateMap<DocumentStatusForUpdateDto, DocumentStatus>();
         }
     }
 }

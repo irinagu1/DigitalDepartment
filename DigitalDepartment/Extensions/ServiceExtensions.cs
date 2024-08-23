@@ -33,6 +33,9 @@ namespace DigitalDepartment.Extensions
             services.AddDbContext<RepositoryContext>(opts =>
             opts.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
 
+        public static void ConfigureChecker(this IServiceCollection services) =>
+            services.AddScoped<ICheckerService, CheckerService>();
+
     }
 
 }

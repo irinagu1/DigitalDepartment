@@ -10,13 +10,16 @@ builder.Services.ConfigureIISIntegration();
 
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
+builder.Services.ConfigureChecker();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddScoped<ValidationFilterAttribute>();
+
 builder.Services.AddControllers()
 .AddApplicationPart(
     typeof(DigitalDepartment.Presentation.AssemblyReference).Assembly);
-builder.Services.AddAutoMapper(typeof(Program));
 
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
