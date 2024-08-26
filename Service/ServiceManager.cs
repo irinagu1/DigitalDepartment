@@ -23,7 +23,7 @@ namespace Service
             _documentStatusService = new Lazy<IDocumentStatusService>
                 (() => new DocumentStatusService(repositoryManager, mapper, checker));
             _documentCategoryService = new Lazy<IDocumentCategoryService>
-                (() => new DocumentCategoryService(repositoryManager, mapper));
+                (() => new DocumentCategoryService(repositoryManager, mapper, checker));
             _documentService = new Lazy<IDocumentService>
                 (() => new DocumentService(repositoryManager, mapper));
             _letterService = new Lazy<ILetterService>

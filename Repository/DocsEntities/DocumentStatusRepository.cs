@@ -35,6 +35,7 @@ namespace Repository.DocsEntities
                                                 documentStatusParameters.PageNumber,
                                                 documentStatusParameters.PageSize);
         }
+
         //один конкретный
         public async Task<DocumentStatus> GetDocumentStatusAsync(int documentStatusId, bool trackChanges)
             => await FindByCondition(dc => dc.Id.Equals(documentStatusId), trackChanges)

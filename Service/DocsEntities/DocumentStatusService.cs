@@ -41,7 +41,7 @@ namespace Service.DocsEntities
 
         public async Task<DocumentStatusDto> GetDocumentStatusAsync(int id, bool trackChanges) 
         {
-            var documentStatus = await _checkerService.GetDocumentEntityAndCheckifitExistsAsync(id, trackChanges);
+            var documentStatus = await _checkerService.GetDocumentStatusEntityAndCheckIfItExistsAsync(id, trackChanges);
             var dcDto = _mapper.Map<DocumentStatusDto>(documentStatus);
             return dcDto;
         }
@@ -58,13 +58,13 @@ namespace Service.DocsEntities
 
         public async Task DeleteDocumentStatusAsync(int documentStatusId, bool trackChanges)
         {
-            var documentStatus = await _checkerService.GetDocumentEntityAndCheckifitExistsAsync(documentStatusId, trackChanges);
+            var documentStatus = await _checkerService.GetDocumentStatusEntityAndCheckIfItExistsAsync(documentStatusId, trackChanges);
             _repository.DocumentStatus.DeleteDocumentStatus(documentStatus);
             await _repository.SaveAsync();
         }
         public async Task UpdateDocumentStatusAsync(int documentStatusId, DocumentStatusForUpdateDto documentStatusForUpdate, bool trackChanges)
         {
-            var documentStatus = await _checkerService.GetDocumentEntityAndCheckifitExistsAsync(documentStatusId, trackChanges);
+            var documentStatus = await _checkerService.GetDocumentStatusEntityAndCheckIfItExistsAsync(documentStatusId, trackChanges);
             _mapper.Map(documentStatusForUpdate, documentStatus);
             await _repository.SaveAsync();
         }

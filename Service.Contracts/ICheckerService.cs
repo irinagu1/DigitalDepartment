@@ -9,6 +9,7 @@ namespace Service.Contracts
 {
     public interface ICheckerService
     {
-        Task<DocumentStatus> GetDocumentEntityAndCheckifitExistsAsync(int id, bool trackChanges);
+        Task<DocumentStatus> GetDocumentStatusEntityAndCheckIfItExistsAsync(int id, bool trackChanges);
+        Task<DocumentCategory> GetDocumentCategoryEntityAndCheckiIfItExistsAsync(int id, bool trackChanges);
     }
 }
