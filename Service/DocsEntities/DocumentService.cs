@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Contracts.RepositoryCore;
+using Entities.Models;
 using Service.Contracts.DocsEntities;
+using Shared.DataTransferObjects.Documents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,16 @@ namespace Service.DocsEntities
         {
             _repository = repository;
             _mapper = mapper;
+        }
+
+        public async Task<DocumentDto> CreateDocumentAsync(DocumentForCreationDto documentForCreationDto)
+        {
+            var documentEntity = _mapper.Map<Document>(documentForCreationDto);
+            _repository.Document.CreateDocument(documentEntity);
+            await _repository.SaveAsync();
+            var documentToReturn = _mapper.Map<DocumentDto>(documentEntity);
+            return documentToReturn;
+
         }
     }
 }

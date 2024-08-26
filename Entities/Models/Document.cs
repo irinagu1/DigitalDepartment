@@ -13,11 +13,14 @@ namespace Entities.Models
         [Column("DocumentId")]
         public int Id { get; set; }
 
+
         [Required(ErrorMessage = "Document name is a requred field")]
         public string? Name { get; set; }
 
-        //blob 
+        [Required(ErrorMessage = "Document path is a requred field")]
+        public string? Path { get; set; }
 
+     
         [ForeignKey(nameof(DocumentStatus))]
         public int DocumentStatusId { get; set; }
         public DocumentStatus? DocumentStatus { get; set; }
@@ -31,6 +34,5 @@ namespace Entities.Models
         [ForeignKey(nameof(Letter))]
         public int LetterId { get; set; }
         public Letter? Letter { get; set; }
-
     }
 }

@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 namespace Contracts.DocsEntities
 {
     public interface ILetterRepository
-    {
+    { 
     }
 }
