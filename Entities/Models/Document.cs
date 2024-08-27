@@ -17,6 +17,7 @@ namespace Entities.Models
         [Required(ErrorMessage = "Document name is a requred field")]
         public string? Name { get; set; }
 
+       
         [Required(ErrorMessage = "Document path is a requred field")]
         public string? Path { get; set; }
 

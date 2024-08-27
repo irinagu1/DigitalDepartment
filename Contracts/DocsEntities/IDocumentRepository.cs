@@ -11,6 +11,8 @@ namespace Contracts.DocsEntities
     {
         //get all with filtering
         //get one
+        Task<Document> GetDocumentAsync(int id);
+        Task<Document> GetDocumentbyPathAsync(string path, bool trackChanges);
         //create one
         void CreateDocument(Document document);
 

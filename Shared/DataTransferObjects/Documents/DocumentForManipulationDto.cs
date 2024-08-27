@@ -13,7 +13,7 @@ namespace Shared.DataTransferObjects.Documents
         [MaxLength(100, ErrorMessage = "Maximum length for the Name is 100 characters.")]
         public string? Name { get; init; }
 
-        [Required(ErrorMessage = "Document path is a required field.")]
+    //    [Required(ErrorMessage = "Document path is a required field.")]
         public string? Path { get; init; }
       
         [Required(ErrorMessage = "Document status is a required field.")]
