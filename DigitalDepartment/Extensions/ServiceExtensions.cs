@@ -37,6 +37,14 @@ namespace DigitalDepartment.Extensions
         public static void ConfigureChecker(this IServiceCollection services) =>
             services.AddScoped<ICheckerService, CheckerService>();
 
+        public static void ConfigureFilesFolders(this IServiceCollection services, IConfiguration configuration) 
+        {
+            var folder = configuration.GetValue<string>("BaseFolder");
+            if (folder is null)
+                throw new ArgumentNullException("No appsettings.json variable for default folder");
+            services.AddSingleton<IFilesService>(new FilesService(folder));
+        }
+
     }
 
 }
