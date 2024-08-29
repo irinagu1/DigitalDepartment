@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects.DocumentCategories;
 using Shared.DataTransferObjects.Documents;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DigitalDepartment.Presentation.Controllers
@@ -23,20 +25,32 @@ namespace DigitalDepartment.Presentation.Controllers
             _service = service;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetDocuments(
+            [FromQuery] DocumentParameters documentParameters)
+        {
+            var pagedResult = await
+                _service.DocumentService.GetAllDocumentsAsync(
+                    documentParameters, trackChanges: false);
+            Response.Headers.Add("X-Pagination",
+                JsonSerializer.Serialize(pagedResult.metaData));
+            return Ok(pagedResult.documents);
+        }
+
         //create
         [HttpPost(Name = "CreateDocument")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateDocument([FromForm] DocumentForCreationDto document)
         {
-            //проверка что существует такой статус, такая категория, такое письмо, такой отправитель и что все ок в принципе
-
-            //идем на уровень сервиса и можем вернуть ссылку
             var createdDocument = await _service.DocumentService.CreateDocumentAsync(document);
+            return CreatedAtRoute("DocumentById", new { id = createdDocument.Id, createdDocument });
+        }
 
-            //  var createdDocumentCategory = await _service.DocumentCategoryService.CreateDocumentCategoryAsync(documentCategory);
-            //search this
-            //   return CreatedAtRoute("DocumentCategoryById", new { id = createdDocumentCategory.Id }, createdDocumentCategory);
-            return Ok(createdDocument.Id);
+        [HttpGet("{id:int}", Name = "DocumentById")]
+        public async Task<IActionResult> GetDocument(int id)
+        {
+            var dc = await _service.DocumentService.GetDocumentByIdAsync(id, trackChanges: false);
+            return Ok(dc);
         }
     }
 }
