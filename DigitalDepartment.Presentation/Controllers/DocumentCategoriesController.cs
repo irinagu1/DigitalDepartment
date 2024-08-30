@@ -1,4 +1,5 @@
 ﻿using DigitalDepartment.Presentation.ActionFilters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects.DocumentCategories;
@@ -15,6 +16,7 @@ namespace DigitalDepartment.Presentation.Controllers
 
     [Route("api/documentcategories")]
     [ApiController]
+    [Authorize(Roles ="User")]
     public class DocumentCategoriesController : ControllerBase
     {
         private readonly IServiceManager _service;
