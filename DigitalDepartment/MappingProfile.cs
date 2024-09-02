@@ -3,6 +3,7 @@ using Entities.Models;
 using Shared.DataTransferObjects.DocumentCategories;
 using Shared.DataTransferObjects.Documents;
 using Shared.DataTransferObjects.DocumentStatuses;
+using Shared.DataTransferObjects.Users;
 
 namespace DigitalDepartment
 {
@@ -22,6 +23,9 @@ namespace DigitalDepartment
             CreateMap<Document, DocumentDto>();
             CreateMap<DocumentForCreationDto, Document>();
             CreateMap<DocumentCategoryForUpdateDto, Document>();
+
+            CreateMap<UserForRegistrationDto, User>();
+
         }
     }
 }
