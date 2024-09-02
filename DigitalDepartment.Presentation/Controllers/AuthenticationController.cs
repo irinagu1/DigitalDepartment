@@ -14,6 +14,7 @@ namespace DigitalDepartment.Presentation.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
+
         private readonly IServiceManager _service;
         public AuthenticationController(IServiceManager service) => _service = service;
 
