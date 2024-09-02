@@ -2,9 +2,10 @@
 using Contracts.RepositoryCore;
 using Entities.Exceptions;
 using Entities.Models;
-
+using Service.Contracts;
 using Service.Contracts.DocsEntities;
 using Shared.DataTransferObjects.DocumentStatuses;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,29 +18,55 @@ namespace Service.DocsEntities
     {
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
-        public DocumentStatusService(IRepositoryManager repository, IMapper mapper)
+        private readonly ICheckerService _checkerService;
+        public DocumentStatusService(IRepositoryManager repository, IMapper mapper, ICheckerService checker)
         {
             _repository = repository;
             _mapper = mapper;
+            _checkerService = checker;
         }
 
-        public async Task <IEnumerable<DocumentStatusDto>> 
-            GetAllDocumentStatusesAsync(bool trackChanges)
+        public async Task <(IEnumerable<DocumentStatusDto> documentStatuses, 
+                            MetaData metaData)> 
+            GetAllDocumentStatusesAsync(
+                DocumentStatusParameters documentStatusParameters, 
+                bool trackChanges)
         {
-            var dc = await _repository.DocumentStatus.GetAllDocumentStatuses(trackChanges);
-            var dcDto = _mapper.Map<IEnumerable<DocumentStatusDto>>(dc);
-            return dcDto;
+            var dcWithMetaData =
+                await _repository.DocumentStatus.GetAllDocumentStatusesAsync(
+                documentStatusParameters, trackChanges);
+            var dcDto = _mapper.Map<IEnumerable<DocumentStatusDto>>(dcWithMetaData);
+            return (documentStatuses: dcDto, metaData: dcWithMetaData.MetaData);
         }
 
         public async Task<DocumentStatusDto> GetDocumentStatusAsync(int id, bool trackChanges) 
         {
-            var dc = await _repository.DocumentStatus.GetDocumentStatus(id, trackChanges);
-            if (dc is null)
-                throw new DocumentStatusNotFoundException(id);
-            var dcDto = _mapper.Map<DocumentStatusDto>(dc);
+            var documentStatus = await _checkerService.GetDocumentStatusEntityAndCheckIfItExistsAsync(id, trackChanges);
+            var dcDto = _mapper.Map<DocumentStatusDto>(documentStatus);
             return dcDto;
         }
-        //but here we will do create and other async
 
+        public async Task<DocumentStatusDto> CreateDocumentStatusAsync(DocumentStatusForCreationDto documentStatus)
+        {
+            //check if the name is exist!!!! maybe throu filtering
+            var documentStatusEntity = _mapper.Map<DocumentStatus>(documentStatus);
+            _repository.DocumentStatus.CreateDocumentStatus(documentStatusEntity);
+            await _repository.SaveAsync();
+            var documentStatusToReturn = _mapper.Map<DocumentStatusDto>(documentStatusEntity);
+            return documentStatusToReturn;
+        }
+
+        public async Task DeleteDocumentStatusAsync(int documentStatusId, bool trackChanges)
+        {
+            var documentStatus = await _checkerService.GetDocumentStatusEntityAndCheckIfItExistsAsync(documentStatusId, trackChanges);
+            _repository.DocumentStatus.DeleteDocumentStatus(documentStatus);
+            await _repository.SaveAsync();
+        }
+        public async Task UpdateDocumentStatusAsync(int documentStatusId, DocumentStatusForUpdateDto documentStatusForUpdate, bool trackChanges)
+        {
+            var documentStatus = await _checkerService.GetDocumentStatusEntityAndCheckIfItExistsAsync(documentStatusId, trackChanges);
+            _mapper.Map(documentStatusForUpdate, documentStatus);
+            await _repository.SaveAsync();
+        }
     }
 }

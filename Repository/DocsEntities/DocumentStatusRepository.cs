@@ -2,6 +2,7 @@
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Core;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,30 @@ namespace Repository.DocsEntities
 
         }
 
-        public async Task<IEnumerable<DocumentStatus>> GetAllDocumentStatuses(bool trackChanges)
-            => await FindAll(trackChanges)
-                .OrderBy(dc => dc.Name)
-                .ToListAsync();
+        //все
+        //фильтр сюда же ( активно-не активно)
+        public async Task<PagedList<DocumentStatus>> GetAllDocumentStatusesAsync(
+             DocumentStatusParameters documentStatusParameters, bool trackChanges)
+        {
+            var documentStatuses = await FindAll(trackChanges)
+                                     .OrderBy(dc => dc.Name)
+                                     .Skip((documentStatusParameters.PageNumber-1)* documentStatusParameters.PageSize)
+                                     .Take(documentStatusParameters.PageSize)
+                                     .ToListAsync();
+            var count = await FindAll(trackChanges).CountAsync();
+            return new PagedList<DocumentStatus>(documentStatuses,
+                                                count,
+                                                documentStatusParameters.PageNumber,
+                                                documentStatusParameters.PageSize);
+        }
 
-        public async Task<DocumentStatus> GetDocumentStatus(int documentStatusId, bool trackChanges)
+        //один конкретный
+        public async Task<DocumentStatus> GetDocumentStatusAsync(int documentStatusId, bool trackChanges)
             => await FindByCondition(dc => dc.Id.Equals(documentStatusId), trackChanges)
             .SingleOrDefaultAsync();
-  
+
+        public void CreateDocumentStatus(DocumentStatus documentStatus) => Create(documentStatus);
+
+        public void DeleteDocumentStatus(DocumentStatus documentStatus) => Delete(documentStatus);
     }
 }

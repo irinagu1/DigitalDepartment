@@ -14,7 +14,8 @@ namespace DigitalDepartment.Extensions
                 options.AddPolicy("CorsPolicy", builder =>
                 builder.AllowAnyOrigin()
                 .AllowAnyMethod()
-                .AllowAnyHeader());
+                .AllowAnyHeader()
+                .WithExposedHeaders("X-Pagination"));
             });
 
         public static void ConfigureIISIntegration(this IServiceCollection services) =>
@@ -32,6 +33,17 @@ namespace DigitalDepartment.Extensions
             IConfiguration configuration) =>
             services.AddDbContext<RepositoryContext>(opts =>
             opts.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
+
+        public static void ConfigureChecker(this IServiceCollection services) =>
+            services.AddScoped<ICheckerService, CheckerService>();
+
+        public static void ConfigureFilesFolders(this IServiceCollection services, IConfiguration configuration) 
+        {
+            var folder = configuration.GetValue<string>("BaseFolder");
+            if (folder is null)
+                throw new ArgumentNullException("No appsettings.json variable for default folder");
+            services.AddSingleton<IFilesService>(new FilesService(folder));
+        }
 
     }
 

@@ -13,5 +13,6 @@ namespace Service.Contracts
         IDocumentStatusService DocumentStatusService { get; }
         IDocumentService DocumentService { get; }
         ILetterService LetterService { get; }
+
     }
 }
