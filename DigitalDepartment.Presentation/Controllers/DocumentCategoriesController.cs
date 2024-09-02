@@ -26,7 +26,7 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles ="Administrator")]
         public async Task<IActionResult> GetDocumentCategories(
             [FromQuery] DocumentCategoryParameters documentCategoryParameters)
         {
@@ -39,6 +39,7 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
         [HttpGet("{id:int}", Name = "DocumentCategoryById")]
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetDocumentCategory(int id)
         {
             //new test comment 
