@@ -12,8 +12,8 @@ using Repository.Core;
 namespace DigitalDepartment.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20240829120907_InitialAgain")]
-    partial class InitialAgain
+    [Migration("20240902124414_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -172,6 +172,129 @@ namespace DigitalDepartment.Migrations
                     b.ToTable("Letters");
                 });
 
+            modelBuilder.Entity("Entities.Models.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("PermissionId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permissions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Create"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Read"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Update"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Delete"
+                        });
+                });
+
+            modelBuilder.Entity("Entities.Models.PermissionRoleEntity", b =>
+                {
+                    b.Property<string>("RoleEntityId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("RoleEntityId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("PermissionRoleEntities");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleEntityId = "483d51a8-37f5-473c-a17a-0b0d175c1e7e",
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            RoleEntityId = "483d51a8-37f5-473c-a17a-0b0d175c1e7e",
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            RoleEntityId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            RoleEntityId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            RoleEntityId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 3
+                        });
+                });
+
+            modelBuilder.Entity("Entities.Models.RoleEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "483d51a8-37f5-473c-a17a-0b0d175c1e7e",
+                            Name = "Manager",
+                            NormalizedName = "MANAGER"
+                        },
+                        new
+                        {
+                            Id = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            Name = "Administrator",
+                            NormalizedName = "ADMINISTRATOR"
+                        });
+                });
+
             modelBuilder.Entity("Entities.Models.User", b =>
                 {
                     b.Property<string>("Id")
@@ -222,6 +345,12 @@ namespace DigitalDepartment.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("SecondName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -247,33 +376,6 @@ namespace DigitalDepartment.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -382,6 +484,21 @@ namespace DigitalDepartment.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("RoleEntityUser", b =>
+                {
+                    b.Property<string>("RolesId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("RolesId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("RoleEntityUser");
+                });
+
             modelBuilder.Entity("Entities.Models.Document", b =>
                 {
                     b.HasOne("Entities.Models.DocumentCategory", "DocumentCategory")
@@ -409,9 +526,28 @@ namespace DigitalDepartment.Migrations
                     b.Navigation("Letter");
                 });
 
+            modelBuilder.Entity("Entities.Models.PermissionRoleEntity", b =>
+                {
+                    b.HasOne("Entities.Models.Permission", "Permission")
+                        .WithMany("PermissionRoleEntities")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Models.RoleEntity", "RoleEntity")
+                        .WithMany("PermissionRoleEntities")
+                        .HasForeignKey("RoleEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("RoleEntity");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Entities.Models.RoleEntity", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -438,7 +574,7 @@ namespace DigitalDepartment.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Entities.Models.RoleEntity", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -460,9 +596,34 @@ namespace DigitalDepartment.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RoleEntityUser", b =>
+                {
+                    b.HasOne("Entities.Models.RoleEntity", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Entities.Models.Letter", b =>
                 {
                     b.Navigation("Documents");
+                });
+
+            modelBuilder.Entity("Entities.Models.Permission", b =>
+                {
+                    b.Navigation("PermissionRoleEntities");
+                });
+
+            modelBuilder.Entity("Entities.Models.RoleEntity", b =>
+                {
+                    b.Navigation("PermissionRoleEntities");
                 });
 #pragma warning restore 612, 618
         }

@@ -54,7 +54,7 @@ namespace DigitalDepartment.Extensions
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            var builder = services.AddIdentity<User, IdentityRole>(o =>
+            var builder = services.AddIdentity<User, RoleEntity>(o =>
             {
                 o.Password.RequireDigit = true;
                 o.Password.RequireLowercase = false;
@@ -64,7 +64,8 @@ namespace DigitalDepartment.Extensions
                 o.User.RequireUniqueEmail = true;
             })
             .AddEntityFrameworkStores<RepositoryContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddRoles<RoleEntity>();
         }
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration
@@ -138,6 +139,17 @@ namespace DigitalDepartment.Extensions
             
         }
 
+        public static void ConfigureAuthorization(this IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+                {
+                    options.AddPolicy("AdminPolicy", policy =>
+                    {
+           //             policy.Requirements.Add()
+                    } );
+                }
+            );
+        }
     }
 
 }
