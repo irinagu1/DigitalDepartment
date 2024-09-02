@@ -16,7 +16,7 @@ namespace DigitalDepartment.Presentation.Controllers
 
     [Route("api/documentcategories")]
     [ApiController]
-  
+
     public class DocumentCategoriesController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -25,6 +25,11 @@ namespace DigitalDepartment.Presentation.Controllers
             _service = service;
         }
 
+        /// <summary>
+        /// gets the list of all document categories
+        /// </summary>
+        /// <param name="documentCategoryParameters"></param>
+        /// <returns>The document categories list</returns>
         [HttpGet]
         [Authorize(Roles ="Administrator")]
         public async Task<IActionResult> GetDocumentCategories(
