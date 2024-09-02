@@ -5,6 +5,7 @@ using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Win32.SafeHandles;
 using Service.Contracts;
 using Shared;
 using Shared.DataTransferObjects.Users;
@@ -26,6 +27,7 @@ namespace Service
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
         private readonly JwtConfiguration _jwtConfiguration;
+
         private User? _user;
 
         public AuthenticationService(IMapper mapper,
@@ -38,7 +40,7 @@ namespace Service
             _configuration.Bind(_jwtConfiguration.Section, _jwtConfiguration);
 
         }
-
+     
         public async Task<IdentityResult> RegisterUser(UserForRegistrationDto
         userForRegistration)
         {
@@ -72,7 +74,8 @@ namespace Service
 
         private SigningCredentials GetSigningCredentials()
         {
-            var key = Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET"));
+            var envVariable = Environment.GetEnvironmentVariable("SecretDigDep");
+            var key = Encoding.UTF8.GetBytes(envVariable + envVariable);
             var secret = new SymmetricSecurityKey(key);
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
@@ -118,6 +121,7 @@ namespace Service
 
         private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
+            var envVar = Environment.GetEnvironmentVariable("SecretDigDep");
             var jwtSettings = _configuration.GetSection("JwtSettings");
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -125,7 +129,8 @@ namespace Service
                 ValidateIssuer = true,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("DigDepSecret"))),
+                    Encoding.UTF8.GetBytes(envVar + envVar)
+                    ),
                 ValidateLifetime = true,
                 ValidIssuer = _jwtConfiguration.ValidIssuer,
                 ValidAudience = _jwtConfiguration.ValidAudience

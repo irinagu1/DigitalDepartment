@@ -71,7 +71,8 @@ namespace DigitalDepartment.Extensions
         {
             var jwtConfiguration = new JwtConfiguration();
             configuration.Bind(jwtConfiguration.Section, jwtConfiguration);
-            var secretKey = Environment.GetEnvironmentVariable("SecretDigDep");
+            var envVar= Environment.GetEnvironmentVariable("SecretDigDep");
+            var secretKey = envVar + envVar;
             services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -94,8 +95,11 @@ namespace DigitalDepartment.Extensions
         }
 
         public static void AddJwtConfiguration(this IServiceCollection services,
-            IConfiguration configuration) =>
-            services.Configure<JwtConfiguration>(configuration.GetSection("JwtSettings"));
+            IConfiguration configuration)
+        {
+            services.Configure<JwtConfiguration>("JwtSettings",
+               configuration.GetSection("JwtSettings"));
+        }
 
 
 
