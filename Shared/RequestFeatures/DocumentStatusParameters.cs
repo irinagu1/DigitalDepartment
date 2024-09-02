@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Contracts.DocsEntities
+namespace Shared.RequestFeatures
 {
-    public interface ILetterRepository
-    { 
+    public class DocumentStatusParameters : RequestParameters
+    {
     }
 }

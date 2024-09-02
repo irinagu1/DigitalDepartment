@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Entities.Models;
+using Shared.DataTransferObjects.DocumentCategories;
+using Shared.DataTransferObjects.Documents;
 using Shared.DataTransferObjects.DocumentStatuses;
 
 namespace DigitalDepartment
@@ -8,7 +10,18 @@ namespace DigitalDepartment
     {
         public MappingProfile() 
         {
+
             CreateMap<DocumentStatus, DocumentStatusDto>();
+            CreateMap<DocumentStatusForCreationDto, DocumentStatus>();
+            CreateMap<DocumentStatusForUpdateDto, DocumentStatus>();
+
+            CreateMap<DocumentCategory, DocumentCategoryDto>();
+            CreateMap<DocumentCategoryForCreationDto, DocumentCategory>();
+            CreateMap<DocumentCategoryForUpdateDto, DocumentCategory>();
+
+            CreateMap<Document, DocumentDto>();
+            CreateMap<DocumentForCreationDto, Document>();
+            CreateMap<DocumentCategoryForUpdateDto, Document>();
         }
     }
 }

@@ -23,7 +23,13 @@ namespace Repository.Configuration
                     Id = 2,
                     Name = "Report",
                     isEnable = true
-                }
+                },
+                 new DocumentCategory
+                 {
+                     Id = 3,
+                     Name = "ThirdCategory",
+                     isEnable = true
+                 }
             );
         }
     }

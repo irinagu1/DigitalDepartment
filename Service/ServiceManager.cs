@@ -18,14 +18,16 @@ namespace Service
         private readonly Lazy<IDocumentService> _documentService;
         private readonly Lazy<ILetterService> _letterService;
 
-        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper)
+
+        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, ICheckerService checker, 
+                                IFilesService filesService)
         {
             _documentStatusService = new Lazy<IDocumentStatusService>
-                (() => new DocumentStatusService(repositoryManager, mapper));
+                (() => new DocumentStatusService(repositoryManager, mapper, checker));
             _documentCategoryService = new Lazy<IDocumentCategoryService>
-                (() => new DocumentCategoryService(repositoryManager, mapper));
+                (() => new DocumentCategoryService(repositoryManager, mapper, checker));
             _documentService = new Lazy<IDocumentService>
-                (() => new DocumentService(repositoryManager, mapper));
+                (() => new DocumentService(repositoryManager, mapper, checker, filesService));
             _letterService = new Lazy<ILetterService>
                 (() => new LetterService(repositoryManager, mapper));
         }
@@ -38,5 +40,6 @@ namespace Service
             => _documentService.Value;
         public ILetterService LetterService 
             => _letterService.Value;
+     
     }
 }
