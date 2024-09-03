@@ -1,4 +1,5 @@
-﻿using Contracts.DocsEntities;
+﻿using Contracts.Auth;
+using Contracts.DocsEntities;
 using Contracts.RepositoryCore;
 using Repository.DocsEntities;
 using System;
@@ -17,6 +18,8 @@ namespace Repository.Core
         private readonly Lazy<IDocumentStatusRepository> _documentStatusRepository;
         private readonly Lazy<IDocumentRepository> _documentRepository;
         private readonly Lazy<ILetterRepository> _letterRepository;
+        
+        private readonly Lazy<IUserRepository> _userRepository;
 
         public RepositoryManager(RepositoryContext repositoryContext)
         {
@@ -33,6 +36,8 @@ namespace Repository.Core
 
             _letterRepository = new Lazy<ILetterRepository>(() 
             => new LetterRepository(repositoryContext));
+            _userRepository = new Lazy<IUserRepository>(() 
+                => new Auth.UserRepository(repositoryContext));
         }
 
         public IDocumentCategoryRepository DocumentCategory =>
@@ -41,6 +46,7 @@ namespace Repository.Core
             _documentStatusRepository.Value;
         public IDocumentRepository Document => _documentRepository.Value;
         public ILetterRepository Letter => _letterRepository.Value;
+        public IUserRepository User => _userRepository.Value;
         public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
 
     }

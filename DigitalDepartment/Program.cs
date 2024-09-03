@@ -1,7 +1,11 @@
+using DigitalDepartment;
 using DigitalDepartment.Extensions;
 using DigitalDepartment.Presentation.ActionFilters;
+using Entities.Models;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Service.Contracts;
+using System.Reflection.Metadata.Ecma335;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +63,5 @@ app.UseSwaggerUI(s =>
 {
     s.SwaggerEndpoint("/swagger/v1/swagger.json", "Digital Department API v1");
 });
-
 
 app.Run();

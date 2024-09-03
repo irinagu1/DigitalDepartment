@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Entities.ConfigurationModels;
 using Entities.Exceptions;
-using Entities.Models;
+using Entities.Models.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -85,6 +85,7 @@ namespace Service
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, _user.UserName),
+                new Claim("userId", _user.Id),
                 new Claim("Admin", "true")
             };
             var roles = await _userManager.GetRolesAsync(_user);

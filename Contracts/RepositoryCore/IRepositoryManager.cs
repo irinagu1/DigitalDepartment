@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Contracts.Auth;
 using Contracts.DocsEntities;
 
 namespace Contracts.RepositoryCore
@@ -14,6 +15,7 @@ namespace Contracts.RepositoryCore
         IDocumentCategoryRepository DocumentCategory { get; }
         IDocumentStatusRepository DocumentStatus { get; }
 
+        IUserRepository User { get; }
         Task SaveAsync();
     }
 }

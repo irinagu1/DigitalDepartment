@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Entities.Models;
+using Entities.Models.Auth;
+using Microsoft.AspNetCore.Identity;
 using Shared.DataTransferObjects.DocumentCategories;
 using Shared.DataTransferObjects.Documents;
 using Shared.DataTransferObjects.DocumentStatuses;
@@ -9,7 +11,7 @@ namespace DigitalDepartment
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile() 
+        public MappingProfile()
         {
 
             CreateMap<DocumentStatus, DocumentStatusDto>();
@@ -25,6 +27,8 @@ namespace DigitalDepartment
             CreateMap<DocumentCategoryForUpdateDto, Document>();
 
             CreateMap<UserForRegistrationDto, User>();
+
+            CreateMap<string, Role>().ForMember(dest => dest.Name, opt => opt.ToString());
 
         }
     }
