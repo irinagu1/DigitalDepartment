@@ -30,7 +30,12 @@ namespace Repository.Auth
                         {
                             p.Name
                         };
-            HashSet<string> uniquePermissions = new HashSet<string>((IEnumerable<string>)permissions);
+            Console.WriteLine(permissions.Count());
+            foreach(var item in permissions) { Console.WriteLine(item.Name); }
+            List<string> permissionsToList = new List<string>();
+            foreach (var item in permissions) { permissionsToList.Add(item.Name); }
+            //List<string> list = permissions.ToList<string>();
+            HashSet<string> uniquePermissions = new HashSet<string>(permissionsToList);
             return uniquePermissions;
         }
     }

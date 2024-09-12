@@ -1,4 +1,5 @@
 ﻿using DigitalDepartment.Presentation.ActionFilters;
+using Entities.Models.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects.Users;
@@ -45,6 +46,9 @@ namespace DigitalDepartment.Presentation.Controllers
                 return Unauthorized();
             var tokenDto = await _service.AuthenticationService
                 .CreateToken(populateExp: true);
+
+     
+         //   var userPermissions = await _service.UserService.GetUserPermissions(userId);
             return Ok(tokenDto);
 
         }

@@ -4,18 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects.DocumentCategories;
 using Shared.RequestFeatures;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace DigitalDepartment.Presentation.Controllers
 {
 
     [Route("api/documentcategories")]
     [ApiController]
+  //  [Authorize]
     public class DocumentCategoriesController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -30,7 +26,7 @@ namespace DigitalDepartment.Presentation.Controllers
         /// <param name="documentCategoryParameters"></param>
         /// <returns>The document categories list</returns>
         [HttpGet]
-        [Authorize(Policy = "ReadDocumentStatuses")]
+        //    [Authorize(Policy = "ReadDocumentStatuses")]
         public async Task<IActionResult> GetDocumentCategories(
             [FromQuery] DocumentCategoryParameters documentCategoryParameters)
         {
@@ -43,7 +39,7 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
         [HttpGet("{id:int}", Name = "DocumentCategoryById")]
-        [Authorize(Policy = "CreateDocumentStatus")]
+        //   [Authorize(Policy = "CreateDocumentStatus")]
         public async Task<IActionResult> GetDocumentCategory(int id)
         {
             //new test comment 

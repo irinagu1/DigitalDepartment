@@ -8,7 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Service
+
+
 {
+    
     public sealed class UserService : IUserService
     {
         private readonly IRepositoryManager _repository;
