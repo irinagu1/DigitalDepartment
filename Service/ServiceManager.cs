@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Contracts.RepositoryCore;
 using Entities.ConfigurationModels;
-using Entities.Models;
+using Entities.Models.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -24,6 +24,7 @@ namespace Service
         private readonly Lazy<IDocumentService> _documentService;
         private readonly Lazy<ILetterService> _letterService;
         private readonly Lazy<IAuthenticationService> _authenticationService;
+        private readonly Lazy<IUserService> _userService;
 
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, ICheckerService checker, 
                               IFilesService filesService, UserManager<User> userManager,
@@ -40,6 +41,8 @@ namespace Service
             _authenticationService = new Lazy<IAuthenticationService>(() =>
                 new AuthenticationService(mapper, userManager,
                     configuration));
+            _userService = new Lazy<IUserService>(() =>
+                 new UserService(repositoryManager));
         }
 
         public IDocumentStatusService DocumentStatusService 
@@ -52,6 +55,8 @@ namespace Service
             => _letterService.Value;
         public IAuthenticationService AuthenticationService 
             => _authenticationService.Value;
+        public IUserService UserService
+            => _userService.Value;
 
     }
 }

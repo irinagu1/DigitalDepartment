@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DigitalDepartment.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialAgain : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,6 +35,8 @@ namespace DigitalDepartment.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SecondName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -95,6 +97,19 @@ namespace DigitalDepartment.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Letters", x => x.LetterId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Permissions",
+                columns: table => new
+                {
+                    PermissionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Permissions", x => x.PermissionId);
                 });
 
             migrationBuilder.CreateTable(
@@ -238,6 +253,39 @@ namespace DigitalDepartment.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PermissionRoles",
+                columns: table => new
+                {
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PermissionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PermissionRoles", x => new { x.RoleId, x.PermissionId });
+                    table.ForeignKey(
+                        name: "FK_PermissionRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PermissionRoles_Permissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "Permissions",
+                        principalColumn: "PermissionId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { "483d51a8-37f5-473c-a17a-0b0d175c1e7e", null, "Manager", "MANAGER" },
+                    { "9365b6ea-c516-4174-a231-43c5975bb099", null, "Administrator", "ADMINISTRATOR" }
+                });
+
             migrationBuilder.InsertData(
                 table: "DocumentCategories",
                 columns: new[] { "DocumentCategoryId", "Name", "isEnable" },
@@ -257,6 +305,29 @@ namespace DigitalDepartment.Migrations
                     { 2, "In process", true },
                     { 3, "Finished", true },
                     { 4, "Closed", true }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Permissions",
+                columns: new[] { "PermissionId", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Create" },
+                    { 2, "Read" },
+                    { 3, "Update" },
+                    { 4, "Delete" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "PermissionRoles",
+                columns: new[] { "PermissionId", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, "483d51a8-37f5-473c-a17a-0b0d175c1e7e" },
+                    { 2, "483d51a8-37f5-473c-a17a-0b0d175c1e7e" },
+                    { 1, "9365b6ea-c516-4174-a231-43c5975bb099" },
+                    { 2, "9365b6ea-c516-4174-a231-43c5975bb099" },
+                    { 3, "9365b6ea-c516-4174-a231-43c5975bb099" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -312,6 +383,11 @@ namespace DigitalDepartment.Migrations
                 name: "IX_Documents_LetterId",
                 table: "Documents",
                 column: "LetterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PermissionRoles_PermissionId",
+                table: "PermissionRoles",
+                column: "PermissionId");
         }
 
         /// <inheritdoc />
@@ -336,7 +412,7 @@ namespace DigitalDepartment.Migrations
                 name: "Documents");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "PermissionRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
@@ -349,6 +425,12 @@ namespace DigitalDepartment.Migrations
 
             migrationBuilder.DropTable(
                 name: "Letters");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Permissions");
         }
     }
 }

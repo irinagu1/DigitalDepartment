@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Models
+namespace Entities.Models.Auth
 {
     public class User : IdentityUser
     {
@@ -14,7 +14,8 @@ namespace Entities.Models
         public string LastName { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
-       
+
+        public virtual ICollection<UserRole>? UserRoles { get; set; }
         //должность
     }
 }

@@ -3,13 +3,15 @@ using Repository.Core;
 using Service.Contracts;
 using Service;
 using Microsoft.EntityFrameworkCore;
-using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Entities.ConfigurationModels;
 using Microsoft.OpenApi.Models;
+using Entities.Models.Auth;
+using Microsoft.AspNetCore.Authorization;
+using DigitalDepartment.Authorzation;
 
 namespace DigitalDepartment.Extensions
 {
@@ -54,7 +56,7 @@ namespace DigitalDepartment.Extensions
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            var builder = services.AddIdentity<User, IdentityRole>(o =>
+            var builder = services.AddIdentity<User, Role>(o =>
             {
                 o.Password.RequireDigit = true;
                 o.Password.RequireLowercase = false;
@@ -65,6 +67,7 @@ namespace DigitalDepartment.Extensions
             })
             .AddEntityFrameworkStores<RepositoryContext>()
             .AddDefaultTokenProviders();
+            
         }
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration
@@ -136,6 +139,27 @@ namespace DigitalDepartment.Extensions
                 });
             });
             
+        }
+
+        public static void ConfigureAuthorization(this IServiceCollection services)
+        {            
+            services.AddScoped<IUserService, UserService>();
+            services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
+            services.AddAuthorization(opt =>
+                {
+                    opt.AddPolicy("ReadDocumentStatuses", 
+                                  policy => policy.AddRequirements
+                                  (
+                                     new PermissionRequirement("ReadDocumentStatuses")
+                                  ));
+                    opt.AddPolicy("CreateDocumentStatus", 
+                                  policy => policy.AddRequirements
+                                  (
+                                      new PermissionRequirement("CreateDocumentStatus")
+                                  ));
+                }
+            );
         }
 
     }

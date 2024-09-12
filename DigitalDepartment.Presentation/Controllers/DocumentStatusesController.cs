@@ -15,7 +15,6 @@ namespace DigitalDepartment.Presentation.Controllers
 {
     [Route("api/documentstatuses")]
     [ApiController]
-    [Authorize(Roles = "Administrator")]
     public class DocumentStatusesController : ControllerBase
     {
         private readonly IServiceManager _service;
