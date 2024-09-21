@@ -27,11 +27,11 @@ namespace DigitalDepartment.Presentation.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateDocumentStatus([FromBody] LetterForCreationDto letterForCreationDto)
         {
-            
-            var createdDocumentStatus = await _service.DocumentStatusService.CreateDocumentStatusAsync(documentStatus);
+
+            //   var createdDocumentStatus = await _service.DocumentStatusService.CreateDocumentStatusAsync(documentStatus);
             //search this
-          //  return Ok()
-            return CreatedAtRoute("DocumentStatusById", new { id = createdDocumentStatus.Id }, createdDocumentStatus);
+            return Ok();
+           // return CreatedAtRoute("DocumentStatusById", new { id = createdDocumentStatus.Id }, createdDocumentStatus);
         }
     }
 }
