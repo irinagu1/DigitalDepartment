@@ -14,7 +14,7 @@ namespace DigitalDepartment.Presentation.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    [Authorize]
+   // [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -24,6 +24,15 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _service.UserService.GetAllUserForLetters();
+            return Ok(users);
+        }
+
+
+
+        [HttpGet("permissions")]
         public async Task<HashSet<string>> GetUserPermissions()
         {
             var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userId").Value.ToString();

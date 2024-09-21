@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace Contracts.Auth
 {
-    public interface IUserRepository
+    public interface IRoleRepository
     {
-        Task<HashSet<string>> GetUserPermissions(string userId);
-        Task<List<User>> GetAllUsers();
+        Task<List<Role>> GetAllRoles();
     }
 }

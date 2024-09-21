@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Shared.DataTransferObjects.DocumentCategories;
 using Shared.DataTransferObjects.Documents;
 using Shared.DataTransferObjects.DocumentStatuses;
+using Shared.DataTransferObjects.Roles;
 using Shared.DataTransferObjects.Users;
 
 namespace DigitalDepartment
@@ -29,6 +30,12 @@ namespace DigitalDepartment
             CreateMap<UserForRegistrationDto, User>();
 
             CreateMap<string, Role>().ForMember(dest => dest.Name, opt => opt.ToString());
+            
+            CreateMap<UserForLettersDto, User>();
+            CreateMap<User, UserForLettersDto>();
+
+            CreateMap<RolesForLettersDto, Role>();
+            CreateMap<Role, RolesForLettersDto>();
 
         }
     }

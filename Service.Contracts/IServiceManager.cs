@@ -15,6 +15,7 @@ namespace Service.Contracts
         ILetterService LetterService { get; }
         IAuthenticationService AuthenticationService { get; }
         IUserService UserService { get; }
+        IRoleService RoleService { get; }
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Contracts.DocsEntities;
 using Contracts.RepositoryCore;
+using Entities.Models;
 using Repository.Core;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,7 @@ namespace Repository.DocsEntities
         {
 
         }
+
+        public void CreateLetter(Letter letter) => Create(letter);
     }
 }

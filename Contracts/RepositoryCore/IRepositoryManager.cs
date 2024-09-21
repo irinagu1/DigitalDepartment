@@ -15,7 +15,10 @@ namespace Contracts.RepositoryCore
         IDocumentCategoryRepository DocumentCategory { get; }
         IDocumentStatusRepository DocumentStatus { get; }
 
+
+
         IUserRepository User { get; }
+        IRoleRepository Role { get; }
         Task SaveAsync();
     }
 }

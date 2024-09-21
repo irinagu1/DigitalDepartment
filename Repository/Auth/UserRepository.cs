@@ -18,6 +18,12 @@ namespace Repository.Auth
             _context = repositoryContext;
         }
 
+        public async Task<List<User>> GetAllUsers()
+        {
+            var users = await _context.Users.ToListAsync();
+            return users;
+        }
+
         public async Task<HashSet<string>> GetUserPermissions(string userId)
         {
             var permissions = from u in _context.Users
