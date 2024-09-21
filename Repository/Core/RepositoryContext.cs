@@ -83,5 +83,6 @@ namespace Repository.Core
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<PermissionRole> PermissionRoles {  get; set; }
         
+        
     }
 }
