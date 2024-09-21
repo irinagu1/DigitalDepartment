@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Service.Contracts;
 using Service.Contracts.DocsEntities;
 using Shared.DataTransferObjects.Documents;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,13 @@ namespace Service.DocsEntities
             _mapper = mapper;
             _checker = checker;
             _files = filesService;
+        }
+
+        public async Task<(IEnumerable<DocumentDto> documents, MetaData metaData)> GetAllDocumentsAsync(DocumentParameters documentParameters, bool trackChanges)
+        {
+            var docsWithMetaData = await _repository.Document.GetAllDocumentsAsync(documentParameters, trackChanges);
+            var docsDto = _mapper.Map<IEnumerable<DocumentDto>>(docsWithMetaData);
+            return (documents: docsDto, metaData: docsWithMetaData.MetaData);
         }
 
         public async Task<DocumentDto> CreateDocumentAsync(DocumentForCreationDto documentForCreationDto)
@@ -57,6 +65,19 @@ namespace Service.DocsEntities
             return documentToReturn;
         }
 
-   
+
+        public async Task<DocumentDto> GetDocumentByIdAsync(int id, bool trackChanges)
+        {
+            var document = await _repository.Document.GetDocumentAsync(id, trackChanges);
+            var documentDto = _mapper.Map<DocumentDto>(document);
+            return documentDto;
+        }
+
+        public async Task<DocumentDto> GetDocumentByPathAsync(string path, bool trackChanges)
+        {
+            var document = await _repository.Document.GetDocumentbyPathAsync(path, trackChanges);
+            var documentDto = _mapper.Map<DocumentDto>(document);
+            return documentDto;
+        }
     }
 }
