@@ -1,4 +1,5 @@
 ﻿using Entities.Models.Auth;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,7 +19,7 @@ namespace Entities.Models
 
         
         [ForeignKey(nameof(Document))]
-        public string DocumentId { get; set; }
+        public int? DocumentId { get; set; }
         public Document? Document { get; set; }
 
         public DateTime DateChecked { get; set; }
