@@ -12,6 +12,6 @@ namespace Service.Contracts
     {
         Task<DocumentStatus> GetDocumentStatusEntityAndCheckIfItExistsAsync(int id, bool trackChanges);
         Task<DocumentCategory> GetDocumentCategoryEntityAndCheckiIfItExistsAsync(int id, bool trackChanges);
-        Task CheckDocumentParameters(Document documentEntity, IFormFile file);
+        Task CheckDocumentParameters(Document documentEntity);
     }
 }

@@ -35,9 +35,11 @@ namespace DigitalDepartment.Presentation.Controllers
                     documentCategoryParameters, trackChanges: false);
             Response.Headers.Add("X-Pagination",
                 JsonSerializer.Serialize(pagedResult.metaData));
+            
             return Ok(pagedResult.documentCategories);
         }
 
+    
         [HttpGet("{id:int}", Name = "DocumentCategoryById")]
         //   [Authorize(Policy = "CreateDocumentStatus")]
         public async Task<IActionResult> GetDocumentCategory(int id)

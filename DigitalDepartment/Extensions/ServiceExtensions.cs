@@ -158,6 +158,11 @@ namespace DigitalDepartment.Extensions
                                   (
                                       new PermissionRequirement("CreateDocumentStatus")
                                   ));
+                    opt.AddPolicy("Create",
+                                 policy => policy.AddRequirements
+                                 (
+                                    new PermissionRequirement("Create")
+                                 ));
                 }
             );
         }

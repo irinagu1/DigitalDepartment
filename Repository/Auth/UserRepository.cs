@@ -24,6 +24,23 @@ namespace Repository.Auth
             return users;
         }
 
+        public async Task<HashSet<string>> GetUserRolesIds(string userId)
+        {
+            var rolesIds = from r in _context.Roles
+                           join ur in _context.UserRoles on r.Id equals ur.RoleId
+                           join u in _context.Users on ur.UserId equals u.Id
+                           where u.Id == userId
+                           select new
+                           {
+                               r.Id
+                           };
+            List<string> rolesToList = new List<string>();
+            foreach (var item in rolesIds) { rolesToList.Add(item.Id); }
+            //List<string> list = permissions.ToList<string>();
+            HashSet<string> uniqueRoles = new HashSet<string>(rolesToList);
+            return uniqueRoles;
+        }
+
         public async Task<HashSet<string>> GetUserPermissions(string userId)
         {
             var permissions = from u in _context.Users

@@ -45,10 +45,8 @@ namespace Service
 
 
 
-        public async Task CheckDocumentParameters(Entities.Models.Document documentEntity, IFormFile file)
+        public async Task CheckDocumentParameters(Entities.Models.Document documentEntity)
         {
-            if(file is null) 
-                throw new ArgumentNullException("File is empty");
             await GetDocumentStatusEntityAndCheckIfItExistsAsync(documentEntity.DocumentStatusId, false);
             await GetDocumentCategoryEntityAndCheckiIfItExistsAsync(documentEntity.DocumentCategoryId, false);
             await CheckPathOriginalityAndEmpty(documentEntity.Path, false);

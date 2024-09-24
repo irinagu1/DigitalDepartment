@@ -8,9 +8,10 @@ namespace Shared.DataTransferObjects.Letters
 {
     public class LetterDto
     {
-        public int Id { get; init; }
+        public string Id { get; set; }
         
-        public string? Text {  get; init; }
+        public string? Text {  get; set; }
+        public string? AuthorId { get; set; }
 
         public DateTime? CreationDate { get; set; }
 

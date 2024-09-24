@@ -8,6 +8,7 @@ using Shared.DataTransferObjects.Documents;
 using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -30,6 +31,69 @@ namespace Service.DocsEntities
             _files = filesService;
         }
 
+        public async Task<(IEnumerable<DocumentForShowDto> documents, MetaData metaData)>
+            GetDocumentsForShowAsync(string userId, DocumentParameters documentParameters, bool trackChanges)
+        {
+            bool toCheck = true;
+            if (documentParameters.WhatType == "Для просмотра") toCheck = false;
+
+            var document = new PagedList<Entities.Models.Document>();
+            if (documentParameters.ForWho == "Общие")
+            {
+                HashSet<string> uniqueRoles = await _repository.User.GetUserRolesIds(userId);
+                document = await _repository.Document.GetAllDocumentsForRolesAsync
+                    (uniqueRoles, toCheck, documentParameters, trackChanges);
+               
+            }
+            else if (documentParameters.ForWho == "Лично мне")
+            {
+                document = await _repository.Document.GetAllDocumentsForUserAsync
+                    (userId, toCheck, documentParameters, trackChanges);
+            }
+
+            var documentsDto = _mapper.Map<IEnumerable<DocumentDto>>(document);
+            var allDocsWithParams = await GetAllDocumentsWithParametersNamesAsync
+                (documents: documentsDto, metaData: document.MetaData);
+
+            return (allDocsWithParams.documents, allDocsWithParams.metaData);
+        }
+
+        public async Task<(IEnumerable<DocumentForShowDto> documents, MetaData metaData)> 
+            GetAllDocumentsWithParametersNamesAsync
+            (IEnumerable<DocumentDto> documents, MetaData metaData)
+        {
+            List<DocumentForShowDto> documentsForShowDto = new List<DocumentForShowDto>();   
+            foreach(var doc in documents)
+            {
+                var docCat = await _repository.DocumentCategory.GetDocumentCategoryAsync(doc.DocumentCategoryId, false);
+                var docStat = await _repository.DocumentStatus.GetDocumentStatusAsync(doc.DocumentStatusId, false);
+                var letter = await GetLetterById(doc.LetterId);
+                //var creationdate
+                //var is signed
+                var newDocForShowDto = new DocumentForShowDto() { Id = doc.Id,
+                    Name = doc.Name,
+                    DocumentCategoryId = doc.DocumentCategoryId,
+                    DocumentCategoryName = docCat.Name,
+                    DocumentStatusId = doc.DocumentStatusId,
+                    DocumentStatusName = docStat.Name,
+                    isArchived = doc.isArchived,
+                    LetterId = doc.LetterId,
+                    DateCreation = letter.CreationDate.Value,
+
+                };
+                documentsForShowDto.Add(newDocForShowDto);
+            }
+
+            return (documents: documentsForShowDto, metaData);
+        }
+
+        private async Task<Letter> GetLetterById(int id)
+        {
+            var letter = await _repository.Letter.GetLetterById(id);
+            return letter;
+        }
+
+
         public async Task<(IEnumerable<DocumentDto> documents, MetaData metaData)> GetAllDocumentsAsync(DocumentParameters documentParameters, bool trackChanges)
         {
             var docsWithMetaData = await _repository.Document.GetAllDocumentsAsync(documentParameters, trackChanges);
@@ -39,30 +103,37 @@ namespace Service.DocsEntities
 
         public async Task<DocumentDto> CreateDocumentAsync(DocumentForCreationDto documentForCreationDto)
         {
+            documentForCreationDto.Path = "D:\\CoreFiles" + "\\" + documentForCreationDto.Name;
+            
             //мапим в ентити
             var documentEntity = _mapper.Map<Entities.Models.Document>(documentForCreationDto);
             //проверка существования категории, статуса, письма, что имя, файл, не пусто!! 
-            await _checker.CheckDocumentParameters(documentEntity, documentForCreationDto.File);
+            await _checker.CheckDocumentParameters(documentEntity);
             //название категории
             var category = await _checker.GetDocumentCategoryEntityAndCheckiIfItExistsAsync(documentEntity.DocumentCategoryId, false);
-            //создаем путь по которому положим файл
-            var path =  _files.CheckIfDirectoryExistsAndCreateIfNot(documentEntity, category.Name);
-            //путь + имя файла
-            documentEntity.Path = path + documentForCreationDto.File.FileName;
-            try 
-            {
-                //кладем на диск
-                 await _files.StoreDocumentInFileSystem(documentForCreationDto.File, path);
-                //создаем запись в базе данных
-                _repository.Document.CreateDocument(documentEntity);
-            }
-            catch(Exception e) 
-            {
-                throw new Exception("Cannot store doc or create in db");
-            }
+
+            _repository.Document.CreateDocument(documentEntity);
             await _repository.SaveAsync();
             var documentToReturn = _mapper.Map<DocumentDto>(documentEntity);
             return documentToReturn;
+
+            //создаем путь по которому положим файл
+            /* var path =  _files.CheckIfDirectoryExistsAndCreateIfNot(documentEntity, category.Name);
+             //путь + имя файла
+             documentEntity.Path = path + documentForCreationDto.File.FileName;
+             try 
+             {
+                 //кладем на диск
+                  await _files.StoreDocumentInFileSystem(documentForCreationDto.File, path);
+                 //создаем запись в базе данных
+                 _repository.Document.CreateDocument(documentEntity);
+             }
+             catch(Exception e) 
+             {
+                 throw new Exception("Cannot store doc or create in db");
+             }
+             await _repository.SaveAsync();*/
+
         }
 
 

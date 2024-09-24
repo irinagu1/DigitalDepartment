@@ -79,6 +79,8 @@ namespace Repository.Core
         public DbSet<DocumentStatus>? DocumentStatuses { get; set; }
         public DbSet<Document>? Documents { get; set; }
         public DbSet<Letter> Letters { get; set; }
+        public DbSet<Recipient> Recipients { get; set; }
+        public DbSet<ToCheck> ToChecks  { get; set; }
         public DbSet<Role> Roles {  get; set; }
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<PermissionRole> PermissionRoles {  get; set; }

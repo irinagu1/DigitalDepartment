@@ -6,6 +6,7 @@ using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,11 +14,11 @@ namespace Repository.DocsEntities
 {
     public class DocumentRepository : RepositoryBase<Document>, IDocumentRepository
     {
+        private RepositoryContext _repositoryContext;
         public DocumentRepository(RepositoryContext repositoryContext) : base(repositoryContext)
         {
-
+            _repositoryContext = repositoryContext;
         }
-
         public async Task<PagedList<Document>> GetAllDocumentsAsync(DocumentParameters documentParameters, bool trackChanges)
         {
             var documents = await FindAll(trackChanges)
@@ -32,6 +33,61 @@ namespace Repository.DocsEntities
                                                 documentParameters.PageNumber,
                                                 documentParameters.PageSize);
         }
+
+        public async Task<PagedList<Document>> GetAllDocumentsForUserAsync
+            (string userId, bool toCheck, DocumentParameters documentParameters, bool trackChanges)
+        {
+            var documents = from d in _repositoryContext.Documents
+                            join l in _repositoryContext.Letters on d.LetterId equals l.Id
+                            join r in _repositoryContext.Recipients on l.Id equals r.LetterId
+                            where r.Type == "user"
+                                  && r.TypeId == userId
+                                  && r.ToCheck == toCheck
+                            select new
+                            {
+                                d
+                            };
+            var count = await documents.CountAsync();
+            documents = documents.Skip((documentParameters.PageNumber - 1) * documentParameters.PageSize)
+                                      .Take(documentParameters.PageSize);
+            List<Document> documentsToList = new List<Document>();
+            foreach (var item in documents)
+            {
+                documentsToList.Add(item.d);
+            }
+            return new PagedList<Document>(documentsToList,
+                                             count,
+                                             documentParameters.PageNumber,
+                                             documentParameters.PageSize);
+        }
+
+        public async Task<PagedList<Document>> GetAllDocumentsForRolesAsync
+           (HashSet<string> rolesIds, bool toCheck, DocumentParameters documentParameters, bool trackChanges)
+        {
+            var documents = from d in _repositoryContext.Documents
+                            join l in _repositoryContext.Letters on d.LetterId equals l.Id
+                            join r in _repositoryContext.Recipients on l.Id equals r.LetterId
+                            where r.Type == "role"
+                                  && rolesIds.Contains(r.TypeId)
+                                  && r.ToCheck == toCheck
+                            select new
+                            {
+                                d
+                            };
+            var count = await documents.CountAsync();
+            documents = documents.Skip((documentParameters.PageNumber - 1) * documentParameters.PageSize)
+                          .Take(documentParameters.PageSize);
+            List<Document> documentsToList = new List<Document>();
+            foreach (var item in documents)
+            {
+                documentsToList.Add(item.d);
+            }
+            return new PagedList<Document>(documentsToList,
+                                 count,
+                                 documentParameters.PageNumber,
+                                 documentParameters.PageSize);
+        }
+
 
         public void CreateDocument(Document document) => Create(document);
 

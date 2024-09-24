@@ -11,5 +11,6 @@ namespace Contracts.Auth
     {
         Task<HashSet<string>> GetUserPermissions(string userId);
         Task<List<User>> GetAllUsers();
+        Task<HashSet<string>> GetUserRolesIds(string userId);
     }
 }

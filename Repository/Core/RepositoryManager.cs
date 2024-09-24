@@ -5,6 +5,7 @@ using Repository.DocsEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,6 +19,8 @@ namespace Repository.Core
         private readonly Lazy<IDocumentStatusRepository> _documentStatusRepository;
         private readonly Lazy<IDocumentRepository> _documentRepository;
         private readonly Lazy<ILetterRepository> _letterRepository;
+        private readonly Lazy<IRecipientRepository> _recipientRepository;
+        private readonly Lazy<IToCheckRepository> _toCheckRepository;
 
         private readonly Lazy<IUserRepository> _userRepository;
         private readonly Lazy<IRoleRepository> _roleRepository;
@@ -37,10 +40,19 @@ namespace Repository.Core
 
             _letterRepository = new Lazy<ILetterRepository>(() 
             => new LetterRepository(repositoryContext));
+
+            _recipientRepository = new Lazy<IRecipientRepository>(() =>
+            new RecipientRepository(repositoryContext));
+
+            _toCheckRepository = new Lazy<IToCheckRepository>(() =>
+            new ToCheckRepository(repositoryContext));
+
             _userRepository = new Lazy<IUserRepository>(() 
                 => new Auth.UserRepository(repositoryContext));
+
             _roleRepository = new Lazy<IRoleRepository>(() 
                 => new Auth.RoleRepository(repositoryContext));
+
         }
 
         public IDocumentCategoryRepository DocumentCategory =>
@@ -49,6 +61,7 @@ namespace Repository.Core
             _documentStatusRepository.Value;
         public IDocumentRepository Document => _documentRepository.Value;
         public ILetterRepository Letter => _letterRepository.Value;
+        public IRecipientRepository Recipient => _recipientRepository.Value;
         public IUserRepository User => _userRepository.Value;
         public IRoleRepository Role => _roleRepository.Value;
         public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();

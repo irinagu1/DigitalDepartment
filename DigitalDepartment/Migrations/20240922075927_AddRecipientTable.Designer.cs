@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Core;
 
@@ -11,9 +12,11 @@ using Repository.Core;
 namespace DigitalDepartment.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20240922075927_AddRecipientTable")]
+    partial class AddRecipientTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permissions", (string)null);
+                    b.ToTable("Permissions");
 
                     b.HasData(
                         new
@@ -73,7 +76,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.ToTable("PermissionRoles", (string)null);
+                    b.ToTable("PermissionRoles");
 
                     b.HasData(
                         new
@@ -276,7 +279,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("LetterId");
 
-                    b.ToTable("Documents", (string)null);
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("Entities.Models.DocumentCategory", b =>
@@ -298,7 +301,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DocumentCategories", (string)null);
+                    b.ToTable("DocumentCategories");
 
                     b.HasData(
                         new
@@ -340,7 +343,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DocumentStatuses", (string)null);
+                    b.ToTable("DocumentStatuses");
 
                     b.HasData(
                         new
@@ -392,7 +395,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Letters", (string)null);
+                    b.ToTable("Letters");
                 });
 
             modelBuilder.Entity("Entities.Models.Recipient", b =>
@@ -422,7 +425,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("LetterId");
 
-                    b.ToTable("Recipients", (string)null);
+                    b.ToTable("Recipients");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

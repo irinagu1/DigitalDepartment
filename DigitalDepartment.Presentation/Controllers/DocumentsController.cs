@@ -1,4 +1,5 @@
 ﻿using DigitalDepartment.Presentation.ActionFilters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects.DocumentCategories;
@@ -15,6 +16,7 @@ namespace DigitalDepartment.Presentation.Controllers
 {
     [Route("api/documents")]
     [ApiController]
+    [Authorize]
     public class DocumentsController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -29,6 +31,51 @@ namespace DigitalDepartment.Presentation.Controllers
             chunkSize = 1048576 * 3;
             tempFolder = "D:\\CoreFiles";
             _responseData = new ResponseContext();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetDocuments(
+         [FromQuery] DocumentParameters documentParameters)
+        {
+            var pagedResult = await
+                _service.DocumentService.GetAllDocumentsAsync(
+                    documentParameters, trackChanges: false);
+            Response.Headers.Add("X-Pagination",
+                JsonSerializer.Serialize(pagedResult.metaData));
+            return Ok(pagedResult.documents);
+        }
+
+        [HttpGet("ForShow")]
+        [Authorize(Policy = "Create")]
+        public async Task<IActionResult> GetDocumentsForShow(
+        [FromQuery] DocumentParameters documentParameters)
+        {
+          //  if (!HttpContext.User.Identity.IsAuthenticated) throw new Exception("no user");
+            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userId").Value.ToString();
+            
+            var pagedResult = await
+                _service.DocumentService.GetDocumentsForShowAsync(userId,
+                    documentParameters, false);
+            Response.Headers.Add("X-Pagination",
+                JsonSerializer.Serialize(pagedResult.metaData));
+            return Ok(pagedResult.documents);
+        }
+
+        [HttpPost("CreateDocument")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> CreateDocument([FromBody] DocumentForCreationDto document)
+        {
+
+            var createdDocument = await _service.DocumentService.CreateDocumentAsync(document);
+            return Ok(createdDocument.Id);
+
+            //   return CreatedAtRoute("DocumentById", new { id = createdDocument.Id, createdDocument });
+
+
+            //  var createdDocumentCategory = await _service.DocumentCategoryService.CreateDocumentCategoryAsync(documentCategory);
+            //search this
+            //   return CreatedAtRoute("DocumentCategoryById", new { id = createdDocumentCategory.Id }, createdDocumentCategory);
+
         }
 
         [HttpPost("UploadChunks")]
@@ -103,32 +150,6 @@ namespace DigitalDepartment.Presentation.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetDocuments(
-            [FromQuery] DocumentParameters documentParameters)
-        {
-            var pagedResult = await
-                _service.DocumentService.GetAllDocumentsAsync(
-                    documentParameters, trackChanges: false);
-            Response.Headers.Add("X-Pagination",
-                JsonSerializer.Serialize(pagedResult.metaData));
-            return Ok(pagedResult.documents);
-        }
-
-        //create
-        /*[HttpPost(Name = "CreateDocument")]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> CreateDocument([FromForm] DocumentForCreationDto document)
-        {
-            var createdDocument = await _service.DocumentService.CreateDocumentAsync(document);
-            return CreatedAtRoute("DocumentById", new { id = createdDocument.Id, createdDocument });
-        }
-
-            //  var createdDocumentCategory = await _service.DocumentCategoryService.CreateDocumentCategoryAsync(documentCategory);
-            //search this
-            //   return CreatedAtRoute("DocumentCategoryById", new { id = createdDocumentCategory.Id }, createdDocumentCategory);
-            return Ok(createdDocument.Id);
-        }*/
 
 
 

@@ -15,7 +15,12 @@ namespace Contracts.DocsEntities
         //get one
         Task<Document> GetDocumentAsync(int id, bool trackChanges);
         Task<Document> GetDocumentbyPathAsync(string path, bool trackChanges);
-        //create one
+
+        Task<PagedList<Document>> GetAllDocumentsForUserAsync
+             (string userId, bool toCheck, DocumentParameters documentParameters, bool trackChanges);
+        Task<PagedList<Document>> GetAllDocumentsForRolesAsync
+             (HashSet<string> rolesIds, bool toCheck, DocumentParameters documentParameters, bool trackChanges);
+
         void CreateDocument(Document document);
 
         //create collection

@@ -8,7 +8,7 @@ namespace Shared.DataTransferObjects.Users
 {
     public record UserForLettersDto
     {
-        public string? UserId { get; init; }
+        public string? Id { get; init; }
         public string? UserName { get; init; }
     }
 }

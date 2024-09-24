@@ -17,6 +17,14 @@ namespace Service.Contracts.DocsEntities
                DocumentParameters documentParameters,
                bool trackChanges);
 
+
+        Task<(IEnumerable<DocumentForShowDto> documents, MetaData metaData)>
+            GetDocumentsForShowAsync(string userId, DocumentParameters documentParameters, bool trackChanges);
+
+        Task<(IEnumerable<DocumentForShowDto> documents, MetaData metaData)>
+            GetAllDocumentsWithParametersNamesAsync(IEnumerable<DocumentDto> documents, MetaData metaData);
+
+
         Task<DocumentDto> GetDocumentByPathAsync(string path, bool trackChanges);
         Task<DocumentDto> GetDocumentByIdAsync(int id, bool trackChanges);
 

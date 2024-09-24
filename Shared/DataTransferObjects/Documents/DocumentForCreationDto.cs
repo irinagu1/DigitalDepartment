@@ -10,8 +10,7 @@ namespace Shared.DataTransferObjects.Documents
 {
     public record DocumentForCreationDto : DocumentForManipulationDto
     {
-        [Required(ErrorMessage = "Please add a file")]
-        public IFormFile? File { get; init; }
+        
 
     }
 }

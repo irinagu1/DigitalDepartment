@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects.DocumentStatuses;
 using Shared.DataTransferObjects.Letters;
+using Shared.DataTransferObjects.Recipients;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,11 +28,30 @@ namespace DigitalDepartment.Presentation.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateDocumentStatus([FromBody] LetterForCreationDto letterForCreationDto)
         {
+            var createdLetter = await _service.LetterService.CreateLetterAsync(letterForCreationDto);
+            return Ok(createdLetter.Id);
 
             //   var createdDocumentStatus = await _service.DocumentStatusService.CreateDocumentStatusAsync(documentStatus);
             //search this
-            return Ok();
+//            return Ok();
            // return CreatedAtRoute("DocumentStatusById", new { id = createdDocumentStatus.Id }, createdDocumentStatus);
         }
+        
+
+        [HttpPost("StoreRecipients")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> StoreRecipients([FromBody] RecipientsForCreationDto recipientsForCreation)
+        {
+            var createdRecipients = await _service.LetterService.StoreRecipients(recipientsForCreation);
+            return Ok("success");
+
+            //   var createdDocumentStatus = await _service.DocumentStatusService.CreateDocumentStatusAsync(documentStatus);
+            //search this
+            //            return Ok();
+            // return CreatedAtRoute("DocumentStatusById", new { id = createdDocumentStatus.Id }, createdDocumentStatus);
+        }
+
+
+
     }
 }

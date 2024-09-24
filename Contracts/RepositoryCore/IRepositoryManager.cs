@@ -12,8 +12,10 @@ namespace Contracts.RepositoryCore
     {
         ILetterRepository Letter { get; }
         IDocumentRepository Document { get; }
+        IRecipientRepository Recipient { get; }
         IDocumentCategoryRepository DocumentCategory { get; }
         IDocumentStatusRepository DocumentStatus { get; }
+
 
 
 

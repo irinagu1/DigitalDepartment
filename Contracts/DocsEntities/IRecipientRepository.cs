@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace Contracts.DocsEntities
 {
-    public interface ILetterRepository
+    public interface IRecipientRepository
     {
-        Task<Letter> GetLetterById(int id);
-        Task<Letter> GetLetterByDocumentId(int documentId); 
-        void CreateLetter(Letter letter);
-
+        void CreateRecipient(Recipient recipient);
     }
 }
