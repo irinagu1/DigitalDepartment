@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Core;
 
@@ -11,9 +12,11 @@ using Repository.Core;
 namespace DigitalDepartment.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20240926165827_AddIsArchivedColumnToDocuments")]
+    partial class AddIsArchivedColumnToDocuments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,10 +34,6 @@ namespace DigitalDepartment.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -46,25 +45,21 @@ namespace DigitalDepartment.Migrations
                         new
                         {
                             Id = 1,
-                            Category = "",
                             Name = "Create"
                         },
                         new
                         {
                             Id = 2,
-                            Category = "",
                             Name = "Read"
                         },
                         new
                         {
                             Id = 3,
-                            Category = "",
                             Name = "Update"
                         },
                         new
                         {
                             Id = 4,
-                            Category = "",
                             Name = "Delete"
                         });
                 });
@@ -120,9 +115,6 @@ namespace DigitalDepartment.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActived")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -144,14 +136,12 @@ namespace DigitalDepartment.Migrations
                         new
                         {
                             Id = "483d51a8-37f5-473c-a17a-0b0d175c1e7e",
-                            IsActived = false,
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
                             Id = "9365b6ea-c516-4174-a231-43c5975bb099",
-                            IsActived = false,
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });

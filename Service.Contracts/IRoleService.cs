@@ -1,4 +1,5 @@
 ﻿using Shared.DataTransferObjects.Roles;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,10 @@ namespace Service.Contracts
     public interface IRoleService
     {
         Task<List<RolesForLettersDto>> GetAllRolesForLetters();
+        Task<List<RolesDto>> GetRolesWithParameters(RolesParameters parameters);
+        RolesDto GetRoleById(string roleId);
+        RolesDto CreateRole(InfoForCreationDto infoForCreationDto);
+        RolesDto UpdateRole(string roleId, InfoForCreationDto infoForCreationDto);
+        bool UpdateRole(string roleId);
     }
 }

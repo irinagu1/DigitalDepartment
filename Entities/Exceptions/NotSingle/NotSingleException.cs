@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Exceptions
+namespace Entities.Exceptions.NotSingle
 {
-    public abstract class NotFoundException : Exception
+    public abstract class NotSingleException : Exception
     {
-        protected NotFoundException(string message)
+        protected NotSingleException(string message)
         : base(message)
         { }
     }

@@ -40,7 +40,8 @@ namespace Repository.DocsEntities
             var documents = from d in _repositoryContext.Documents
                             join l in _repositoryContext.Letters on d.LetterId equals l.Id
                             join r in _repositoryContext.Recipients on l.Id equals r.LetterId
-                            where r.Type == "user"
+                            where d.isArchived == false
+                                  && r.Type == "user"
                                   && r.TypeId == userId
                                   && r.ToCheck == toCheck
                             select new
@@ -67,7 +68,8 @@ namespace Repository.DocsEntities
             var documents = from d in _repositoryContext.Documents
                             join l in _repositoryContext.Letters on d.LetterId equals l.Id
                             join r in _repositoryContext.Recipients on l.Id equals r.LetterId
-                            where r.Type == "role"
+                            where d.isArchived == false
+                                  && r.Type == "role"
                                   && rolesIds.Contains(r.TypeId)
                                   && r.ToCheck == toCheck
                             select new
@@ -90,11 +92,16 @@ namespace Repository.DocsEntities
 
 
         public void CreateDocument(Document document) => Create(document);
+        public void UpdateDocument(Document document) => Update(document);
 
         public Task<Document> GetDocumentAsync(int id, bool trackChanges) =>
             FindByCondition(d => d.Id == id, trackChanges).FirstOrDefaultAsync();
+        public Document GetDocument(int id, bool trackChanges) =>
+          FindByCondition(d => d.Id == id, trackChanges).FirstOrDefault();
 
         public Task<Document> GetDocumentbyPathAsync(string path, bool trackChanges) =>
             FindByCondition(d => d.Path == path, trackChanges).SingleOrDefaultAsync();
+
+       
     }
 }

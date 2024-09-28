@@ -13,6 +13,7 @@ namespace Entities.Models.Auth
         public virtual ICollection<UserRole>? UserRoles { get; set; }
 
         public virtual ICollection<PermissionRole>? PermissionRoles { get; set; }
+        public bool IsActived { get; set; }
       
     }
 }

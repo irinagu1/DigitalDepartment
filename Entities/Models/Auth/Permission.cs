@@ -12,6 +12,7 @@ namespace Entities.Models.Auth
         [Column("PermissionId")]
         public int Id { get; set; }
         public string? Name { get; set; }
+        public string Category { get; set; } = "";
         public virtual ICollection<PermissionRole>? PermissionRoles { get; set; }
     }
 }

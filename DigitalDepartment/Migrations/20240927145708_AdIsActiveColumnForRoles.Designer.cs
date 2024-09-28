@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Core;
 
@@ -11,9 +12,11 @@ using Repository.Core;
 namespace DigitalDepartment.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20240927145708_AdIsActiveColumnForRoles")]
+    partial class AdIsActiveColumnForRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,10 +34,6 @@ namespace DigitalDepartment.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -46,25 +45,21 @@ namespace DigitalDepartment.Migrations
                         new
                         {
                             Id = 1,
-                            Category = "",
                             Name = "Create"
                         },
                         new
                         {
                             Id = 2,
-                            Category = "",
                             Name = "Read"
                         },
                         new
                         {
                             Id = 3,
-                            Category = "",
                             Name = "Update"
                         },
                         new
                         {
                             Id = 4,
-                            Category = "",
                             Name = "Delete"
                         });
                 });

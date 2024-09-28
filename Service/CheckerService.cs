@@ -1,5 +1,7 @@
 ﻿using Contracts.RepositoryCore;
 using Entities.Exceptions;
+using Entities.Exceptions.NotFound;
+using Entities.Exceptions.NotSingle;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Service.Contracts;

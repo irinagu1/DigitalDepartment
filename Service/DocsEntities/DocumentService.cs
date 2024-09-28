@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Contracts.RepositoryCore;
+using Entities.Exceptions;
+using Entities.Exceptions.NotFound;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Service.Contracts;
@@ -53,14 +55,14 @@ namespace Service.DocsEntities
 
             var documentsDto = _mapper.Map<IEnumerable<DocumentDto>>(document);
             var allDocsWithParams = await GetAllDocumentsWithParametersNamesAsync
-                (documents: documentsDto, metaData: document.MetaData);
+                (documents: documentsDto, metaData: document.MetaData, userId: userId);
 
             return (allDocsWithParams.documents, allDocsWithParams.metaData);
         }
 
         public async Task<(IEnumerable<DocumentForShowDto> documents, MetaData metaData)> 
             GetAllDocumentsWithParametersNamesAsync
-            (IEnumerable<DocumentDto> documents, MetaData metaData)
+            (IEnumerable<DocumentDto> documents, MetaData metaData, string userId)
         {
             List<DocumentForShowDto> documentsForShowDto = new List<DocumentForShowDto>();   
             foreach(var doc in documents)
@@ -68,9 +70,12 @@ namespace Service.DocsEntities
                 var docCat = await _repository.DocumentCategory.GetDocumentCategoryAsync(doc.DocumentCategoryId, false);
                 var docStat = await _repository.DocumentStatus.GetDocumentStatusAsync(doc.DocumentStatusId, false);
                 var letter = await GetLetterById(doc.LetterId);
+                var isSigned = await GetToCheckByUserAndDocumentId(userId, doc.Id);
                 //var creationdate
                 //var is signed
-                var newDocForShowDto = new DocumentForShowDto() { Id = doc.Id,
+                var newDocForShowDto = new DocumentForShowDto()
+                {
+                    Id = doc.Id,
                     Name = doc.Name,
                     DocumentCategoryId = doc.DocumentCategoryId,
                     DocumentCategoryName = docCat.Name,
@@ -79,7 +84,8 @@ namespace Service.DocsEntities
                     isArchived = doc.isArchived,
                     LetterId = doc.LetterId,
                     DateCreation = letter.CreationDate.Value,
-
+                    isSigned = isSigned != null ? true : false,
+                    DateSigned = isSigned != null ? isSigned.DateChecked : null
                 };
                 documentsForShowDto.Add(newDocForShowDto);
             }
@@ -93,6 +99,11 @@ namespace Service.DocsEntities
             return letter;
         }
 
+        private async Task<ToCheck> GetToCheckByUserAndDocumentId(string userId, int documentId)
+        {
+            var isSigned = await _repository.ToCheck.GetToCheckByUserAndDocumentIds(userId, documentId);
+            return isSigned;
+        }
 
         public async Task<(IEnumerable<DocumentDto> documents, MetaData metaData)> GetAllDocumentsAsync(DocumentParameters documentParameters, bool trackChanges)
         {
@@ -150,5 +161,34 @@ namespace Service.DocsEntities
             var documentDto = _mapper.Map<DocumentDto>(document);
             return documentDto;
         }
+
+        public DocumentDto ArchiveDocument(int id)
+        {
+            var document = _repository.Document.GetDocument(id, false);
+            if (document is null)
+                throw  new DocumentNotFoundException(id);
+            document.isArchived = !document.isArchived;
+            _repository.Document.UpdateDocument(document);
+            _repository.Save();
+            var documentDto = _mapper.Map<DocumentDto>(document);
+            return documentDto;
+        }
+
+        public DocumentDto UpdateDocument(DocumentForUpdateDto documentForUpdateDto)
+        {
+            var documentEntity = _repository.Document.GetDocument(documentForUpdateDto.Id, false);
+            if (documentForUpdateDto.DocumentStatusId is not null)
+            {
+                documentEntity.DocumentStatusId = documentForUpdateDto.DocumentStatusId.Value;
+            }
+            if(documentForUpdateDto.DocumentCategoryId is not null)
+                documentEntity.DocumentCategoryId = documentForUpdateDto.DocumentCategoryId.Value;
+            _repository.Document.UpdateDocument(documentEntity);
+            _repository.Save();
+
+            return _mapper.Map<DocumentDto>(documentEntity);
+        }
+
+
     }
 }

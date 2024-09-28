@@ -24,6 +24,8 @@ namespace Repository.Core
 
         private readonly Lazy<IUserRepository> _userRepository;
         private readonly Lazy<IRoleRepository> _roleRepository;
+        private readonly Lazy<IPermissionRepository> _permissionRepository;
+        private readonly Lazy<IPermissionRoleRepository> _permissionRoleRepository;
 
         public RepositoryManager(RepositoryContext repositoryContext)
         {
@@ -52,7 +54,11 @@ namespace Repository.Core
 
             _roleRepository = new Lazy<IRoleRepository>(() 
                 => new Auth.RoleRepository(repositoryContext));
+            _permissionRepository = new Lazy<IPermissionRepository>(()=> 
+            new Auth.PermissionRepository(repositoryContext));
 
+            _permissionRoleRepository = new Lazy<IPermissionRoleRepository>(()=>
+            new Auth.PermissionRoleRepository(repositoryContext));
         }
 
         public IDocumentCategoryRepository DocumentCategory =>
@@ -64,7 +70,11 @@ namespace Repository.Core
         public IRecipientRepository Recipient => _recipientRepository.Value;
         public IUserRepository User => _userRepository.Value;
         public IRoleRepository Role => _roleRepository.Value;
+        public IToCheckRepository ToCheck => _toCheckRepository.Value;
+        public IPermissionRepository Permission => _permissionRepository.Value;
+        public IPermissionRoleRepository PermissionRole => _permissionRoleRepository.Value;
         public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
+        public void Save() => _repositoryContext.SaveChanges();
 
     }
 

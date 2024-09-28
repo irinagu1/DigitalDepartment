@@ -26,6 +26,8 @@ namespace Service
         private readonly Lazy<IAuthenticationService> _authenticationService;
         private readonly Lazy<IUserService> _userService;
         private readonly Lazy<IRoleService> _roleService;
+        private readonly Lazy<IToCheckService> _toCheckService;
+        private readonly Lazy<IPermissionService> _permissionService;
         public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, ICheckerService checker, 
                               IFilesService filesService, UserManager<User> userManager,
                              IConfiguration configuration)
@@ -45,6 +47,10 @@ namespace Service
                  new UserService(repositoryManager, mapper));
             _roleService = new Lazy<IRoleService>(() =>
                 new RoleService(repositoryManager, mapper));
+            _toCheckService = new Lazy<IToCheckService>(()=> 
+                new ToCheckService(repositoryManager, mapper));
+            _permissionService = new Lazy<IPermissionService>(()=> 
+            new PermissionService(repositoryManager, mapper));
         }
 
         public IDocumentStatusService DocumentStatusService 
@@ -61,6 +67,10 @@ namespace Service
             => _userService.Value;
         public IRoleService RoleService
             => _roleService.Value;
+        public IToCheckService ToCheckService
+            => _toCheckService.Value;
+        public IPermissionService PermissionService
+            => _permissionService.Value;
 
     }
 }

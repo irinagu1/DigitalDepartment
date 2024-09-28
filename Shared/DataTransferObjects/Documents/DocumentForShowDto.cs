@@ -23,6 +23,8 @@ namespace Shared.DataTransferObjects.Documents
         public bool isArchived { get; set; }
 
         public DateTime DateCreation { get; set; }
+
         public bool isSigned { get; set; }
+        public DateTime? DateSigned { get; set; }
     }
 }

@@ -16,6 +16,8 @@ namespace Service.Contracts
         IAuthenticationService AuthenticationService { get; }
         IUserService UserService { get; }
         IRoleService RoleService { get; }
+        IPermissionService PermissionService { get; }
+        IToCheckService ToCheckService { get; }
 
     }
 }

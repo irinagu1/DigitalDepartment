@@ -1,7 +1,10 @@
 ﻿using Contracts.Auth;
+using Entities.Exceptions.NotFound;
+using Entities.Models;
 using Entities.Models.Auth;
 using Microsoft.EntityFrameworkCore;
 using Repository.Core;
+using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +25,44 @@ namespace Repository.Auth
         {
             var roles = await _context.Roles.ToListAsync();
             return roles;
+        }
+
+        public Role GetRole(string id, bool trackChanges)
+        {
+            var role = FindByCondition(r => r.Id == id, trackChanges).SingleOrDefault();
+            if (role is null)
+                throw new RoleNotFoundException(id);
+            return role;
+        }
+
+        public async Task<Role> GetRoleAsync(string id, bool trackChanges)
+        {
+            var role = await FindByCondition(r => r.Id == id, trackChanges)
+                .SingleOrDefaultAsync();
+            if (role is null)
+                throw new RoleNotFoundException(id);
+            return role;
+        }
+
+        public async Task<List<Role>> GetRolesWithParams(RolesParameters rolesParameters, bool trackChanges)
+        {
+            var roles = await FindByCondition(r => r.IsActived == rolesParameters.isActive, trackChanges)
+                        .ToListAsync();
+            return roles;
+        }
+
+        public void CreateRole(Role role) => Create(role);
+        public void UpdateRole(Role role) => Update(role);
+
+        public async Task<Role> GetRoleByNameAsync(string name, bool trackChanges)
+        {
+            var role = await FindByCondition(r => r.Name == name, trackChanges).FirstOrDefaultAsync();
+            return role;
+        }
+        public Role GetRoleByName(string name, bool trackChanges)
+        {
+            var role = FindByCondition(r => r.Name == name, trackChanges).FirstOrDefault();
+            return role;
         }
     }
 }

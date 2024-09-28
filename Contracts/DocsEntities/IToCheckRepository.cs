@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,7 @@ namespace Contracts.DocsEntities
 {
     public interface IToCheckRepository
     {
+        Task<ToCheck> GetToCheckByUserAndDocumentIds(string userId, int documentId);
+        void CreateToCheck(ToCheck toCheck);
     }
 }

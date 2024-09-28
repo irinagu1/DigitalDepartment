@@ -35,5 +35,7 @@ namespace Entities.Models
         [ForeignKey(nameof(Letter))]
         public int LetterId { get; set; }
         public Letter? Letter { get; set; }
+
+        public bool isArchived { get; set; } = false;
     }
 }

@@ -15,12 +15,15 @@ namespace Contracts.RepositoryCore
         IRecipientRepository Recipient { get; }
         IDocumentCategoryRepository DocumentCategory { get; }
         IDocumentStatusRepository DocumentStatus { get; }
-
+        IToCheckRepository ToCheck { get; }
 
 
 
         IUserRepository User { get; }
         IRoleRepository Role { get; }
+        IPermissionRepository Permission { get; }
+        IPermissionRoleRepository PermissionRole { get; }
         Task SaveAsync();
+        void Save();
     }
 }

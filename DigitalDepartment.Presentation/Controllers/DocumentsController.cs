@@ -8,6 +8,7 @@ using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -61,7 +62,35 @@ namespace DigitalDepartment.Presentation.Controllers
             return Ok(pagedResult.documents);
         }
 
+        [HttpPost("SignDocument")]
+        public async Task<IActionResult> CreateDocument(string documentId)
+        {
+            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userId").Value.ToString();
+            var toCheckDto = await _service.ToCheckService.Create(userId, int.Parse(documentId));
+
+            return NoContent();
+        }
+
+        [HttpPut("UpdateDocument")]
+        public async Task<IActionResult> UpdateDocument([FromBody] DocumentForUpdateDto documentForUpdateDto)
+        {
+            var documentDto = _service.DocumentService.UpdateDocument(documentForUpdateDto);
+            if (documentDto is not null)
+                return NoContent();
+            throw new Exception("document is null");
+        }
+
+        [HttpPut("ArchiveDocument")]
+        public async Task<IActionResult> ArchiveDocument(string documentId)
+        {
+            var documentDto = _service.DocumentService.ArchiveDocument(int.Parse(documentId));
+            if(documentDto is not null)
+                return NoContent();
+            throw new Exception("document is null");
+        }
+
         [HttpPost("CreateDocument")]
+        [Authorize(Policy = "Create")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateDocument([FromBody] DocumentForCreationDto document)
         {
@@ -79,6 +108,7 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
         [HttpPost("UploadChunks")]
+        [Authorize(Policy = "Create")]
         public async Task<IActionResult> UploadChunks(string id, string fileName)
         {
             try
@@ -106,6 +136,7 @@ namespace DigitalDepartment.Presentation.Controllers
 
 
         [HttpPost("UploadComplete")]
+        [Authorize(Policy = "Create")]
         public IActionResult UploadComplete(string fileName)
         {
             try
@@ -126,6 +157,8 @@ namespace DigitalDepartment.Presentation.Controllers
             }
             return Ok(_responseData);
         }
+
+        [Authorize(Policy = "Create")]
         private static void MergeChunks(string chunk1, string chunk2)
         {
             FileStream fs1 = null;

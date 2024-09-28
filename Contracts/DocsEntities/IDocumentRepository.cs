@@ -14,6 +14,7 @@ namespace Contracts.DocsEntities
         Task<PagedList<Entities.Models.Document>> GetAllDocumentsAsync(DocumentParameters documentParameters, bool trackChanges);
         //get one
         Task<Document> GetDocumentAsync(int id, bool trackChanges);
+        Document GetDocument(int id, bool trackChanges);
         Task<Document> GetDocumentbyPathAsync(string path, bool trackChanges);
 
         Task<PagedList<Document>> GetAllDocumentsForUserAsync
@@ -21,7 +22,10 @@ namespace Contracts.DocsEntities
         Task<PagedList<Document>> GetAllDocumentsForRolesAsync
              (HashSet<string> rolesIds, bool toCheck, DocumentParameters documentParameters, bool trackChanges);
 
+        
         void CreateDocument(Document document);
+
+        void UpdateDocument(Document document);
 
         //create collection
         //delete document

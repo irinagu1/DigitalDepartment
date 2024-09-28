@@ -1,5 +1,5 @@
 ﻿using Entities.ErrorModel;
-using Entities.Exceptions;
+using Entities.Exceptions.NotFound;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using System.Net;
