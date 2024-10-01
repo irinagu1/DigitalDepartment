@@ -32,6 +32,7 @@ namespace Service.Contracts.DocsEntities
 
         Task<DocumentDto> CreateDocumentAsync(DocumentForCreationDto documentForCreationDto);
         DocumentDto UpdateDocument(DocumentForUpdateDto documentForUpdateDto);
+        int AmountOfConnectedDocumentsByCategoryId(int categoryId);
 
     }
 }

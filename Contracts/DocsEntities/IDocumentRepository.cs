@@ -22,7 +22,8 @@ namespace Contracts.DocsEntities
         Task<PagedList<Document>> GetAllDocumentsForRolesAsync
              (HashSet<string> rolesIds, bool toCheck, DocumentParameters documentParameters, bool trackChanges);
 
-        
+        int AmountOfConnectedDocumentsByCategoryId(int categoryId);
+
         void CreateDocument(Document document);
 
         void UpdateDocument(Document document);

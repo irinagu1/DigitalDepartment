@@ -10,7 +10,10 @@ namespace Service.Contracts
 {
     public interface IUserService
     {
+        UserDto GetUserById(string userId);
+        Task<UserDto> GetUserByIdAsync(string userId);
         Task<HashSet<string>> GetUserPermissions(string userId);
+        Task<IEnumerable<UserDto>> GetAllUsersForShow(string isActive);
         Task<List<UserForLettersDto>> GetAllUserForLetters();
     }
 }

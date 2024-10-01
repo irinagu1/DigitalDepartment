@@ -189,6 +189,10 @@ namespace Service.DocsEntities
             return _mapper.Map<DocumentDto>(documentEntity);
         }
 
-
+        public int AmountOfConnectedDocumentsByCategoryId(int categoryId)
+        {
+            var count = _repository.Document.AmountOfConnectedDocumentsByCategoryId(categoryId);
+            return count;
+        }
     }
 }

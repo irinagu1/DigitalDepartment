@@ -29,6 +29,13 @@ namespace DigitalDepartment.Presentation.Controllers
             return Ok(roles);
         }
 
+        [HttpGet("user")]
+        public async Task<IActionResult> GetUsersRoles([FromQuery]string  id)
+        {
+            var roles = await _service.RoleService.GetByUserId(id);
+            return Ok(roles);
+        }
+
         [HttpGet("GetWithParameters")]
         public async Task<IActionResult> GetRolesWithParameters([FromQuery] RolesParameters rolesParameters)
         {

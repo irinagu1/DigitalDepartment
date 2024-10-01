@@ -9,8 +9,10 @@ namespace Contracts.Auth
 {
     public interface IUserRepository
     {
+        User GetUserById(string userId);
+        Task<User> GetUserByIdAsync(string userId);
         Task<HashSet<string>> GetUserPermissions(string userId);
-        Task<List<User>> GetAllUsers();
+        Task<IEnumerable<User>> GetAllUsersByActive(bool param);
         Task<HashSet<string>> GetUserRolesIds(string userId);
     }
 }

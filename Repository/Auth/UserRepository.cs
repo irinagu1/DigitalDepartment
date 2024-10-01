@@ -1,4 +1,5 @@
 ﻿using Contracts.Auth;
+using Entities.Exceptions.NotFound;
 using Entities.Models.Auth;
 using Microsoft.EntityFrameworkCore;
 using Repository.Core;
@@ -18,9 +19,9 @@ namespace Repository.Auth
             _context = repositoryContext;
         }
 
-        public async Task<List<User>> GetAllUsers()
+        public async Task<IEnumerable<User>> GetAllUsersByActive(bool param)
         {
-            var users = await _context.Users.ToListAsync();
+            var users = await _context.Users.Where(u => u.isActive == param).ToListAsync();
             return users;
         }
 
@@ -60,6 +61,20 @@ namespace Repository.Auth
             //List<string> list = permissions.ToList<string>();
             HashSet<string> uniquePermissions = new HashSet<string>(permissionsToList);
             return uniquePermissions;
+        }
+
+        public User GetUserById(string userId)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.Id == userId);
+           
+            return user;
+        }
+
+        public async Task<User> GetUserByIdAsync(string userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+           
+            return user;
         }
     }
 }

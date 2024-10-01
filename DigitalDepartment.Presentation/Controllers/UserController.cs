@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using Shared.DataTransferObjects.Users;
 using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
@@ -24,12 +25,27 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<IActionResult> GetAllUsersForLetters()
         {
             var users = await _service.UserService.GetAllUserForLetters();
             return Ok(users);
         }
 
+
+        [HttpGet("byid")]
+        public async Task<IActionResult> GetUserById([FromQuery] string id)
+        {
+            var users = await _service.UserService.GetUserByIdAsync(id);
+            return Ok(users);
+        }
+
+
+        [HttpGet("forshow")]
+        public async Task<IActionResult> GetAllUsersForShow([FromQuery]string isActive)
+        {
+            var users = await _service.UserService.GetAllUsersForShow(isActive);
+            return Ok(users);
+        }
 
 
         [HttpGet("permissions")]
@@ -38,6 +54,14 @@ namespace DigitalDepartment.Presentation.Controllers
             var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userId").Value.ToString();
             var permissions = await _service.UserService.GetUserPermissions(userId);
             return permissions;
+        }
+
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateUser([FromQuery] string id, 
+            [FromBody] UserForUpdateDto userForUpdateDto)
+        {
+            //   var updated =
+            return NoContent();
         }
     }
 }

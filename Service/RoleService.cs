@@ -145,5 +145,12 @@ namespace Service
 
             return true;
         }
+
+        public async Task<IEnumerable<RolesDto>> GetByUserId(string userId)
+        {
+            var roles = await _repository.Role.GetByUserId(userId);
+            var rolesDto = _mapper.Map<IEnumerable<RolesDto>>(roles);
+            return rolesDto;
+        }
     }
 }

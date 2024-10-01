@@ -33,7 +33,18 @@ namespace Service.DocsEntities
                 await _repository.DocumentCategory.GetAllDocumentCategoriesAsync(
                 documentCategoryParameters, trackChanges);
             var docCatDto = _mapper.Map<IEnumerable<DocumentCategoryDto>>(docCategoriesWithMetaData);
-            return (documentCategories: docCatDto, metaData: docCategoriesWithMetaData.MetaData);
+
+            return (documentCategories: GetConnectedDocuments(docCatDto), metaData: docCategoriesWithMetaData.MetaData);
+        }
+
+        IEnumerable<DocumentCategoryDto> GetConnectedDocuments(IEnumerable<DocumentCategoryDto> list)
+        {
+            foreach(var el in list)
+            {
+                var count = _repository.Document.AmountOfConnectedDocumentsByCategoryId(el.Id);
+                el.ConnectedDocuments = count;
+            }
+            return list;
         }
 
         public async Task<DocumentCategoryDto> GetDocumentCategoryAsync(int Id, bool trackChanges)

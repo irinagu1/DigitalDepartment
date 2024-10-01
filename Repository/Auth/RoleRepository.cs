@@ -64,5 +64,14 @@ namespace Repository.Auth
             var role = FindByCondition(r => r.Name == name, trackChanges).FirstOrDefault();
             return role;
         }
+
+        public async Task<IEnumerable<Role>> GetByUserId(string userId)
+        {
+            var roles = await _context.UserRoles
+                 .Where(ur => ur.UserId == userId)
+                 .Select(r => r.Role)
+                 .ToListAsync();
+            return roles;
+        }
     }
 }

@@ -102,6 +102,10 @@ namespace Repository.DocsEntities
         public Task<Document> GetDocumentbyPathAsync(string path, bool trackChanges) =>
             FindByCondition(d => d.Path == path, trackChanges).SingleOrDefaultAsync();
 
-       
+        public int AmountOfConnectedDocumentsByCategoryId(int categoryId)
+        {
+            var count = FindByCondition(d=>d.DocumentCategoryId == categoryId, false).Count();
+            return count;
+        }
     }
 }

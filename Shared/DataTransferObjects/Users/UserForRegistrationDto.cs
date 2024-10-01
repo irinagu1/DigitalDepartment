@@ -21,6 +21,7 @@ namespace Shared.DataTransferObjects.Users
 
         public string? Email { get; init; }
         public string? PhoneNumber { get; init; }
+        public bool? isActive { get; init; }
         public ICollection<string>? Roles { get; init; }
     }
 }
