@@ -47,7 +47,7 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
         [HttpGet("ForShow")]
-        [Authorize(Policy = "Create")]
+     //   [Authorize(Policy = "Create")]
         public async Task<IActionResult> GetDocumentsForShow(
         [FromQuery] DocumentParameters documentParameters)
         {
@@ -90,7 +90,7 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
         [HttpPost("CreateDocument")]
-        [Authorize(Policy = "Create")]
+     //   [Authorize(Policy = "Create")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateDocument([FromBody] DocumentForCreationDto document)
         {
@@ -108,7 +108,7 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
         [HttpPost("UploadChunks")]
-        [Authorize(Policy = "Create")]
+ //       [Authorize(Policy = "Create")]
         public async Task<IActionResult> UploadChunks(string id, string fileName)
         {
             try
@@ -136,7 +136,7 @@ namespace DigitalDepartment.Presentation.Controllers
 
 
         [HttpPost("UploadComplete")]
-        [Authorize(Policy = "Create")]
+   //     [Authorize(Policy = "Create")]
         public IActionResult UploadComplete(string fileName)
         {
             try
@@ -158,7 +158,7 @@ namespace DigitalDepartment.Presentation.Controllers
             return Ok(_responseData);
         }
 
-        [Authorize(Policy = "Create")]
+   //     [Authorize(Policy = "Create")]
         private static void MergeChunks(string chunk1, string chunk2)
         {
             FileStream fs1 = null;

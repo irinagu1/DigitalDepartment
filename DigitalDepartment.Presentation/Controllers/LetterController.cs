@@ -1,4 +1,5 @@
 ﻿using DigitalDepartment.Presentation.ActionFilters;
+using Entities.Exceptions.NotFound;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects.DocumentStatuses;
@@ -28,6 +29,10 @@ namespace DigitalDepartment.Presentation.Controllers
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateDocumentStatus([FromBody] LetterForCreationDto letterForCreationDto)
         {
+            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userId").Value.ToString();
+            if (userId == null) 
+                throw new Exception("cannot get userId");
+            letterForCreationDto.AuthorId = userId;
             var createdLetter = await _service.LetterService.CreateLetterAsync(letterForCreationDto);
             return Ok(createdLetter.Id);
 

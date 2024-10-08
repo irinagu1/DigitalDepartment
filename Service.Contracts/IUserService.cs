@@ -1,4 +1,5 @@
 ﻿using Entities.Models.Auth;
+using Shared.DataTransferObjects;
 using Shared.DataTransferObjects.Users;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,8 @@ namespace Service.Contracts
         Task<HashSet<string>> GetUserPermissions(string userId);
         Task<IEnumerable<UserDto>> GetAllUsersForShow(string isActive);
         Task<List<UserForLettersDto>> GetAllUserForLetters();
+        bool UpdateUserStatus(string userId);
+        bool UpdateUser(UserForUpdateDto userForUpdateDto);
+        bool ChangePassword(PasswordToChangeDto changeDto);
     }
 }

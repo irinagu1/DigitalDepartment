@@ -4,6 +4,7 @@ using Entities.Exceptions.NotFound;
 using Entities.Models.Auth;
 using Microsoft.AspNetCore.Identity;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 using Shared.DataTransferObjects.Users;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,12 @@ namespace Service
     {
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
-        public UserService(IRepositoryManager repository, IMapper mapper)
+        private readonly ICheckerService _checker;
+        public UserService(IRepositoryManager repository, IMapper mapper, ICheckerService checker)
         {
             _repository = repository;
             _mapper = mapper;
+            _checker = checker;
         }
 
         public UserDto GetUserById(string userId)
@@ -66,6 +69,59 @@ namespace Service
             return permissions;
         }
 
-      
+        public bool UpdateUserStatus(string userId)
+        {
+            var excistedUser = _checker.GetUserEntityAndCheckItExists(userId, false);
+            excistedUser.isActive = !excistedUser.isActive;
+            _repository.User.Update(excistedUser);
+            _repository.Save();
+            return true;
+        }
+
+        public bool UpdateUser(UserForUpdateDto userForUpdateDto)
+        {
+            var excistedUser = _checker.GetUserEntityAndCheckItExists(userForUpdateDto.Id, false);
+            if (UpdateUserEntity(userForUpdateDto, excistedUser) && UpdateUserRoles(userForUpdateDto.RolesNames, userForUpdateDto.Id))
+                return true;
+            else throw new Exception("cannot update");
+        }
+
+        public bool UpdateUserEntity(UserForUpdateDto updateDto, User userEntity)
+        {
+            userEntity.FirstName = updateDto.FirstName; 
+            userEntity.SecondName = updateDto.SecondName;
+            userEntity.LastName = updateDto.LastName;
+            userEntity.UserName = updateDto.UserName;
+            userEntity.Email = updateDto.UserName + "@mail.ru";
+            _repository.User.Update(userEntity);
+            _repository.Save();
+            return true;
+        }
+
+        public bool UpdateUserRoles(IEnumerable<string>? Roles, string userId)
+        {
+            _repository.UserRole.DeleteRolesForUser(userId);
+            foreach(var roleName in Roles)
+            {
+                var role = _repository.Role.GetRoleByName(roleName, false);
+                UserRoleDto userRoleDto = new UserRoleDto()
+                {
+                    UserId = userId,
+                    RoleId = role.Id,
+                };
+                var entity = _mapper.Map<UserRole>(userRoleDto);
+                _repository.UserRole.Create(entity);
+            }
+
+            _repository.Save();
+            return true;
+        }
+
+        public bool ChangePassword(PasswordToChangeDto changeDto)
+        {
+            return true;
+          //  var userEntity = _checker.GetUserEntityAndCheckItExists(changeDto.UserId, false);
+        //    userEntity.PasswordHash
+        }
     }
 }

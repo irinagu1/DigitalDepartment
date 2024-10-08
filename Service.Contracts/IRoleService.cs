@@ -17,5 +17,6 @@ namespace Service.Contracts
         RolesDto CreateRole(InfoForCreationDto infoForCreationDto);
         RolesDto UpdateRole(string roleId, InfoForCreationDto infoForCreationDto);
         bool UpdateRole(string roleId);
+        Task DeleteRoleAsync(string roleId, bool trackChanges);
     }
 }

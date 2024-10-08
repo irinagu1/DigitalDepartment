@@ -4,6 +4,7 @@ using Entities.Exceptions;
 using Entities.Models;
 using Service.Contracts;
 using Service.Contracts.DocsEntities;
+using Shared.DataTransferObjects.DocumentCategories;
 using Shared.DataTransferObjects.DocumentStatuses;
 using Shared.RequestFeatures;
 using System;
@@ -36,7 +37,7 @@ namespace Service.DocsEntities
                 await _repository.DocumentStatus.GetAllDocumentStatusesAsync(
                 documentStatusParameters, trackChanges);
             var dcDto = _mapper.Map<IEnumerable<DocumentStatusDto>>(dcWithMetaData);
-            return (documentStatuses: dcDto, metaData: dcWithMetaData.MetaData);
+            return (documentStatuses: GetConnectedDocuments(dcDto), metaData: dcWithMetaData.MetaData);
         }
 
         public async Task<DocumentStatusDto> GetDocumentStatusAsync(int id, bool trackChanges) 
@@ -45,7 +46,15 @@ namespace Service.DocsEntities
             var dcDto = _mapper.Map<DocumentStatusDto>(documentStatus);
             return dcDto;
         }
-
+        IEnumerable<DocumentStatusDto> GetConnectedDocuments(IEnumerable<DocumentStatusDto> list)
+        {
+            foreach (var el in list)
+            {
+                var count = _repository.Document.AmountOfConnectedDocumentsByStatusId(el.Id);
+                el.ConnectedDocuments = count;
+            }
+            return list;
+        }
         public async Task<DocumentStatusDto> CreateDocumentStatusAsync(DocumentStatusForCreationDto documentStatus)
         {
             //check if the name is exist!!!! maybe throu filtering

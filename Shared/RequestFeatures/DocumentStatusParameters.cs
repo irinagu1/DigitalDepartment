@@ -8,5 +8,6 @@ namespace Shared.RequestFeatures
 {
     public class DocumentStatusParameters : RequestParameters
     {
+        public bool isEnable { get; set; }
     }
 }

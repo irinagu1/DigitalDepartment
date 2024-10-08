@@ -24,7 +24,7 @@ namespace Repository.DocsEntities
         public async Task<PagedList<DocumentStatus>> GetAllDocumentStatusesAsync(
              DocumentStatusParameters documentStatusParameters, bool trackChanges)
         {
-            var documentStatuses = await FindAll(trackChanges)
+            var documentStatuses = await FindByCondition(ds=> ds.isEnable == documentStatusParameters.isEnable, trackChanges)
                                      .OrderBy(dc => dc.Name)
                                      .Skip((documentStatusParameters.PageNumber-1)* documentStatusParameters.PageSize)
                                      .Take(documentStatusParameters.PageSize)

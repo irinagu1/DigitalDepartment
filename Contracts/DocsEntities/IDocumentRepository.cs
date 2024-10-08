@@ -23,6 +23,7 @@ namespace Contracts.DocsEntities
              (HashSet<string> rolesIds, bool toCheck, DocumentParameters documentParameters, bool trackChanges);
 
         int AmountOfConnectedDocumentsByCategoryId(int categoryId);
+        int AmountOfConnectedDocumentsByStatusId(int statusId);
 
         void CreateDocument(Document document);
 

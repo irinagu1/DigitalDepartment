@@ -47,6 +47,8 @@ namespace DigitalDepartment
             CreateMap<User, UserDto>().ForMember("FullName", opt => opt.MapFrom(
                 src => src.FirstName + ' ' + src.SecondName + ' ' + src.LastName));
             CreateMap<UserDto, User>();
+            CreateMap<User, UserForUpdateDto>();
+            CreateMap<UserForUpdateDto, User>();
 
             CreateMap<RolesForLettersDto, Role>();
             CreateMap<Role, RolesForLettersDto>();
@@ -78,6 +80,8 @@ namespace DigitalDepartment
             CreateMap<PermissionRole, PermissionRoleDto>();
             CreateMap<PermissionRoleDto, PermissionRole>();
 
+            CreateMap<UserRole, UserRoleDto>();
+            CreateMap<UserRoleDto, UserRole>();
         }
     }
 }

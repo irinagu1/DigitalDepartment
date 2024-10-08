@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Entities.Models.Auth;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,9 @@ namespace Service.Contracts
     {
         Task<DocumentStatus> GetDocumentStatusEntityAndCheckIfItExistsAsync(int id, bool trackChanges);
         Task<DocumentCategory> GetDocumentCategoryEntityAndCheckiIfItExistsAsync(int id, bool trackChanges);
+        Task<Role> GetRoleEntityAndCheckIdExistsAsync(string id, bool trackChanges);
         Task CheckDocumentParameters(Document documentEntity);
+        User GetUserEntityAndCheckItExists(string id, bool trackChanges);
+
     }
 }

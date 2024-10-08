@@ -23,6 +23,7 @@ namespace Contracts.RepositoryCore
         IRoleRepository Role { get; }
         IPermissionRepository Permission { get; }
         IPermissionRoleRepository PermissionRole { get; }
+        IUserRoleRepository UserRole { get; }
         Task SaveAsync();
         void Save();
     }

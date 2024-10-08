@@ -29,6 +29,7 @@ namespace DigitalDepartment.Presentation.Controllers
             return Ok(roles);
         }
 
+
         [HttpGet("user")]
         public async Task<IActionResult> GetUsersRoles([FromQuery]string  id)
         {
@@ -74,6 +75,12 @@ namespace DigitalDepartment.Presentation.Controllers
             var role = _service.RoleService.UpdateRole(roleId);
             return Ok(role);
         }
-
+        //delete
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRole(string id)
+        {
+            await _service.RoleService.DeleteRoleAsync(id, trackChanges: false);
+            return NoContent();
+        }
     }
 }

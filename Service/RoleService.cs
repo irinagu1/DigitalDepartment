@@ -18,10 +18,12 @@ namespace Service
     {
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
-        public RoleService(IRepositoryManager repository, IMapper mapper)
+        private readonly ICheckerService _checkerService;
+        public RoleService(IRepositoryManager repository, IMapper mapper, ICheckerService checkerService)
         {
             _repository = repository;
             _mapper = mapper;
+            _checkerService = checkerService;
         }
 
         public RolesDto CreateRole(InfoForCreationDto infoForCreationDto)
@@ -77,7 +79,19 @@ namespace Service
         {
             var roles = await _repository.Role.GetRolesWithParams(parameters, false);
             var rolesDto = _mapper.Map<List<RolesDto>>(roles);
+            if (parameters.WithUsersAmount)
+                rolesDto = GetAmountofUsersForRoles(rolesDto);
             return rolesDto;
+        }
+
+        public List<RolesDto> GetAmountofUsersForRoles(List<RolesDto> list)
+        {
+            foreach(var el in list)
+            {
+                var count = _repository.UserRole.GetAmountOfUsersByRoleId(el.Id);
+                el.ConnectedUsers = count;
+            }
+            return list;
         }
 
         public RolesDto UpdateRole(string roleId, InfoForCreationDto infoForCreationDto)
@@ -151,6 +165,13 @@ namespace Service
             var roles = await _repository.Role.GetByUserId(userId);
             var rolesDto = _mapper.Map<IEnumerable<RolesDto>>(roles);
             return rolesDto;
+        }
+
+        public async Task DeleteRoleAsync(string roleId, bool trackChanges)
+        {
+            var roleEntity = await _checkerService.GetRoleEntityAndCheckIdExistsAsync(roleId, trackChanges);
+            _repository.Role.Delete(roleEntity);
+            await _repository.SaveAsync();
         }
     }
 }

@@ -53,7 +53,7 @@ namespace Repository.Auth
 
         public void CreateRole(Role role) => Create(role);
         public void UpdateRole(Role role) => Update(role);
-
+        public void DeleteRole(Role role) => Delete(role);
         public async Task<Role> GetRoleByNameAsync(string name, bool trackChanges)
         {
             var role = await FindByCondition(r => r.Name == name, trackChanges).FirstOrDefaultAsync();

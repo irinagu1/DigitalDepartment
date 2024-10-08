@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 namespace Shared.DataTransferObjects.DocumentStatuses
 {
     public record DocumentStatusDto
-    (
-        int Id, 
-        string Name,
-        bool isEnable
-    );
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool isEnable { get; set; }
+        public int? ConnectedDocuments { get; set; }
+    }
 }

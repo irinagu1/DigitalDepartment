@@ -13,5 +13,6 @@ namespace Shared.DataTransferObjects.Roles
         public string? Name { get; set; }
         public string? NormalizedName { get; set; }
         public string? isActived { get; set; }
+        public int? ConnectedUsers { get; set; }
     }
 }

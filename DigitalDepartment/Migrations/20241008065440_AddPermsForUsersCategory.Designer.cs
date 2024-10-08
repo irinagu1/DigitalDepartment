@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Core;
 
@@ -11,9 +12,11 @@ using Repository.Core;
 namespace DigitalDepartment.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20241008065440_AddPermsForUsersCategory")]
+    partial class AddPermsForUsersCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,36 +75,6 @@ namespace DigitalDepartment.Migrations
                             Id = 5,
                             Category = "Пользователи",
                             Name = "Удаление пользователей"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Category = "Документы",
-                            Name = "Просмотр своих документов"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Category = "Документы",
-                            Name = "Загрузка документов"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Category = "Документы",
-                            Name = "Просмотр архива документов"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Category = "Документы",
-                            Name = "Архивирование документов"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Category = "Документы",
-                            Name = "Просмотр всех документов"
                         });
                 });
 

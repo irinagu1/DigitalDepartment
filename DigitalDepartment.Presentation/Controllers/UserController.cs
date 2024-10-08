@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 using Shared.DataTransferObjects.Users;
 using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,11 +59,30 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> UpdateUser([FromQuery] string id, 
+        public async Task<IActionResult> UpdateUser(
             [FromBody] UserForUpdateDto userForUpdateDto)
         {
-            //   var updated =
-            return NoContent();
+            var result = _service.UserService.UpdateUser(userForUpdateDto);
+            if (result)
+                return NoContent();
+            return BadRequest(result);
+        }
+
+        [HttpPost("toArchive")]
+        public async Task<IActionResult> ToArchiveUser([FromQuery] string userId)
+        {
+            var ifOk = _service.UserService.UpdateUserStatus(userId);
+            return Ok(ifOk);
+        }
+     
+        [HttpPut("password")]
+        public async Task<IActionResult> ChangePassword(
+         [FromBody] PasswordToChangeDto changeDto)
+        {
+            //var result = _service.UserService.UpdateUser(userForUpdateDto);
+         //   if (result)
+                return NoContent();
+
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Shared.DataTransferObjects.Letters
     public record LetterForCreationDto
     {
         public string? Text { get; init; } = "Text";
-        public string? AuthorId { get; init; }
+        public string? AuthorId { get; set; }
         public DateTime? CreationDate { get; set; } = DateTime.Now;
 
     }

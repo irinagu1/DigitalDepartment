@@ -44,9 +44,9 @@ namespace Service
                 new AuthenticationService(mapper, userManager,
                     configuration));
             _userService = new Lazy<IUserService>(() =>
-                 new UserService(repositoryManager, mapper));
+                 new UserService(repositoryManager, mapper, checker));
             _roleService = new Lazy<IRoleService>(() =>
-                new RoleService(repositoryManager, mapper));
+                new RoleService(repositoryManager, mapper, checker));
             _toCheckService = new Lazy<IToCheckService>(()=> 
                 new ToCheckService(repositoryManager, mapper));
             _permissionService = new Lazy<IPermissionService>(()=> 

@@ -19,5 +19,6 @@ namespace Contracts.Auth
         Role GetRole(string id, bool trackChanges);
         void Create(Role role);
         void Update(Role role);
+        void Delete(Role role);
     }
 }

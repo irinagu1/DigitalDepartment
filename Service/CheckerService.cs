@@ -3,6 +3,7 @@ using Entities.Exceptions;
 using Entities.Exceptions.NotFound;
 using Entities.Exceptions.NotSingle;
 using Entities.Models;
+using Entities.Models.Auth;
 using Microsoft.AspNetCore.Http;
 using Service.Contracts;
 using Shared.DataTransferObjects.Documents;
@@ -63,6 +64,20 @@ namespace Service
                 throw new DocumentNotSingleException(path);
         }
 
+        public async Task<Role> GetRoleEntityAndCheckIdExistsAsync(string id, bool trackChanges)
+        {
+            var roleEntity = await _repository.Role.GetRoleAsync(id, trackChanges);
+            if (roleEntity is null)
+                throw new RoleNotFoundException(id);
+            return roleEntity;
+        }
 
+        public User GetUserEntityAndCheckItExists(string id, bool trackChanges)
+        {
+            var userEntity = _repository.User.GetUserById(id);
+            if (userEntity is null)
+                throw new UserNotFound(id);
+            return userEntity;
+        }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Core;
 
@@ -11,9 +12,11 @@ using Repository.Core;
 namespace DigitalDepartment.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20241008065315_clearPermsAndpermsRoles")]
+    partial class clearPermsAndpermsRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,68 +44,6 @@ namespace DigitalDepartment.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Permissions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Category = "Пользователи",
-                            Name = "Просмотр пользователей"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Category = "Пользователи",
-                            Name = "Добавление пользователей"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Category = "Пользователи",
-                            Name = "Редактирование пользователей"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Category = "Пользователи",
-                            Name = "Архивирование пользователей"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Category = "Пользователи",
-                            Name = "Удаление пользователей"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Category = "Документы",
-                            Name = "Просмотр своих документов"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Category = "Документы",
-                            Name = "Загрузка документов"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Category = "Документы",
-                            Name = "Просмотр архива документов"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Category = "Документы",
-                            Name = "Архивирование документов"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Category = "Документы",
-                            Name = "Просмотр всех документов"
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.Auth.PermissionRole", b =>
