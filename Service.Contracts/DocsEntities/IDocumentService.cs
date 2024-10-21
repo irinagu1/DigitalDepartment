@@ -29,6 +29,7 @@ namespace Service.Contracts.DocsEntities
 
         Task<DocumentDto> GetDocumentByPathAsync(string path, bool trackChanges);
         Task<DocumentDto> GetDocumentByIdAsync(int id, bool trackChanges);
+      
 
         Task<DocumentDto> CreateDocumentAsync(DocumentForCreationDto documentForCreationDto);
         DocumentDto UpdateDocument(DocumentForUpdateDto documentForUpdateDto);

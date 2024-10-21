@@ -18,5 +18,6 @@ namespace Entities.Models.Auth
 
         public virtual ICollection<UserRole>? UserRoles { get; set; }
         //должность
+   
     }
 }

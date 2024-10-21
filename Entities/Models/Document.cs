@@ -37,5 +37,7 @@ namespace Entities.Models
         public Letter? Letter { get; set; }
 
         public bool isArchived { get; set; } = false;
+
+        public DateTime? CreationDate { get; set; } 
     }
 }

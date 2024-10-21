@@ -20,7 +20,7 @@ namespace Contracts.DocsEntities
         Task<PagedList<Document>> GetAllDocumentsForUserAsync
              (string userId, bool toCheck, DocumentParameters documentParameters, bool trackChanges);
         Task<PagedList<Document>> GetAllDocumentsForRolesAsync
-             (HashSet<string> rolesIds, bool toCheck, DocumentParameters documentParameters, bool trackChanges);
+             (string userId, HashSet<string> rolesIds, bool toCheck, DocumentParameters documentParameters, bool trackChanges);
 
         int AmountOfConnectedDocumentsByCategoryId(int categoryId);
         int AmountOfConnectedDocumentsByStatusId(int statusId);

@@ -76,5 +76,24 @@ namespace Repository.Auth
            
             return user;
         }
+        public User GetUserByLetterIdAsync(int letterId)
+        {
+            var user = _context.Letters.Include(l => l.Author)
+                .Where(l => l.Id == letterId)
+                .Select(l => l.Author).FirstOrDefault();
+            return user;
+        }
+
+        public async Task<IEnumerable<User>> GetAll()
+        {
+            var users = await _context.Users.ToListAsync();
+            return users;
+        }
+
+        public async Task<IEnumerable<User>> GetUsersByRoleId(string roleId)
+        {
+            var users = await _context.Users.Where(u => u.UserRoles.Any(ur => ur.RoleId == roleId)).ToListAsync();
+            return users;
+        }
     }
 }

@@ -62,6 +62,16 @@ namespace DigitalDepartment.Presentation.Controllers
             return Ok(pagedResult.documents);
         }
 
+        [HttpGet("ForReport")]
+        //   [Authorize(Policy = "Create")]
+        public async Task<IActionResult> GetDocumentsForReport(
+       [FromQuery] int documentId)
+        {
+         //
+            return Ok();
+        }
+
+
         [HttpPost("SignDocument")]
         public async Task<IActionResult> CreateDocument(string documentId)
         {

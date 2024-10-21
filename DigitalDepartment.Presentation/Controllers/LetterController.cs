@@ -24,6 +24,23 @@ namespace DigitalDepartment.Presentation.Controllers
             _service = service;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetRecipients([FromQuery] int letterId, int documentId)
+        {
+            var dtoToReturn = await _service.LetterService.GetRecipientsForReportByLetterId(letterId, documentId);
+
+            return Ok(dtoToReturn);
+        }
+
+
+        [HttpGet("GetByCategories")]
+        public async Task<IActionResult> GetAllRecipientsByCategories([FromQuery] int letterId)
+        {
+            var dtoToReturn = await _service.LetterService.GetRecipientsByLetterId(letterId);
+
+            return Ok(dtoToReturn);
+        }
+
         //create
         [HttpPost(Name = "CreateLetter")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
@@ -34,7 +51,7 @@ namespace DigitalDepartment.Presentation.Controllers
                 throw new Exception("cannot get userId");
             letterForCreationDto.AuthorId = userId;
             var createdLetter = await _service.LetterService.CreateLetterAsync(letterForCreationDto);
-            return Ok(createdLetter.Id);
+            return Ok(createdLetter);
 
             //   var createdDocumentStatus = await _service.DocumentStatusService.CreateDocumentStatusAsync(documentStatus);
             //search this
@@ -56,6 +73,8 @@ namespace DigitalDepartment.Presentation.Controllers
             // return CreatedAtRoute("DocumentStatusById", new { id = createdDocumentStatus.Id }, createdDocumentStatus);
         }
 
+
+      
 
 
     }
