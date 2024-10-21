@@ -8,6 +8,6 @@ namespace Shared.RequestFeatures
 {
     public class DocumentCategoryParameters : RequestParameters
     {
-        public bool isEnable { get; set; }
+        public bool? isEnable { get; set; }
     }
 }

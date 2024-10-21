@@ -10,5 +10,6 @@ namespace Contracts.DocsEntities
     public interface IRecipientRepository
     {
         void CreateRecipient(Recipient recipient);
+        Task<IEnumerable<Recipient>> GetRecipientsByTypeAndLetterId(string type, int letterId, bool isToCheck);
     }
 }

@@ -3,6 +3,7 @@ using Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Update.Internal;
 using Repository.Core;
+using Repository.Extensions;
 using Shared.RequestFeatures;
 
 namespace Repository.DocsEntities
@@ -18,7 +19,8 @@ namespace Repository.DocsEntities
         public async Task<PagedList<DocumentCategory>> GetAllDocumentCategoriesAsync(
             DocumentCategoryParameters documentCategoryParameters, bool trackChanges)
         {
-            var documentCategories = await FindByCondition(dc => dc.isEnable == documentCategoryParameters.isEnable, trackChanges)
+            var documentCategories = await FindAll(trackChanges)
+                                      .FilterDocumentCategories(documentCategoryParameters)
                                      .OrderBy(dc => dc.Name)
                                      .Skip((documentCategoryParameters.PageNumber - 1) * documentCategoryParameters.PageSize)
                                      .Take(documentCategoryParameters.PageSize)

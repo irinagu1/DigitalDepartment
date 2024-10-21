@@ -123,5 +123,12 @@ namespace Service
           //  var userEntity = _checker.GetUserEntityAndCheckItExists(changeDto.UserId, false);
         //    userEntity.PasswordHash
         }
+
+        public async Task<IEnumerable<UserDto>> GetUsersByRole(string roleId)
+        {
+            var usersEntities = await _repository.User.GetUsersByRoleId(roleId);
+            var usersDto = _mapper.Map<IEnumerable<UserDto>>(usersEntities);
+            return usersDto;
+        }
     }
 }

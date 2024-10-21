@@ -26,5 +26,7 @@ namespace Shared.DataTransferObjects.Documents
 
         public bool isSigned { get; set; }
         public DateTime? DateSigned { get; set; }
+
+        public string Author { get; set; }
     }
 }

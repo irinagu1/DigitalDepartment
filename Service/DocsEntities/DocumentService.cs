@@ -44,7 +44,7 @@ namespace Service.DocsEntities
             {
                 HashSet<string> uniqueRoles = await _repository.User.GetUserRolesIds(userId);
                 document = await _repository.Document.GetAllDocumentsForRolesAsync
-                    (uniqueRoles, toCheck, documentParameters, trackChanges);
+                    (userId, uniqueRoles, toCheck, documentParameters, trackChanges);
                
             }
             else if (documentParameters.ForWho == "Лично мне")
@@ -56,6 +56,14 @@ namespace Service.DocsEntities
             var documentsDto = _mapper.Map<IEnumerable<DocumentDto>>(document);
             var allDocsWithParams = await GetAllDocumentsWithParametersNamesAsync
                 (documents: documentsDto, metaData: document.MetaData, userId: userId);
+
+            foreach(var el in allDocsWithParams.documents)
+            {
+                var author = _repository.User.GetUserByLetterIdAsync(el.LetterId);
+                if (author is not null)
+                    el.Author = author.FirstName + " " + author.SecondName + " " + author.LastName;
+                else el.Author = "";
+            }
 
             return (allDocsWithParams.documents, allDocsWithParams.metaData);
         }
@@ -85,7 +93,8 @@ namespace Service.DocsEntities
                     LetterId = doc.LetterId,
                     DateCreation = letter.CreationDate.Value,
                     isSigned = isSigned != null ? true : false,
-                    DateSigned = isSigned != null ? isSigned.DateChecked : null
+                    DateSigned = isSigned != null ? isSigned.DateChecked : null,
+                    Author = doc.Author
                 };
                 documentsForShowDto.Add(newDocForShowDto);
             }
@@ -194,5 +203,7 @@ namespace Service.DocsEntities
             var count = _repository.Document.AmountOfConnectedDocumentsByCategoryId(categoryId);
             return count;
         }
+
+  
     }
 }

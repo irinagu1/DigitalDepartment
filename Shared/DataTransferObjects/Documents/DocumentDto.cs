@@ -20,5 +20,7 @@ namespace Shared.DataTransferObjects.Documents
         public int LetterId { get; set; }
 
         public bool isArchived { get; set; }
+
+        public string Author {  get; set; }
     }
 }

@@ -23,5 +23,8 @@ namespace Shared.RequestFeatures
             }
         }
 
+        public string? OrderBy { get; set; }
+
+
     }
 }
