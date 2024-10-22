@@ -6,11 +6,7 @@ using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Service.Contracts;
 using Service.Contracts.DocsEntities;
-<<<<<<< HEAD
 //using Service.ReportsManipulation;
-=======
-using Service.ReportsManipulation;
->>>>>>> d7e8f93277b6bf5e9034a93eeb8abfa9198eeef7
 using Shared.DataTransferObjects.Documents;
 using Shared.RequestFeatures;
 using System;

@@ -73,11 +73,7 @@ namespace Repository.Core
         }
 
         
-<<<<<<< HEAD
         public IPositionRepository Position =>
-=======
-        public IPositionRepository PositionRepository =>
->>>>>>> d7e8f93277b6bf5e9034a93eeb8abfa9198eeef7
             _positionRepository.Value;
         public IDocumentCategoryRepository DocumentCategory =>
             _documentCategoryRepository.Value;
