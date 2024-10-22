@@ -5,6 +5,8 @@ using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Storage;
 using Service.Contracts.DocsEntities;
+using Service.Reports;
+
 //using Service.ReportsManipulation;
 using Shared.DataTransferObjects.Documents;
 using Shared.DataTransferObjects.Letters;
@@ -151,11 +153,10 @@ namespace Service.DocsEntities
 
         public async Task CreateReport(int documentId, int letterId)
         {
-        /*    var document = _repository.Document.GetDocument(documentId, false);
+            var document = _repository.Document.GetDocument(documentId, false);
             var recipients = await GetRecipientsForReportByLetterId(letterId, documentId);
-            ReportManager reportManager = new ReportManager();
-            reportManager.CreateGeneralReport(recipients, document.Name ?? "");
-       */
+            ReportGenerator reportGenerator = new ReportGenerator();
+            reportGenerator.CreateGeneralReport(recipients, document.Name ?? "");
         }
     }
 }
