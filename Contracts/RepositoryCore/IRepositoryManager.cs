@@ -10,6 +10,7 @@ namespace Contracts.RepositoryCore
 {
     public interface IRepositoryManager
     {
+        IPositionRepository Position { get; }
         ILetterRepository Letter { get; }
         IDocumentRepository Document { get; }
         IRecipientRepository Recipient { get; }

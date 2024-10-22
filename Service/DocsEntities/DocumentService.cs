@@ -6,6 +6,7 @@ using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Service.Contracts;
 using Service.Contracts.DocsEntities;
+using Service.ReportsManipulation;
 using Shared.DataTransferObjects.Documents;
 using Shared.RequestFeatures;
 using System;
@@ -204,6 +205,8 @@ namespace Service.DocsEntities
             return count;
         }
 
-  
+     
+
+
     }
 }
