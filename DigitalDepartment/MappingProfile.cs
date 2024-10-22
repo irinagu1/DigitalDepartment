@@ -8,6 +8,7 @@ using Shared.DataTransferObjects.Documents;
 using Shared.DataTransferObjects.DocumentStatuses;
 using Shared.DataTransferObjects.Letters;
 using Shared.DataTransferObjects.PermissionRole;
+using Shared.DataTransferObjects.Position;
 using Shared.DataTransferObjects.Recipients;
 using Shared.DataTransferObjects.Roles;
 using Shared.DataTransferObjects.ToCheck;
@@ -19,6 +20,10 @@ namespace DigitalDepartment
     {
         public MappingProfile()
         {
+
+            CreateMap<Position, PositionDto>();
+            CreateMap<PositionForCreationDto, Position>();
+            CreateMap<PositionForUpdateDto, Position>();
 
             CreateMap<DocumentStatus, DocumentStatusDto>();
             CreateMap<DocumentStatusForCreationDto, DocumentStatus>();

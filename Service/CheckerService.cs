@@ -79,5 +79,14 @@ namespace Service
                 throw new UserNotFound(id);
             return userEntity;
         }
+
+        public async Task<Position> GetPositionEntityAndCheckIfItExistsAsync(int id, bool trackChanges)
+        {
+            var entity = 
+                await _repository.Position.GetPositionByIdAsync(id, trackChanges);
+            if(entity is null)
+                throw new PositionnotFoundException(id);
+            return entity;
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace Service.Contracts
 {
     public interface IServiceManager
     {
+        IPositionService PositionService { get; }
         IDocumentCategoryService DocumentCategoryService { get; }
         IDocumentStatusService DocumentStatusService { get; }
         IDocumentService DocumentService { get; }

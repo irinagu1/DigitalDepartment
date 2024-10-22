@@ -75,6 +75,7 @@ namespace Repository.Core
             modelBuilder.ApplyConfiguration(new PermissionsRolesConfiguration());
         }
 
+        public DbSet<Position>? Positions {  get; set; }
         public DbSet<DocumentCategory>? DocumentCategories { get; set; }
         public DbSet<DocumentStatus>? DocumentStatuses { get; set; }
         public DbSet<Document>? Documents { get; set; }
