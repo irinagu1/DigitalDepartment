@@ -28,7 +28,7 @@ namespace Repository.Core
         private readonly Lazy<IPermissionRepository> _permissionRepository;
         private readonly Lazy<IPermissionRoleRepository> _permissionRoleRepository;
         private readonly Lazy<IUserRoleRepository> _userRoleRepository;
-        private readonly Lazy<IPositionRepository> _positionRepository;
+
 
 
         public RepositoryManager(RepositoryContext repositoryContext)
