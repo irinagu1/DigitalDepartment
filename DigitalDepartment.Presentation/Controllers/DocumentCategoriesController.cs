@@ -44,8 +44,6 @@ namespace DigitalDepartment.Presentation.Controllers
         //   [Authorize(Policy = "CreateDocumentStatus")]
         public async Task<IActionResult> GetDocumentCategory(int id)
         {
-            //new test comment 
-            //for check sth on github
             var dc = await
                 _service.DocumentCategoryService.GetDocumentCategoryAsync(id, trackChanges: false);
             return Ok(dc);

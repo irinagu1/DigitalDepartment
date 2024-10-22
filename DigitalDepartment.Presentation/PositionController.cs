@@ -1,0 +1,79 @@
+﻿using DigitalDepartment.Presentation.ActionFilters;
+using Microsoft.AspNetCore.Mvc;
+using Service.Contracts;
+using Shared.DataTransferObjects.DocumentCategories;
+using Shared.DataTransferObjects.Position;
+using Shared.RequestFeatures;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace DigitalDepartment.Presentation
+{
+    [Route("api/positions")]
+    [ApiController]
+    public class PositionController : ControllerBase
+    {
+        private readonly IServiceManager _service;
+        public PositionController(IServiceManager service)
+        {
+            _service = service;
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetDocumentCategories(
+        [FromQuery] DocumentCategoryParameters documentCategoryParameters)
+        {
+            var pagedResult = await
+                _service.DocumentCategoryService.GetAllDocumentCategoriesAsync(
+                    documentCategoryParameters, trackChanges: false);
+            Response.Headers.Add("X-Pagination",
+                JsonSerializer.Serialize(pagedResult.metaData));
+
+            return Ok(pagedResult.documentCategories);
+        }
+
+
+        [HttpGet("{id:int}", Name = "PositionById")]
+        public async Task<IActionResult> GetPositionById(int id)
+        {
+            var dc = await
+                _service.DocumentCategoryService.GetDocumentCategoryAsync(id, trackChanges: false);
+            return Ok(dc);
+        }
+
+
+        [HttpPost(Name = "CreatePosition")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> CreatePosition
+            ([FromBody] PositionForCreationDto position)
+        {
+            var createdPosition =
+                await _service.PositionService.CreatePositionAsync(position);
+            //search this
+            return CreatedAtRoute("PositionById", 
+                new { id = createdPosition.Id }, 
+                createdPosition);
+        }
+
+        [HttpPut("{id:int}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> UpdatePosition
+            (int id, 
+            [FromBody] PositionForUpdateDto position)
+        {
+            await _service.PositionService.UpdatePositionAsync
+                (id, position, false);
+            return NoContent();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> DeletePosition(int id)
+        {
+            await _service.PositionService.DeletePositionAsync(id, false);
+            return NoContent();
+        }
+    }
+}

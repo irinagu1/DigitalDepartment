@@ -16,7 +16,7 @@ namespace Contracts.DocsEntities
         Task<Document> GetDocumentAsync(int id, bool trackChanges);
         Document GetDocument(int id, bool trackChanges);
         Task<Document> GetDocumentbyPathAsync(string path, bool trackChanges);
-
+    
         Task<PagedList<Document>> GetAllDocumentsForUserAsync
              (string userId, bool toCheck, DocumentParameters documentParameters, bool trackChanges);
         Task<PagedList<Document>> GetAllDocumentsForRolesAsync

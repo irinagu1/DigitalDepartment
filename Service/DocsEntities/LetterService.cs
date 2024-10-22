@@ -151,11 +151,11 @@ namespace Service.DocsEntities
 
         public async Task CreateReport(int documentId, int letterId)
         {
-        /*    var document = _repository.Document.GetDocument(documentId, false);
+
+           /* var document = _repository.Document.GetDocument(documentId, false);
             var recipients = await GetRecipientsForReportByLetterId(letterId, documentId);
             ReportManager reportManager = new ReportManager();
-            reportManager.CreateGeneralReport(recipients, document.Name ?? "");
-       */
+            reportManager.CreateGeneralReport(recipients, document.Name ?? "");*/
         }
     }
 }

@@ -95,5 +95,13 @@ namespace Repository.Auth
             var users = await _context.Users.Where(u => u.UserRoles.Any(ur => ur.RoleId == roleId)).ToListAsync();
             return users;
         }
+
+        public int AmountOfConnectedUsersByPositionId(int positionId)
+        {
+            var count = FindByCondition
+                (u => u.PositionId == positionId, false).Count();
+            return count;
+
+        }
     }
 }

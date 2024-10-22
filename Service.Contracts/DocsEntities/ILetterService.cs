@@ -13,7 +13,9 @@ using System.Threading.Tasks;
 namespace Service.Contracts.DocsEntities
 {
     public interface ILetterService
+
     {
+        Task CreateReport(int documentId, int letterId);
         Task<LetterDto> CreateLetterAsync(LetterForCreationDto letterForCreationDto);
         Task<string> StoreRecipients(RecipientsForCreationDto recipientsForCreationDto);
         Task<IEnumerable<RecipientsForReportDto>> GetRecipientsForReportByLetterId(int LetterId, int documentId);
