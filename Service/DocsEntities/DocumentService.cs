@@ -6,7 +6,7 @@ using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Service.Contracts;
 using Service.Contracts.DocsEntities;
-using Service.ReportsManipulation;
+//using Service.ReportsManipulation;
 using Shared.DataTransferObjects.Documents;
 using Shared.RequestFeatures;
 using System;

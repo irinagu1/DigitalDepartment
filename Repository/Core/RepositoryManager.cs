@@ -72,7 +72,7 @@ namespace Repository.Core
         }
 
         
-        public IPositionRepository PositionRepository =>
+        public IPositionRepository Position =>
             _positionRepository.Value;
         public IDocumentCategoryRepository DocumentCategory =>
             _documentCategoryRepository.Value;
