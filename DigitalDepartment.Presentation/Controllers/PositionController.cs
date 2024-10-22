@@ -22,17 +22,17 @@ namespace DigitalDepartment.Presentation
         {
             _service = service;
         }
+
         [HttpGet]
-        public async Task<IActionResult> GetDocumentCategories(
-        [FromQuery] DocumentCategoryParameters documentCategoryParameters)
+        public async Task<IActionResult> GetPositions(
+        [FromQuery] PositionParameters positionParameters)
         {
             var pagedResult = await
-                _service.DocumentCategoryService.GetAllDocumentCategoriesAsync(
-                    documentCategoryParameters, trackChanges: false);
+                _service.PositionService.GetAllPositionsCategoriesAsync(positionParameters, false);
             Response.Headers.Add("X-Pagination",
                 JsonSerializer.Serialize(pagedResult.metaData));
 
-            return Ok(pagedResult.documentCategories);
+            return Ok(pagedResult.positions);
         }
 
 
@@ -40,7 +40,7 @@ namespace DigitalDepartment.Presentation
         public async Task<IActionResult> GetPositionById(int id)
         {
             var dc = await
-                _service.DocumentCategoryService.GetDocumentCategoryAsync(id, trackChanges: false);
+                _service.PositionService.GetPositionByIdAsync(id, false);
             return Ok(dc);
         }
 

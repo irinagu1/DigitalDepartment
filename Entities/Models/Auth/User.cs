@@ -20,7 +20,7 @@ namespace Entities.Models.Auth
         public virtual ICollection<UserRole>? UserRoles { get; set; }
 
         [ForeignKey(nameof(Position))]
-        public int PositionId { get; set; }
+        public int? PositionId { get; set; }
         public Position? Position{ get; set; }
 
 
