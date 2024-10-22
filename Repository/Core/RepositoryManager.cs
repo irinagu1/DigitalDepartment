@@ -28,6 +28,7 @@ namespace Repository.Core
         private readonly Lazy<IPermissionRepository> _permissionRepository;
         private readonly Lazy<IPermissionRoleRepository> _permissionRoleRepository;
         private readonly Lazy<IUserRoleRepository> _userRoleRepository;
+        private readonly Lazy<IPositionRepository> _positionRepository;
 
 
         public RepositoryManager(RepositoryContext repositoryContext)
@@ -72,7 +73,11 @@ namespace Repository.Core
         }
 
         
+<<<<<<< HEAD
         public IPositionRepository Position =>
+=======
+        public IPositionRepository PositionRepository =>
+>>>>>>> d7e8f93277b6bf5e9034a93eeb8abfa9198eeef7
             _positionRepository.Value;
         public IDocumentCategoryRepository DocumentCategory =>
             _documentCategoryRepository.Value;
