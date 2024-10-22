@@ -19,6 +19,8 @@ namespace Service
 {
     public sealed class ServiceManager : IServiceManager
     {
+
+        private readonly Lazy<IPositionService> _positionService;
         private readonly Lazy<IDocumentStatusService> _documentStatusService;
         private readonly Lazy<IDocumentCategoryService> _documentCategoryService;
         private readonly Lazy<IDocumentService> _documentService;
@@ -32,6 +34,8 @@ namespace Service
                               IFilesService filesService, UserManager<User> userManager,
                              IConfiguration configuration)
         {
+            _positionService = new Lazy<IPositionService>(()=> 
+            new PositionService(repositoryManager, mapper, checker));
             _documentStatusService = new Lazy<IDocumentStatusService>
                 (() => new DocumentStatusService(repositoryManager, mapper, checker));
             _documentCategoryService = new Lazy<IDocumentCategoryService>
@@ -51,8 +55,11 @@ namespace Service
                 new ToCheckService(repositoryManager, mapper));
             _permissionService = new Lazy<IPermissionService>(()=> 
             new PermissionService(repositoryManager, mapper));
+
         }
 
+        public IPositionService PositionService =>
+            _positionService.Value;
         public IDocumentStatusService DocumentStatusService 
             => _documentStatusService.Value;
         public IDocumentCategoryService DocumentCategoryService

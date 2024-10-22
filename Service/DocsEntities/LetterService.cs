@@ -5,7 +5,6 @@ using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Storage;
 using Service.Contracts.DocsEntities;
-using Service.ReportsManipulation;
 using Shared.DataTransferObjects.Documents;
 using Shared.DataTransferObjects.Letters;
 using Shared.DataTransferObjects.Recipients;
