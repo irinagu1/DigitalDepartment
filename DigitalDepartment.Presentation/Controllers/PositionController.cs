@@ -11,7 +11,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace DigitalDepartment.Presentation
+namespace DigitalDepartment.Presentation.Controllers
 {
     [Route("api/positions")]
     [ApiController]
@@ -53,15 +53,15 @@ namespace DigitalDepartment.Presentation
             var createdPosition =
                 await _service.PositionService.CreatePositionAsync(position);
             //search this
-            return CreatedAtRoute("PositionById", 
-                new { id = createdPosition.Id }, 
+            return CreatedAtRoute("PositionById",
+                new { id = createdPosition.Id },
                 createdPosition);
         }
 
         [HttpPut("{id:int}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdatePosition
-            (int id, 
+            (int id,
             [FromBody] PositionForUpdateDto position)
         {
             await _service.PositionService.UpdatePositionAsync
