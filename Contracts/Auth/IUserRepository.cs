@@ -10,6 +10,7 @@ namespace Contracts.Auth
 {
     public interface IUserRepository
     {
+        int AmountOfConnectedUsersByPositionId(int positionId);
         User GetUserById(string userId);
         Task<IEnumerable<User>> GetAll();
         Task<User> GetUserByIdAsync(string userId);

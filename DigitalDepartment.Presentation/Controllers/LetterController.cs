@@ -32,6 +32,12 @@ namespace DigitalDepartment.Presentation.Controllers
             return Ok(dtoToReturn);
         }
 
+        [HttpGet("CreateReport")]
+        public async Task<IActionResult> CreateReport([FromQuery] int letterId, int documentId)
+        {
+            await _service.LetterService.CreateReport(documentId, letterId);
+            return Ok();
+        }
 
         [HttpGet("GetByCategories")]
         public async Task<IActionResult> GetAllRecipientsByCategories([FromQuery] int letterId)

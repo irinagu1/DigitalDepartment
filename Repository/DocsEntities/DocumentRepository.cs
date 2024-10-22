@@ -161,5 +161,7 @@ namespace Repository.DocsEntities
             var count = FindByCondition(d => d.DocumentStatusId == statusId, false).Count();
             return count;
         }
+
+   
     }
 }
