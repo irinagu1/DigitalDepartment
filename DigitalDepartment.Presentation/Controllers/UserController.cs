@@ -49,6 +49,18 @@ namespace DigitalDepartment.Presentation.Controllers
             return Ok(users);
         }
 
+        [HttpGet("userInfo")]
+        public async Task<IActionResult> GetInfoAboutUser()
+        {
+            var userId = 
+                HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userId")?.
+                Value.ToString();
+            if (userId is null)
+                return BadRequest();
+            
+            var info = await _service.UserService.GetInfoAboutUser(userId);
+            return Ok(info);
+        }
 
         [HttpGet("permissions")]
         public async Task<HashSet<string>> GetUserPermissions()

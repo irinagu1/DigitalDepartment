@@ -54,6 +54,9 @@ namespace Repository.DocsEntities
                             {
                                 d
                             };
+            var count = await documents.CountAsync();
+            documents = documents.Skip((documentParameters.PageNumber - 1) * documentParameters.PageSize)
+                                      .Take(documentParameters.PageSize);
 
             List<Document> documentsToList = new List<Document>();
             foreach (var item in documents)
@@ -64,10 +67,7 @@ namespace Repository.DocsEntities
             if(documentParameters.IsSigned is not null)
                 documentsToList = FilterSigned(documentsToList, documentParameters.IsSigned.Value, userId);
 
-            var count = await documents.CountAsync();
-            documents = documents.Skip((documentParameters.PageNumber - 1) * documentParameters.PageSize)
-                                      .Take(documentParameters.PageSize);
-      
+          
             return new PagedList<Document>(documentsToList,
                                              count,
                                              documentParameters.PageNumber,
@@ -92,6 +92,10 @@ namespace Repository.DocsEntities
                                 d
                             };
 
+         
+            var count = await documents.CountAsync();
+            documents = documents.Skip((documentParameters.PageNumber - 1) * documentParameters.PageSize)
+                          .Take(documentParameters.PageSize);
             List<Document> documentsToList = new List<Document>();
             foreach (var item in documents)
             {
@@ -101,10 +105,6 @@ namespace Repository.DocsEntities
             if (documentParameters.IsSigned is not null)
                 documentsToList = FilterSigned(documentsToList, documentParameters.IsSigned.Value, userId);
 
-            var count = await documents.CountAsync();
-            documents = documents.Skip((documentParameters.PageNumber - 1) * documentParameters.PageSize)
-                          .Take(documentParameters.PageSize);
-         
             return new PagedList<Document>(documentsToList,
                                  count,
                                  documentParameters.PageNumber,

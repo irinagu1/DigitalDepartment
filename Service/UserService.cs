@@ -5,6 +5,7 @@ using Entities.Models.Auth;
 using Microsoft.AspNetCore.Identity;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.DataTransferObjects.Roles;
 using Shared.DataTransferObjects.Users;
 using System;
 using System.Collections.Generic;
@@ -129,6 +130,16 @@ namespace Service
             var usersEntities = await _repository.User.GetUsersByRoleId(roleId);
             var usersDto = _mapper.Map<IEnumerable<UserDto>>(usersEntities);
             return usersDto;
+        }
+
+        public async Task<UserAndRolesDto> GetInfoAboutUser(string userId)
+        {
+            var user = GetUserById(userId);
+            
+            var rolesEntities = await _repository.Role.GetByUserId(userId);
+            var rolesDto = _mapper.Map<IEnumerable<RolesDto>>(rolesEntities);
+
+            return new UserAndRolesDto() { User = user, Roles = rolesDto };
         }
     }
 }

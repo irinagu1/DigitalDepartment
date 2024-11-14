@@ -11,6 +11,7 @@ namespace Service.Contracts
 {
     public interface IUserService
     {
+        Task<UserAndRolesDto> GetInfoAboutUser(string userId);
         UserDto GetUserById(string userId);
         Task<UserDto> GetUserByIdAsync(string userId);
         Task<HashSet<string>> GetUserPermissions(string userId);
