@@ -18,9 +18,9 @@ namespace Entities.Models
         public User? User { get; set; }
 
         
-        [ForeignKey(nameof(Document))]
-        public int? DocumentId { get; set; }
-        public Document? Document { get; set; }
+        [ForeignKey(nameof(Version))]
+        public long? VersionId { get; set; }
+        public DocumentVersion? Version { get; set; }
 
         public DateTime DateChecked { get; set; }
     }

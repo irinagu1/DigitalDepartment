@@ -20,7 +20,7 @@ namespace Repository.DocsEntities
         public void CreateToCheck(ToCheck toCheck) => Create(toCheck);
 
         public async Task<ToCheck> GetToCheckByUserAndDocumentIds(string userId, int documentId)
-            => await FindByCondition(tc => tc.UserId == userId && tc.DocumentId == documentId, false).
+            => await FindByCondition(tc => tc.UserId == userId /*&& tc.DocumentId == documentId*/, false).
                 FirstOrDefaultAsync();
 
       

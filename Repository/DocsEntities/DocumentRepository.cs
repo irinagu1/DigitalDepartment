@@ -134,7 +134,7 @@ namespace Repository.DocsEntities
         public bool CheckIfDocumentSigned(string userId, int documentId)
         {
             var entity = from d in _repositoryContext.Documents
-                         join ch in _repositoryContext.ToChecks on d.Id equals ch.DocumentId
+                         join ch in _repositoryContext.ToChecks on d.Id equals 10/* ch.DocumentId*/
                          where ch.UserId == userId && d.Id == documentId
                          select ch;
             if (entity.FirstOrDefault() is not null)
@@ -148,7 +148,8 @@ namespace Repository.DocsEntities
           FindByCondition(d => d.Id == id, trackChanges).FirstOrDefault();
 
         public Task<Document> GetDocumentbyPathAsync(string path, bool trackChanges) =>
-            FindByCondition(d => d.Path == path, trackChanges).SingleOrDefaultAsync();
+            FindByCondition(d => /*d.Path == path*/ d.isArchived == false, trackChanges).SingleOrDefaultAsync();
+            
 
         public int AmountOfConnectedDocumentsByCategoryId(int categoryId)
         {

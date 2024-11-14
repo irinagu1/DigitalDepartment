@@ -18,8 +18,8 @@ namespace Entities.Models
         public string? Name { get; set; }
 
        
-        [Required(ErrorMessage = "Document path is a requred field")]
-        public string? Path { get; set; }
+      //  [Required(ErrorMessage = "Document path is a requred field")]
+    //    public string? Path { get; set; }
 
      
         [ForeignKey(nameof(DocumentStatus))]
@@ -38,6 +38,6 @@ namespace Entities.Models
 
         public bool isArchived { get; set; } = false;
 
-        public DateTime? CreationDate { get; set; } 
+      //  public DateTime? CreationDate { get; set; } 
     }
 }

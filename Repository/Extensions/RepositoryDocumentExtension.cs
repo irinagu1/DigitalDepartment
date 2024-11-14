@@ -27,6 +27,7 @@ namespace Repository.Extensions
 
             return documents.OrderBy(orderQuery);
         }
+
         public static IQueryable<Document> Search(this IQueryable<Document> documents, string searchName, string searchAuthor)
         {
             if (string.IsNullOrWhiteSpace(searchName) && string.IsNullOrWhiteSpace(searchAuthor))
@@ -59,10 +60,10 @@ namespace Repository.Extensions
                 DateTime dateDt = DateTime.Parse(date);
                 var a = dateDt.Date;
                
-                documents = documents.Where(e => e.CreationDate.Value.Date.Year == dateDt.Date.Year 
+               /* documents = documents.Where(e => e.CreationDate.Value.Date.Year == dateDt.Date.Year 
                                                 && e.CreationDate.Value.Date.Month == dateDt.Date.Month
                                                 && e.CreationDate.Value.Date.Day == dateDt.Date.Day
-                                                );
+                                                );*/
             }
 
             if(status is not null)

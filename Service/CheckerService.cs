@@ -52,7 +52,7 @@ namespace Service
         {
             await GetDocumentStatusEntityAndCheckIfItExistsAsync(documentEntity.DocumentStatusId, false);
             await GetDocumentCategoryEntityAndCheckiIfItExistsAsync(documentEntity.DocumentCategoryId, false);
-            await CheckPathOriginalityAndEmpty(documentEntity.Path, false);
+         //   await CheckPathOriginalityAndEmpty(documentEntity.Path, false);
         }
 
         public async Task CheckPathOriginalityAndEmpty(string? path, bool trackChanges)
