@@ -18,13 +18,12 @@ namespace Contracts.RepositoryCore
         IDocumentStatusRepository DocumentStatus { get; }
         IToCheckRepository ToCheck { get; }
 
-
-
         IUserRepository User { get; }
         IRoleRepository Role { get; }
         IPermissionRepository Permission { get; }
         IPermissionRoleRepository PermissionRole { get; }
         IUserRoleRepository UserRole { get; }
+        IDocumentVersionRepository DocumentVersion { get; }
         Task SaveAsync();
         void Save();
     }

@@ -19,5 +19,8 @@ namespace Repository.DocsEntities
         {
             _repositoryContext = repositoryContext;
         }
+
+        public void CreateDocumentVersion(DocumentVersion documentVersion) =>
+            Create(documentVersion);
     }
 }

@@ -17,6 +17,7 @@ namespace Service.Contracts
         Task<Role> GetRoleEntityAndCheckIdExistsAsync(string id, bool trackChanges);
         Task CheckDocumentParameters(Document documentEntity);
         User GetUserEntityAndCheckItExists(string id, bool trackChanges);
+        void CheckIfPathIsEmpty(string? path);
 
     }
 }

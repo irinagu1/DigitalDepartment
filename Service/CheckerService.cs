@@ -52,16 +52,13 @@ namespace Service
         {
             await GetDocumentStatusEntityAndCheckIfItExistsAsync(documentEntity.DocumentStatusId, false);
             await GetDocumentCategoryEntityAndCheckiIfItExistsAsync(documentEntity.DocumentCategoryId, false);
-         //   await CheckPathOriginalityAndEmpty(documentEntity.Path, false);
+           
         }
 
-        public async Task CheckPathOriginalityAndEmpty(string? path, bool trackChanges)
+        public void CheckIfPathIsEmpty(string? path)
         {
             if (path is null)
                 throw new Exception("Document path is empty");
-            var document = await _repository.Document.GetDocumentbyPathAsync(path, trackChanges);
-            if (document is not null)
-                throw new DocumentNotSingleException(path);
         }
 
         public async Task<Role> GetRoleEntityAndCheckIdExistsAsync(string id, bool trackChanges)

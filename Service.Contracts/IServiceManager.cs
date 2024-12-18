@@ -19,6 +19,6 @@ namespace Service.Contracts
         IRoleService RoleService { get; }
         IPermissionService PermissionService { get; }
         IToCheckService ToCheckService { get; }
-
+        IDocumentVersionService DocumentVersionService { get; }
     }
 }

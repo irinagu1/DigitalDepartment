@@ -6,6 +6,7 @@ using Shared.DataTransferObjects;
 using Shared.DataTransferObjects.DocumentCategories;
 using Shared.DataTransferObjects.Documents;
 using Shared.DataTransferObjects.DocumentStatuses;
+using Shared.DataTransferObjects.DocumentVersion;
 using Shared.DataTransferObjects.Letters;
 using Shared.DataTransferObjects.PermissionRole;
 using Shared.DataTransferObjects.Position;
@@ -87,6 +88,9 @@ namespace DigitalDepartment
 
             CreateMap<UserRole, UserRoleDto>();
             CreateMap<UserRoleDto, UserRole>();
+
+            CreateMap<DocumentVersionForCreationDto, DocumentVersion>();
+
         }
     }
 }

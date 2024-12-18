@@ -10,6 +10,7 @@ namespace Shared.DataTransferObjects.Documents
 {
     public record DocumentForCreationDto : DocumentForManipulationDto
     {
+        public string? Path { get; set; } = "";
         public DateTime CreationDate { get; set; }
     }
 }

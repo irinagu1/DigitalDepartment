@@ -17,7 +17,7 @@ namespace DigitalDepartment.Presentation.Controllers
 {
     [Route("api/documents")]
     [ApiController]
-    [Authorize]
+  //  [Authorize]
     public class DocumentsController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -74,7 +74,7 @@ namespace DigitalDepartment.Presentation.Controllers
 
 
         [HttpPost("SignDocument")]
-        public async Task<IActionResult> CreateDocument(string documentId)
+        public async Task<IActionResult> SignDocument(string documentId)
         {
             var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userId").Value.ToString();
             var toCheckDto = await _service.ToCheckService.Create(userId, int.Parse(documentId));

@@ -12,6 +12,8 @@ using Microsoft.OpenApi.Models;
 using Entities.Models.Auth;
 using Microsoft.AspNetCore.Authorization;
 using DigitalDepartment.Authorzation;
+using Service.Contracts.DocsEntities;
+using Service.DocsEntities;
 
 namespace DigitalDepartment.Extensions
 {
@@ -37,6 +39,8 @@ namespace DigitalDepartment.Extensions
 
         public static void ConfigureServiceManager(this IServiceCollection services) =>
             services.AddScoped<IServiceManager, ServiceManager>();
+        public static void ConfigureDocumentVersionService(this IServiceCollection services) =>
+            services.AddScoped<IDocumentVersionService, DocumentVersionService>();
 
         public static void ConfigureSqlContext(this IServiceCollection services,
             IConfiguration configuration) =>

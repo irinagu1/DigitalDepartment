@@ -8,6 +8,7 @@ using Service.Contracts;
 using Service.Contracts.DocsEntities;
 //using Service.ReportsManipulation;
 using Shared.DataTransferObjects.Documents;
+using Shared.DataTransferObjects.DocumentVersion;
 using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
@@ -25,13 +26,19 @@ namespace Service.DocsEntities
         private readonly IMapper _mapper;
         private readonly ICheckerService _checker;
         private readonly IFilesService _files;
-
-        public DocumentService(IRepositoryManager repository, IMapper mapper, ICheckerService checker, IFilesService filesService)
+        private readonly IDocumentVersionService _versions;
+        public DocumentService(
+            IRepositoryManager repository, 
+            IMapper mapper, 
+            ICheckerService checker, 
+            IFilesService filesService,
+            IDocumentVersionService versionService)
         {
             _repository = repository;
             _mapper = mapper;
             _checker = checker;
             _files = filesService;
+            _versions = versionService;
         }
 
         public async Task<(IEnumerable<DocumentForShowDto> documents, MetaData metaData)>
@@ -125,40 +132,28 @@ namespace Service.DocsEntities
 
         public async Task<DocumentDto> CreateDocumentAsync(DocumentForCreationDto documentForCreationDto)
         {
-            documentForCreationDto.Path = "D:\\CoreFiles" + "\\" + documentForCreationDto.Name;
-            
-            //мапим в ентити
-            var documentEntity = _mapper.Map<Entities.Models.Document>(documentForCreationDto);
-            //проверка существования категории, статуса, письма, что имя, файл, не пусто!! 
-            await _checker.CheckDocumentParameters(documentEntity);
-            //название категории
-            var category = await _checker.GetDocumentCategoryEntityAndCheckiIfItExistsAsync(documentEntity.DocumentCategoryId, false);
+            //    documentForCreationDto.Path = "D:\\CoreFiles" + "\\" + documentForCreationDto.Name;
+            var documentDto = await CreateDocumentEnity(documentForCreationDto);
+            await _versions.CreateVersionEntity(
+                1, 
+                documentForCreationDto.Path, 
+                documentDto
+                );
 
-            _repository.Document.CreateDocument(documentEntity);
-            await _repository.SaveAsync();
-            var documentToReturn = _mapper.Map<DocumentDto>(documentEntity);
-            return documentToReturn;
-
-            //создаем путь по которому положим файл
-            /* var path =  _files.CheckIfDirectoryExistsAndCreateIfNot(documentEntity, category.Name);
-             //путь + имя файла
-             documentEntity.Path = path + documentForCreationDto.File.FileName;
-             try 
-             {
-                 //кладем на диск
-                  await _files.StoreDocumentInFileSystem(documentForCreationDto.File, path);
-                 //создаем запись в базе данных
-                 _repository.Document.CreateDocument(documentEntity);
-             }
-             catch(Exception e) 
-             {
-                 throw new Exception("Cannot store doc or create in db");
-             }
-             await _repository.SaveAsync();*/
-
+            return documentDto;
         }
 
+        public async Task<DocumentDto> CreateDocumentEnity(DocumentForCreationDto documentForCreationDto)
+        {
+            var documentEntity = _mapper.Map<Entities.Models.Document>(documentForCreationDto);
+            await _checker.CheckDocumentParameters(documentEntity);
+            _repository.Document.CreateDocument(documentEntity);
+            await _repository.SaveAsync();
+            var documentDto = _mapper.Map<DocumentDto>(documentEntity);
+            return documentDto;
+        }
 
+     
         public async Task<DocumentDto> GetDocumentByIdAsync(int id, bool trackChanges)
         {
             var document = await _repository.Document.GetDocumentAsync(id, trackChanges);

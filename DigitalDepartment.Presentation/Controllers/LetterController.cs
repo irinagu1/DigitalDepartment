@@ -50,7 +50,7 @@ namespace DigitalDepartment.Presentation.Controllers
         //create
         [HttpPost(Name = "CreateLetter")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> CreateDocumentStatus([FromBody] LetterForCreationDto letterForCreationDto)
+        public async Task<IActionResult> CreateLetter([FromBody] LetterForCreationDto letterForCreationDto)
         {
             var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userId").Value.ToString();
             if (userId == null) 

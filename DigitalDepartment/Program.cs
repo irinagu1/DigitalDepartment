@@ -15,6 +15,7 @@ builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureChecker();
+builder.Services.ConfigureDocumentVersionService();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.ConfigureFilesFolders(builder.Configuration);

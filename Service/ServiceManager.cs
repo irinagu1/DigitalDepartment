@@ -30,9 +30,16 @@ namespace Service
         private readonly Lazy<IRoleService> _roleService;
         private readonly Lazy<IToCheckService> _toCheckService;
         private readonly Lazy<IPermissionService> _permissionService;
-        public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper, ICheckerService checker, 
-                              IFilesService filesService, UserManager<User> userManager,
-                             IConfiguration configuration)
+        private readonly Lazy<IDocumentVersionService> _documentVersionService;
+
+        public ServiceManager(
+            IRepositoryManager repositoryManager, 
+            IMapper mapper, 
+            ICheckerService checker, 
+            IFilesService filesService,
+            IDocumentVersionService documentVersionService,
+            UserManager<User> userManager,
+            IConfiguration configuration)
         {
             _positionService = new Lazy<IPositionService>(()=> 
             new PositionService(repositoryManager, mapper, checker));
@@ -41,7 +48,12 @@ namespace Service
             _documentCategoryService = new Lazy<IDocumentCategoryService>
                 (() => new DocumentCategoryService(repositoryManager, mapper, checker));
             _documentService = new Lazy<IDocumentService>
-                (() => new DocumentService(repositoryManager, mapper, checker, filesService));
+                (() => new DocumentService(
+                    repositoryManager, 
+                    mapper, 
+                    checker, 
+                    filesService, 
+                    documentVersionService));
             _letterService = new Lazy<ILetterService>
                 (() => new LetterService(repositoryManager, mapper));
             _authenticationService = new Lazy<IAuthenticationService>(() =>
@@ -78,6 +90,7 @@ namespace Service
             => _toCheckService.Value;
         public IPermissionService PermissionService
             => _permissionService.Value;
-
+        public IDocumentVersionService DocumentVersionService
+            => _documentVersionService.Value;
     }
 }
