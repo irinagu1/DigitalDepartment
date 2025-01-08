@@ -15,5 +15,6 @@ namespace Contracts.DocsEntities
         Task<Position> GetPositionByIdAsync(int positionId, bool trackChanges);
         void CreatePosition(Position position);
         void DeletePosition(Position position);
+        void UpdatePosition(Position position);
     }
 }

@@ -44,13 +44,14 @@ namespace Service
             _repository.Position.DeletePosition(position);
             await _repository.SaveAsync();
         }
-        public async Task UpdatePositionAsync(int positionId, PositionForUpdateDto positionForUpdate, bool trackChanges)
+        public async Task UpdatePosition(int positionId, PositionForUpdateDto positionForUpdate, bool trackChanges)
         {
             var position =
                await _checkerService.GetPositionEntityAndCheckIfItExistsAsync
                (positionId, trackChanges);
             _mapper.Map(positionForUpdate, position);
-            await _repository.SaveAsync();
+            _repository.Position.UpdatePosition(position);
+            _repository.Save();
         }
 
         public async Task<PositionDto> GetPositionByIdAsync(int id, bool trackChanges)
@@ -63,7 +64,7 @@ namespace Service
         }
 
         public async Task<(IEnumerable<PositionDto> positions, MetaData metaData)> 
-            GetAllPositionsCategoriesAsync
+            GetAllPositionsAsync
             (PositionParameters positionParameters, bool trackChanges)
         {
             var positionsWithMetaData = 

@@ -11,7 +11,7 @@ namespace Service.Contracts
     public interface IPositionService
     {
         Task<(IEnumerable<PositionDto> positions, MetaData metaData)>
-          GetAllPositionsCategoriesAsync(
+          GetAllPositionsAsync(
               PositionParameters positionParameters,
               bool trackChanges);
 
@@ -21,6 +21,6 @@ namespace Service.Contracts
 
         Task DeletePositionAsync(int positionId, bool trackChanges);
 
-        Task UpdatePositionAsync(int positionId, PositionForUpdateDto  positionForUpdate, bool trackChanges);
+        Task UpdatePosition(int positionId, PositionForUpdateDto  positionForUpdate, bool trackChanges);
     }
 }

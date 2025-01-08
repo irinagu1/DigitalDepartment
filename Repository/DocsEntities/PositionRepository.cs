@@ -1,5 +1,6 @@
 ﻿using Contracts.DocsEntities;
 using Entities.Models;
+using Entities.Models.Auth;
 using Microsoft.EntityFrameworkCore;
 using Repository.Core;
 using Repository.Extensions;
@@ -24,6 +25,8 @@ namespace Repository.DocsEntities
         
         public void DeletePosition(Position position) =>
             Delete(position);
+
+        public void UpdatePosition(Position position) => Update(position);
 
         public async Task<PagedList<Position>> GetAllPositionsAsync(PositionParameters positionParameters, bool trackChanges)
         {

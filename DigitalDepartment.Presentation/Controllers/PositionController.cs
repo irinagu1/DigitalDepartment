@@ -28,7 +28,7 @@ namespace DigitalDepartment.Presentation.Controllers
         [FromQuery] PositionParameters positionParameters)
         {
             var pagedResult = await
-                _service.PositionService.GetAllPositionsCategoriesAsync(positionParameters, false);
+                _service.PositionService.GetAllPositionsAsync(positionParameters, false);
             Response.Headers.Add("X-Pagination",
                 JsonSerializer.Serialize(pagedResult.metaData));
 
@@ -45,7 +45,7 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
 
-        [HttpPost(Name = "CreatePosition")]
+        [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreatePosition
             ([FromBody] PositionForCreationDto position)
@@ -64,7 +64,7 @@ namespace DigitalDepartment.Presentation.Controllers
             (int id,
             [FromBody] PositionForUpdateDto position)
         {
-            await _service.PositionService.UpdatePositionAsync
+            await _service.PositionService.UpdatePosition
                 (id, position, false);
             return NoContent();
         }
