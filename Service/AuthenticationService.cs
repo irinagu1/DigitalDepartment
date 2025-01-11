@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Win32.SafeHandles;
 using Service.Contracts;
 using Shared;
+using Shared.DataTransferObjects;
 using Shared.DataTransferObjects.Users;
 using System;
 using System.Collections.Generic;
@@ -160,6 +161,46 @@ namespace Service
                 throw new RefreshTokenBadRequest();
             _user = user;
             return await CreateToken(populateExp: false);
+        }
+
+        public async Task<bool> ChangePassword(PasswordToChangeDto changeDto)
+        {
+            var user = await _userManager.FindByIdAsync(changeDto.UserId);
+            if(user is not null)
+            {
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var result = await _userManager.ResetPasswordAsync(user, code, changeDto.NewPassword);
+                if (result.Succeeded)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public async Task<bool> DeleteUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is not null)
+            {
+                var result = await _userManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool UpdateUser(User userForUpdate)
+        {
+         //   var re
+          /*
+                var result = _userManager.Up (userForUpdate);
+                if (result.Succeeded)
+                {
+                    return true;
+                }
+            */
+            return false;
         }
 
     }

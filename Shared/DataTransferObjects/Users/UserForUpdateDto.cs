@@ -14,6 +14,7 @@ namespace Shared.DataTransferObjects.Users
         public string SecondName { get; set; }
         public string LastName { get; set; }
         public string UserName { get; set; }
+        public int PositionId { get; set; }
         public IEnumerable<string> RolesNames { get; set; }
 
     }

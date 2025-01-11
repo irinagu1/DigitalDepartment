@@ -17,17 +17,22 @@ namespace Service
 
 
 {
-    
+
     public sealed class UserService : IUserService
     {
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
         private readonly ICheckerService _checker;
-        public UserService(IRepositoryManager repository, IMapper mapper, ICheckerService checker)
+   //     private readonly IAuthenticationService _authentication;
+        public UserService(IRepositoryManager repository, 
+            IMapper mapper, 
+            ICheckerService checker)
+       //     IAuthenticationService authentication)
         {
             _repository = repository;
             _mapper = mapper;
             _checker = checker;
+        //    _authentication = authentication;
         }
 
         public UserDto GetUserById(string userId)
@@ -42,7 +47,7 @@ namespace Service
 
         public async Task<UserDto> GetUserByIdAsync(string userId)
         {
-            var user =await _repository.User.GetUserByIdAsync(userId);
+            var user = await _repository.User.GetUserByIdAsync(userId);
             if (user is null)
                 throw new UserNotFound(userId);
             var userDto = _mapper.Map<UserDto>(user);
@@ -51,7 +56,7 @@ namespace Service
 
         public async Task<List<UserForLettersDto>> GetAllUserForLetters()
         {
-            var users =  await _repository.User.GetAllUsersByActive(true);
+            var users = await _repository.User.GetAllUsersByActive(true);
             var usersForLettersDto = _mapper.Map<List<UserForLettersDto>>(users);
             return usersForLettersDto;
         }
@@ -61,9 +66,36 @@ namespace Service
             bool isActive = bool.Parse(activity);
             var users = await _repository.User.GetAllUsersByActive(isActive);
             var usersDto = _mapper.Map<List<UserDto>>(users);
+
+            var usersForDeleting = await GetUsersForDeleting();
+         
+            for (int i = 0; i < usersDto.Count; i++)
+            {
+                var positionName = await ReturnPositionName(usersDto[i].PositionId);
+                if (positionName is not null)
+                    usersDto[i].PositionName = positionName;
+
+                var flag = usersForDeleting.Where(u=> u.Id == usersDto[i].Id).Any();
+                if (flag)
+                    usersDto[i].CanDelete = true;
+                else
+                    usersDto[i].CanDelete = false;
+            }
+          
             return usersDto;
         }
 
+        public async Task<string> ReturnPositionName(int? PositionId)
+        {
+            if (PositionId is not null)
+            {
+                var position = await _repository.Position.GetPositionByIdAsync
+                    (PositionId.Value, false);
+                    return position.Name;
+            }
+            return null;
+
+        }
         public async Task<HashSet<string>> GetUserPermissions(string userId)
         {
             var permissions = await _repository.User.GetUserPermissions(userId);
@@ -94,8 +126,13 @@ namespace Service
             userEntity.LastName = updateDto.LastName;
             userEntity.UserName = updateDto.UserName;
             userEntity.Email = updateDto.UserName + "@mail.ru";
-            _repository.User.Update(userEntity);
+            userEntity.PositionId = updateDto.PositionId;
+       //     _authentication.UpdateUser(userEntity);
+
+            _repository.User.UpdateUser(userEntity);
             _repository.Save();
+            
+
             return true;
         }
 
@@ -118,12 +155,7 @@ namespace Service
             return true;
         }
 
-        public bool ChangePassword(PasswordToChangeDto changeDto)
-        {
-            return true;
-          //  var userEntity = _checker.GetUserEntityAndCheckItExists(changeDto.UserId, false);
-        //    userEntity.PasswordHash
-        }
+     
 
         public async Task<IEnumerable<UserDto>> GetUsersByRole(string roleId)
         {
@@ -140,6 +172,13 @@ namespace Service
             var rolesDto = _mapper.Map<IEnumerable<RolesDto>>(rolesEntities);
 
             return new UserAndRolesDto() { User = user, Roles = rolesDto };
+        }
+
+        public async Task<IEnumerable<UserDto>> GetUsersForDeleting()
+        {
+            var usersEntities = await _repository.User.GetUsersForDeleting();
+            var usersDto = _mapper.Map<IEnumerable<UserDto>>(usersEntities);
+            return usersDto;
         }
     }
 }

@@ -18,7 +18,9 @@ namespace Contracts.Auth
         Task<IEnumerable<User>> GetAllUsersByActive(bool param);
         Task<HashSet<string>> GetUserRolesIds(string userId);
         Task<IEnumerable<User>> GetUsersByRoleId(string roleId);
+        Task<IEnumerable<User>> GetUsersForDeleting();
         User GetUserByLetterIdAsync(int letterId);
         void Update(User user);
+        void UpdateUser(User user);
     }
 }

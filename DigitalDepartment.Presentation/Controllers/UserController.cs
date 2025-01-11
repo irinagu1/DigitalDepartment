@@ -49,6 +49,13 @@ namespace DigitalDepartment.Presentation.Controllers
             return Ok(users);
         }
 
+        [HttpGet("fordeleting")]
+        public async Task<IActionResult> GetAllUsersForDeleting()
+        {
+            var users = await _service.UserService.GetUsersForDeleting();
+            return Ok(users);
+        }
+
         [HttpGet("userInfo")]
         public async Task<IActionResult> GetInfoAboutUser()
         {

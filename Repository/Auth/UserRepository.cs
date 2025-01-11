@@ -90,6 +90,8 @@ namespace Repository.Auth
             return users;
         }
 
+        public void UpdateUser(User user) => Update(user);
+
         public async Task<IEnumerable<User>> GetUsersByRoleId(string roleId)
         {
             var users = await _context.Users.Where(u => u.UserRoles.Any(ur => ur.RoleId == roleId)).ToListAsync();
@@ -103,5 +105,28 @@ namespace Repository.Auth
             return count;
 
         }
+
+        public async Task<IEnumerable<User>> GetUsersForDeleting()
+        {
+            var allUsers = await _context.Users.ToListAsync();
+            var usersToDelete = new List<User>();
+            for(int i=0; i < allUsers.Count; i++)
+            {
+                var inRecipients = _context.Recipients.Where(
+                    r => r.Type == "user" &&
+                    r.TypeId == allUsers[i].Id).ToList();
+                if (inRecipients.Count != 0)
+                    continue;
+
+                var inToChecks = _context.ToChecks.Where(
+                    ch => ch.UserId == allUsers[i].Id).ToList();
+                if (inToChecks.Count != 0)
+                    continue;
+                usersToDelete.Add(allUsers[i]);
+            }
+            return usersToDelete;
+        }
+
+
     }
 }

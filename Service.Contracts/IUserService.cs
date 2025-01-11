@@ -17,9 +17,10 @@ namespace Service.Contracts
         Task<HashSet<string>> GetUserPermissions(string userId);
         Task<IEnumerable<UserDto>> GetAllUsersForShow(string isActive);
         Task<IEnumerable<UserDto>> GetUsersByRole(string roleId);
+        Task<IEnumerable<UserDto>> GetUsersForDeleting();
         Task<List<UserForLettersDto>> GetAllUserForLetters();
         bool UpdateUserStatus(string userId);
         bool UpdateUser(UserForUpdateDto userForUpdateDto);
-        bool ChangePassword(PasswordToChangeDto changeDto);
+      
     }
 }

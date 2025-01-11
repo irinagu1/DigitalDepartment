@@ -1,13 +1,17 @@
 ﻿using DigitalDepartment.Presentation.ActionFilters;
 using Entities.Models.Auth;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 using Shared.DataTransferObjects.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DigitalDepartment.Presentation.Controllers
 {
@@ -46,13 +50,28 @@ namespace DigitalDepartment.Presentation.Controllers
                 return Unauthorized();
             var tokenDto = await _service.AuthenticationService
                 .CreateToken(populateExp: true);
-
-     
-         //   var userPermissions = await _service.UserService.GetUserPermissions(userId);
             return Ok(tokenDto);
 
         }
 
+        [HttpPut("password")]
+        public async Task<IActionResult> ChangePassword(
+        [FromBody] PasswordToChangeDto changeDto)
+        {
+            var result = await _service.AuthenticationService.ChangePassword(changeDto);
+            if (!result)
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            var result = await _service.AuthenticationService.DeleteUser(userId);
+            if (!result)
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            return Ok();
+        }
 
     }
 }

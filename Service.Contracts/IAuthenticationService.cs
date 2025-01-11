@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Entities.Models.Auth;
+using Microsoft.AspNetCore.Identity;
 using Shared;
+using Shared.DataTransferObjects;
 using Shared.DataTransferObjects.Users;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,8 @@ namespace Service.Contracts
         Task<TokenDto> CreateToken(bool populateExp);
         Task<TokenDto> RefreshToken(TokenDto tokenDto);
 
-
+        Task<bool> ChangePassword(PasswordToChangeDto changeDto);
+        Task<bool> DeleteUser(string userId);
+        bool UpdateUser(User userForUpdate);
     }
 }

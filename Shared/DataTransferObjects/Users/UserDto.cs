@@ -15,5 +15,8 @@ namespace Shared.DataTransferObjects.Users
         public string? LastName { get; set; }
         public string? UserName { get; set; }
         public bool? isActive { get; set; }
+        public bool? CanDelete { get; set; }
+        public int? PositionId { get; set; }
+        public string? PositionName { get; set; }
     }
 }
