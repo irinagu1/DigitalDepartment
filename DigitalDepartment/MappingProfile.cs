@@ -34,6 +34,9 @@ namespace DigitalDepartment
             CreateMap<DocumentCategoryForCreationDto, DocumentCategory>();
             CreateMap<DocumentCategoryForUpdateDto, DocumentCategory>();
 
+            CreateMap<DocumentVersion, VersionDto>();
+            CreateMap<VersionDto, DocumentVersion>();
+
             CreateMap<Document, DocumentDto>();
             CreateMap<DocumentForCreationDto, Document>();
             CreateMap<Document, DocumentForUpdateDto>();

@@ -27,7 +27,7 @@ namespace Repository.DocsEntities
         {
             var documentStatuses = await FindAll(trackChanges)
                                       .FilterDocumentStatuses(documentStatusParameters)
-                                     .OrderBy(dc => dc.Name)
+                                     .OrderByDescending(dc => dc.isEnable)
                                      .Skip((documentStatusParameters.PageNumber-1)* documentStatusParameters.PageSize)
                                      .Take(documentStatusParameters.PageSize)
                                      .ToListAsync();

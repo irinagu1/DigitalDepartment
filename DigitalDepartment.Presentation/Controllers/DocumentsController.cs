@@ -34,7 +34,57 @@ namespace DigitalDepartment.Presentation.Controllers
             _responseData = new ResponseContext();
         }
 
-      
+
+        [HttpGet("byIdForVersion")]
+        public async Task<IActionResult> GetDocumentByIdForVersion(
+         [FromQuery] int documentId)
+        {
+            var dto = await _service.DocumentService
+                .GetDocumentByIdForVersion(documentId);
+            return Ok(dto);
+        }
+
+
+        [HttpPost("CreateDocument")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> CreateDocument([FromBody] DocumentForCreationDto document)
+        {
+            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userId").Value.ToString();
+            var createdDocument = await _service.DocumentService.CreateDocumentAsync(document, userId);
+            return Ok(createdDocument.Id);
+        }
+
+        [HttpGet("all")]
+        public IActionResult GetAllDocuments(
+           [FromQuery] DocumentShowParameters documentParameters)
+        {
+            var pagedResult =  _service.DocumentService.GetAllDocumentsForShowAsync(
+                    documentParameters, false);
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
+            return Ok(pagedResult.documents);
+        }
+
+        [HttpPut("ArchiveDocument")]
+        public async Task<IActionResult> ArchiveDocument(string documentId)
+        {
+            var documentDto = _service.DocumentService.ArchiveDocument(int.Parse(documentId));
+            if (documentDto is not null)
+                return NoContent();
+            throw new Exception("document is null");
+        }
+
+
+        [HttpDelete("DeleteDocument")]
+        public IActionResult DeleteDocument(int documentId)
+        {
+            var result = _service.DocumentService.DeleteDocument(documentId);
+            if(result)
+                return NoContent();
+            throw new Exception("cannot delete document");
+        }
+        //CHECKEDD
+
+
         [HttpGet]
         public async Task<IActionResult> GetDocuments(
          [FromQuery] DocumentParameters documentParameters)
@@ -91,32 +141,12 @@ namespace DigitalDepartment.Presentation.Controllers
             throw new Exception("document is null");
         }
 
-        [HttpPut("ArchiveDocument")]
-        public async Task<IActionResult> ArchiveDocument(string documentId)
-        {
-            var documentDto = _service.DocumentService.ArchiveDocument(int.Parse(documentId));
-            if(documentDto is not null)
-                return NoContent();
-            throw new Exception("document is null");
-        }
+     
+        
 
-        [HttpPost("CreateDocument")]
-     //   [Authorize(Policy = "Create")]
-        [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> CreateDocument([FromBody] DocumentForCreationDto document)
-        {
+     
 
-            var createdDocument = await _service.DocumentService.CreateDocumentAsync(document);
-            return Ok(createdDocument.Id);
-
-            //   return CreatedAtRoute("DocumentById", new { id = createdDocument.Id, createdDocument });
-
-
-            //  var createdDocumentCategory = await _service.DocumentCategoryService.CreateDocumentCategoryAsync(documentCategory);
-            //search this
-            //   return CreatedAtRoute("DocumentCategoryById", new { id = createdDocumentCategory.Id }, createdDocumentCategory);
-
-        }
+        #region Uploading
 
         [HttpPost("UploadChunks")]
  //       [Authorize(Policy = "Create")]
@@ -194,7 +224,7 @@ namespace DigitalDepartment.Presentation.Controllers
             }
         }
 
-
+        #endregion
 
 
     }

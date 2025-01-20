@@ -9,7 +9,7 @@ namespace Shared.DataTransferObjects.ToCheck
     public class ToCheckForCreateDto
     {
         public string? UserId { get; set; }
-        public int? DocumentId { get; set; }
+        public long? VersionId { get; set; }
         public DateTime? DateChecked { get; set; }
     }
 }

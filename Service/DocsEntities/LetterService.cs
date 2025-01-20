@@ -141,9 +141,9 @@ namespace Service.DocsEntities
             var recipientsForReport = new List<RecipientsForReportDto>();
             foreach(var user in usersDto)
             {
-                var toCheck = await _repository.ToCheck.GetToCheckByUserAndDocumentIds(user.Id, documentId);
+                var toCheck = "aa";//  await _repository.ToCheck.GetToCheckByUserAndDocumentIds(user.Id, documentId);
                 if (toCheck is not null)
-                    recipientsForReport.Add(new RecipientsForReportDto() { User = user, DateChecked = toCheck.DateChecked });
+                    recipientsForReport.Add(new RecipientsForReportDto() { User = user, DateChecked = DateTime.Now/*toCheck.DateChecked */});
                 else
                     recipientsForReport.Add(new RecipientsForReportDto() { User = user, DateChecked = null});
             }

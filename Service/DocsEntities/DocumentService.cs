@@ -41,6 +41,85 @@ namespace Service.DocsEntities
             _versions = versionService;
         }
 
+        public async Task<DocumentDto> CreateDocumentAsync(DocumentForCreationDto documentForCreationDto,
+            string authorId)
+        {
+            var documentDto = await CreateDocumentEnity(documentForCreationDto);
+            await _versions.CreateVersionEntity(
+                1,
+                documentForCreationDto.Path,
+                documentForCreationDto.Message,
+                documentDto, 
+                authorId
+                );
+
+            return documentDto;
+        }
+
+        public async Task<DocumentDto> CreateDocumentEnity(DocumentForCreationDto documentForCreationDto)
+        {
+            var documentEntity = _mapper.Map<Entities.Models.Document>(documentForCreationDto);
+            await _checker.CheckDocumentParameters(documentEntity);
+            _repository.Document.CreateDocument(documentEntity);
+            await _repository.SaveAsync();
+            var documentDto = _mapper.Map<DocumentDto>(documentEntity);
+            return documentDto;
+        }
+
+        public async Task<DocumentForVersion> GetDocumentByIdForVersion(int id)
+        {
+            var documentEntity = await _checker.GetDocumentEntityAndCheckIfExistsAsync(id);
+            var status = await 
+                _checker.GetDocumentStatusEntityAndCheckIfItExistsAsync
+                (documentEntity.DocumentStatusId, false);
+            var category = await
+               _checker.GetDocumentCategoryEntityAndCheckiIfItExistsAsync
+               (documentEntity.DocumentCategoryId, false);
+
+            var documentForVersion = new DocumentForVersion()
+            {
+                Id = documentEntity.Id,
+                Name = documentEntity.Name,
+                DocumentStatusId = documentEntity.DocumentStatusId,
+                DocumentStatusName = status.Name,
+                DocumentCategoryId = documentEntity.DocumentCategoryId,
+                DocumentCategoryName = category.Name,
+                LetterId = documentEntity.LetterId
+            };
+            return documentForVersion;
+        }
+
+        public (List<DocumentShowDto> documents, MetaData metaData) 
+            GetAllDocumentsForShowAsync
+            (DocumentShowParameters documentParameters, bool trackChanges)
+        {
+            var documents = _repository.Document.GetAllDocumentsForShowAsync
+                (documentParameters, false);
+            return (documents, documents.MetaData);
+        }
+
+        public DocumentDto ArchiveDocument(int id)
+        {
+            var document = _repository.Document.GetDocument(id, false);
+            if (document is null)
+                throw new DocumentNotFoundException(id);
+            document.isArchived = !document.isArchived;
+            _repository.Document.UpdateDocument(document);
+            _repository.Save();
+            var documentDto = _mapper.Map<DocumentDto>(document);
+            return documentDto;
+        }
+
+        public bool DeleteDocument(int documentId)
+        {
+            _repository.Document.DeleteDocument(documentId);
+            return true;
+        }
+
+        //CHECKEED
+
+
+
         public async Task<(IEnumerable<DocumentForShowDto> documents, MetaData metaData)>
             GetDocumentsForShowAsync(string userId, DocumentParameters documentParameters, bool trackChanges)
         {
@@ -119,7 +198,10 @@ namespace Service.DocsEntities
 
         private async Task<ToCheck> GetToCheckByUserAndDocumentId(string userId, int documentId)
         {
-            var isSigned = await _repository.ToCheck.GetToCheckByUserAndDocumentIds(userId, documentId);
+            //    var isSigned = await _repository.ToCheck.GetToCheckByUserAndDocumentIds(userId, documentId);
+
+            var isSigned = await _repository.ToCheck
+                .GetToCheckByUserAndVersionId(userId, 13);
             return isSigned;
         }
 
@@ -130,30 +212,7 @@ namespace Service.DocsEntities
             return (documents: docsDto, metaData: docsWithMetaData.MetaData);
         }
 
-        public async Task<DocumentDto> CreateDocumentAsync(DocumentForCreationDto documentForCreationDto)
-        {
-            //    documentForCreationDto.Path = "D:\\CoreFiles" + "\\" + documentForCreationDto.Name;
-            var documentDto = await CreateDocumentEnity(documentForCreationDto);
-            await _versions.CreateVersionEntity(
-                1, 
-                documentForCreationDto.Path, 
-                documentDto
-                );
-
-            return documentDto;
-        }
-
-        public async Task<DocumentDto> CreateDocumentEnity(DocumentForCreationDto documentForCreationDto)
-        {
-            var documentEntity = _mapper.Map<Entities.Models.Document>(documentForCreationDto);
-            await _checker.CheckDocumentParameters(documentEntity);
-            _repository.Document.CreateDocument(documentEntity);
-            await _repository.SaveAsync();
-            var documentDto = _mapper.Map<DocumentDto>(documentEntity);
-            return documentDto;
-        }
-
-     
+      
         public async Task<DocumentDto> GetDocumentByIdAsync(int id, bool trackChanges)
         {
             var document = await _repository.Document.GetDocumentAsync(id, trackChanges);
@@ -168,17 +227,7 @@ namespace Service.DocsEntities
             return documentDto;
         }
 
-        public DocumentDto ArchiveDocument(int id)
-        {
-            var document = _repository.Document.GetDocument(id, false);
-            if (document is null)
-                throw  new DocumentNotFoundException(id);
-            document.isArchived = !document.isArchived;
-            _repository.Document.UpdateDocument(document);
-            _repository.Save();
-            var documentDto = _mapper.Map<DocumentDto>(document);
-            return documentDto;
-        }
+
 
         public DocumentDto UpdateDocument(DocumentForUpdateDto documentForUpdateDto)
         {
@@ -201,8 +250,6 @@ namespace Service.DocsEntities
             return count;
         }
 
-     
-
-
+    
     }
 }

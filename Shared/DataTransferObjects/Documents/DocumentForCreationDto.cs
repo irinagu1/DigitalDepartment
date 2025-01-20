@@ -12,5 +12,6 @@ namespace Shared.DataTransferObjects.Documents
     {
         public string? Path { get; set; } = "";
         public DateTime CreationDate { get; set; }
+        public string Message { get; set; } = "";
     }
 }

@@ -20,9 +20,9 @@ namespace Service.DocsEntities
             _repository = repository;
             _mapper = mapper;
         }
-        public async Task<ToCheckDto> Create(string userId, int documentId)
+        public async Task<ToCheckDto> Create(string userId, long versionId)
         {
-            var dto = CreateDto(userId, documentId);    
+            var dto = CreateDto(userId, versionId);    
             var entity = _mapper.Map<ToCheck>(dto);
             _repository.ToCheck.CreateToCheck(entity);
             await _repository.SaveAsync();
@@ -30,11 +30,11 @@ namespace Service.DocsEntities
             return ToCheckDto;
         }
 
-        ToCheckForCreateDto CreateDto(string userId, int documentId)
+        ToCheckForCreateDto CreateDto(string userId, long versionId)
         {
             return new ToCheckForCreateDto { 
                 UserId = userId, 
-                DocumentId = documentId,
+                VersionId = versionId,
                 DateChecked = DateTime.Now
             };
         }

@@ -13,6 +13,18 @@ namespace Service.Contracts.DocsEntities
 {
     public interface IDocumentService
     {
+
+        (List<DocumentShowDto> documents, MetaData metaData)
+            GetAllDocumentsForShowAsync
+         (DocumentShowParameters documentParameters, bool trackChanges);
+
+        bool DeleteDocument(int documentId);
+
+       DocumentDto ArchiveDocument(int id);
+
+
+        //CHECKED
+
         Task<(IEnumerable<DocumentDto> documents, MetaData metaData)>
            GetAllDocumentsAsync(
                DocumentParameters documentParameters,
@@ -25,15 +37,16 @@ namespace Service.Contracts.DocsEntities
         Task<(IEnumerable<DocumentForShowDto> documents, MetaData metaData)>
             GetAllDocumentsWithParametersNamesAsync(IEnumerable<DocumentDto> documents, MetaData metaData, string userId);
 
-        DocumentDto ArchiveDocument(int id);
+     
 
         Task<DocumentDto> GetDocumentByPathAsync(string path, bool trackChanges);
         Task<DocumentDto> GetDocumentByIdAsync(int id, bool trackChanges);
-      
+        Task<DocumentForVersion> GetDocumentByIdForVersion(int id);
 
-        Task<DocumentDto> CreateDocumentAsync(DocumentForCreationDto documentForCreationDto);
+        Task<DocumentDto> CreateDocumentAsync(DocumentForCreationDto documentForCreationDto, string authorId);
         DocumentDto UpdateDocument(DocumentForUpdateDto documentForUpdateDto);
         int AmountOfConnectedDocumentsByCategoryId(int categoryId);
+        
 
     }
 }

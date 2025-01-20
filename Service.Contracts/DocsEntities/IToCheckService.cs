@@ -10,6 +10,6 @@ namespace Service.Contracts.DocsEntities
 {
     public interface IToCheckService
     {
-        Task<ToCheckDto> Create(string userId, int documentId);
+        Task<ToCheckDto> Create(string userId, long versionId);
     }
 }

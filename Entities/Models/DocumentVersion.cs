@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities.Models.Auth;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,6 +27,10 @@ namespace Entities.Models
         public string? Path { get; set; }
 
         public DateTime? CreationDate { get; set; }
+
+        [ForeignKey(nameof(User))]
+        public string? AuthorId { get;set; }
+        public User? Author { get; set; }
 
         public string Message { get; set; } = "";
 

@@ -67,7 +67,8 @@ namespace Service
                 new ToCheckService(repositoryManager, mapper));
             _permissionService = new Lazy<IPermissionService>(()=> 
             new PermissionService(repositoryManager, mapper));
-
+            _documentVersionService = new Lazy<IDocumentVersionService>(() =>
+                new DocumentVersionService(repositoryManager, mapper, checker));
         }
 
         public IPositionService PositionService =>

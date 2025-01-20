@@ -1,4 +1,5 @@
 ﻿using Entities.Models;
+using Shared.DataTransferObjects.Documents;
 using Shared.RequestFeatures;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,17 @@ namespace Contracts.DocsEntities
 {
     public interface IDocumentRepository
     {
+        PagedList<DocumentShowDto> GetAllDocumentsForShowAsync
+              (DocumentShowParameters documentParameters, bool trackChanges);
+
+        void CreateDocument(Document document);
+
+        void UpdateDocument(Document document);
+        void DeleteDocument(int documentId);
+
+        //checked
+
+
         //get all with filtering
         Task<PagedList<Entities.Models.Document>> GetAllDocumentsAsync(DocumentParameters documentParameters, bool trackChanges);
         //get one
@@ -25,9 +37,6 @@ namespace Contracts.DocsEntities
         int AmountOfConnectedDocumentsByCategoryId(int categoryId);
         int AmountOfConnectedDocumentsByStatusId(int statusId);
 
-        void CreateDocument(Document document);
-
-        void UpdateDocument(Document document);
 
         //create collection
         //delete document

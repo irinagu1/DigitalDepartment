@@ -8,9 +8,9 @@ namespace Shared.DataTransferObjects.DocumentVersion
 {
     public record DocumentVersionForCreationDto
     {
-        public long Number { get; set; }
+        public long? Number { get; set; }
 
-        public bool isLast { get; set; }
+        public bool? isLast { get; set; }
 
         public int DocumentId { get; set; }
    
@@ -19,5 +19,6 @@ namespace Shared.DataTransferObjects.DocumentVersion
         public DateTime? CreationDate { get; set; }
 
         public string Message { get; set; } = "";
+        public string? AuthorId { get; set; }
     }
 }

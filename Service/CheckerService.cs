@@ -46,8 +46,6 @@ namespace Service
             return new Letter();
         }
 
-
-
         public async Task CheckDocumentParameters(Entities.Models.Document documentEntity)
         {
             await GetDocumentStatusEntityAndCheckIfItExistsAsync(documentEntity.DocumentStatusId, false);
@@ -83,6 +81,22 @@ namespace Service
                 await _repository.Position.GetPositionByIdAsync(id, trackChanges);
             if(entity is null)
                 throw new PositionnotFoundException(id);
+            return entity;
+        }
+
+        public async Task<DocumentVersion> GetDocumentVersionEntityAndCheckIfExistsAsync(long id)
+        {
+            var entity = await _repository.DocumentVersion.GetVersionById(id);
+            if (entity is null)
+                throw new DocumentVersionNotFoundException(id);
+            return entity;
+        }
+
+        public async Task<Entities.Models.Document> GetDocumentEntityAndCheckIfExistsAsync(int id)
+        {
+            var entity = await _repository.Document.GetDocumentAsync(id, false);
+            if (entity is null)
+                throw new DocumentNotFoundException(id);
             return entity;
         }
     }

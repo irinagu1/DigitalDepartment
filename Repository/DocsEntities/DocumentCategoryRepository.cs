@@ -21,7 +21,7 @@ namespace Repository.DocsEntities
         {
             var documentCategories = await FindAll(trackChanges)
                                       .FilterDocumentCategories(documentCategoryParameters)
-                                     .OrderBy(dc => dc.Name)
+                                     .OrderByDescending(dc => dc.isEnable)
                                      .Skip((documentCategoryParameters.PageNumber - 1) * documentCategoryParameters.PageSize)
                                      .Take(documentCategoryParameters.PageSize)
                                      .ToListAsync();

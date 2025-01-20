@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
 using System.Globalization;
 using Repository.DocsEntities;
+using Shared.DataTransferObjects.DocumentVersion;
+using Shared.DataTransferObjects.Documents;
 
 
 namespace Repository.Extensions
@@ -16,7 +18,66 @@ namespace Repository.Extensions
     public static class RepositoryDocumentExtension
 
     {
-        public static IQueryable<Document> Sort(this IQueryable<Document> documents, 
+
+        public static IQueryable<DocumentShowDto> Filter
+         (this IQueryable<DocumentShowDto> documentDtos, string date)
+        {
+            if (string.IsNullOrWhiteSpace(date))
+                return documentDtos;
+
+            if (date is not null)
+            {
+                DateTime dateDt = DateTime.Parse(date);
+                var dateValue = dateDt.Date;
+                documentDtos = documentDtos.Where(
+                    e => e.LetterCreationDate.Date.Year == dateDt.Date.Year &&
+                         e.LetterCreationDate.Date.Month == dateDt.Date.Month &&
+                         e.LetterCreationDate.Date.Day == dateDt.Date.Day
+                );
+            }
+            return documentDtos;
+        }
+
+        public static IQueryable<DocumentShowDto> Search
+            (this IQueryable<DocumentShowDto> documentDtos,
+            string searchName,
+            string searchAuthor)
+        {
+            if (string.IsNullOrWhiteSpace(searchName) &&
+                string.IsNullOrWhiteSpace(searchAuthor))
+                return documentDtos;
+
+            string lowerCaseTerm;
+
+            if (!string.IsNullOrWhiteSpace(searchName))
+            {
+                lowerCaseTerm = searchName.Trim().ToLower();
+                documentDtos = documentDtos.Where(e =>
+                    e.Name.ToLower().Contains(lowerCaseTerm));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchAuthor))
+            {
+                lowerCaseTerm = searchAuthor.Trim().ToLower();
+                documentDtos = documentDtos.Where(e =>
+                    e.LetterAuthorFullName.ToLower().Contains(lowerCaseTerm)
+                );
+            }
+
+            return documentDtos;
+        }
+
+        public static IQueryable<DocumentShowDto> Sort
+            (this IQueryable<DocumentShowDto> documentDtos)
+        {
+            documentDtos = documentDtos.OrderByDescending(e => e.LetterCreationDate);
+            return documentDtos;
+        }
+
+
+        //CHECKED
+
+        public static IQueryable<Document> SortDocuments(this IQueryable<Document> documents, 
             string orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))
@@ -28,7 +89,7 @@ namespace Repository.Extensions
             return documents.OrderBy(orderQuery);
         }
 
-        public static IQueryable<Document> Search(this IQueryable<Document> documents, string searchName, string searchAuthor)
+        public static IQueryable<Document> SearchDocuments(this IQueryable<Document> documents, string searchName, string searchAuthor)
         {
             if (string.IsNullOrWhiteSpace(searchName) && string.IsNullOrWhiteSpace(searchAuthor))
                 return documents;

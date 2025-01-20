@@ -9,7 +9,11 @@ namespace Contracts.DocsEntities
 {
     public interface IToCheckRepository
     {
-        Task<ToCheck> GetToCheckByUserAndDocumentIds(string userId, int documentId);
+        Task<ToCheck?> GetToCheckByUserAndVersionId
+            (string userId, long versionId);
+     
         void CreateToCheck(ToCheck toCheck);
+
+
     }
 }

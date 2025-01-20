@@ -11,6 +11,8 @@ namespace Service.Contracts
 {
     public interface ICheckerService
     {
+        Task<Document> GetDocumentEntityAndCheckIfExistsAsync(int id);
+        Task<DocumentVersion> GetDocumentVersionEntityAndCheckIfExistsAsync(long id);
         Task<Position> GetPositionEntityAndCheckIfItExistsAsync(int id, bool trackChanges);
         Task<DocumentStatus> GetDocumentStatusEntityAndCheckIfItExistsAsync(int id, bool trackChanges);
         Task<DocumentCategory> GetDocumentCategoryEntityAndCheckiIfItExistsAsync(int id, bool trackChanges);
