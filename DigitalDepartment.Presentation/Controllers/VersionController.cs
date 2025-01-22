@@ -29,6 +29,29 @@ namespace DigitalDepartment.Presentation.Controllers
          
         }
 
+        [HttpGet]
+        [Route("nameForDownload")]
+        public async Task<IActionResult> NameForDownload(long versionId)
+        {
+            var name = await _service.DocumentVersionService.NameForDownload(versionId);
+            return Ok(name);
+        }
+
+        [HttpGet]
+        [Route("download")]
+        public async Task<IActionResult> DownloadFile(long versionId)
+        {
+            var path = await _service.DocumentVersionService.DownloadFile(versionId);
+            if (path == "error")
+                return NotFound("not found path in directory");
+            else
+            {
+                byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+                return File(fileBytes, "application/octet-stream", path);
+            }
+        }
+
+
         [HttpGet("forReport")]
         public async Task<IActionResult> GetRecipientsForReport
            ([FromQuery] long versionId)
@@ -117,9 +140,9 @@ namespace DigitalDepartment.Presentation.Controllers
         }
 
         [HttpDelete("DeleteVersion")]
-        public IActionResult DeleteVersion(long versionId)
+        public async Task<IActionResult> DeleteVersion(long versionId)
         {
-            _service.DocumentVersionService.DeleteDocumentVersion(versionId);
+            await _service.DocumentVersionService.DeleteDocumentVersion(versionId);
                 return Ok();
         }
     }

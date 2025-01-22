@@ -1,5 +1,7 @@
 ﻿using DigitalDepartment.Presentation.ActionFilters;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects.DocumentCategories;
@@ -75,9 +77,9 @@ namespace DigitalDepartment.Presentation.Controllers
 
 
         [HttpDelete("DeleteDocument")]
-        public IActionResult DeleteDocument(int documentId)
+        public async Task<IActionResult> DeleteDocument(int documentId)
         {
-            var result = _service.DocumentService.DeleteDocument(documentId);
+            var result = await _service.DocumentService.DeleteDocument(documentId);
             if(result)
                 return NoContent();
             throw new Exception("cannot delete document");
@@ -141,14 +143,44 @@ namespace DigitalDepartment.Presentation.Controllers
             throw new Exception("document is null");
         }
 
-     
-        
 
-     
+
+
+
 
         #region Uploading
 
-        [HttpPost("UploadChunks")]
+      
+        [HttpPost("uploadfile")]
+        public async Task<IActionResult> UploadFile(IFormFile file, IFormCollection formCollection)
+
+        {
+            var description = formCollection["description"];
+            if (file == null)
+            {
+                return BadRequest("No file was provided.");
+            }
+            var baseFolder = _service.DocumentVersionService.returnBaseFolder();
+            bool exists = System.IO.Directory.Exists(baseFolder);
+            if (!exists)
+                System.IO.Directory.CreateDirectory(baseFolder);
+
+
+            var filePath = Path.Combine(baseFolder, description);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return Ok("File uploaded successfully.");
+        }
+    
+
+
+        //NOT USED
+
+    [HttpPost("UploadChunks")]
  //       [Authorize(Policy = "Create")]
         public async Task<IActionResult> UploadChunks(string id, string fileName)
         {

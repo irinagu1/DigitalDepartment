@@ -11,6 +11,7 @@ namespace Service.Contracts
     public interface IRoleService
     {
         Task<IEnumerable<RolesDto>> GetByUserId(string userId);
+        Task<List<RolesForLettersDto>> GetAllRolesForLetters(RolesParameters parameters);
         Task<List<RolesForLettersDto>> GetAllRolesForLetters();
         Task<List<RolesDto>> GetRolesWithParameters(RolesParameters parameters);
         RolesDto GetRoleById(string roleId);

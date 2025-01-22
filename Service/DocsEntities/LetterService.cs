@@ -4,6 +4,7 @@ using Entities.Exceptions.NotFound;
 using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Configuration;
 using Service.Contracts.DocsEntities;
 using Service.Reports;
 
@@ -25,10 +26,93 @@ namespace Service.DocsEntities
     {
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
-        public LetterService(IRepositoryManager repository, IMapper mapper)
+        private readonly IConfiguration _cofigurator;
+
+        public LetterService(IRepositoryManager repository, IMapper mapper, IConfiguration configuration)
         {
             _repository = repository;
             _mapper = mapper;
+            _cofigurator = configuration;
+        }
+
+        public async Task<bool> CheckAfterUploadingAndClearIfUncorrect(int letterId)
+        {
+            bool flag = true;
+            var letterEntity=  await _repository.Letter.GetLetterById(letterId);
+            if (letterEntity is null)
+            {
+                await ClearAboutDocuments(letterId);
+                return false;
+            }
+
+            var documents = _repository.Document.GetDocumentsByLetterId(letterId);
+            if(documents.Count == 0)
+            {
+                await ClearAboutDocuments(letterId);
+                return false;
+            }
+
+            var baseFolder = returnBaseFolder();
+            if (baseFolder == "not found") return false;
+
+            for(int i=0;i<documents.Count; i++)
+            {
+                var versions = _repository.DocumentVersion.
+                    GetAllVersionsByDocumentId(documents[i].Id).ToList();
+                if (versions.Count == 0)
+                {
+                    await ClearAboutDocuments(letterId);
+                    return false;
+                }
+                else
+                {
+                    for (int j = 0; j < versions.Count; j++)
+                    {
+                        var path = Path.Combine(baseFolder, versions[i].Path);
+                        var isExcist = File.Exists(path);
+                        if (!isExcist)
+                        {
+                            await ClearAboutDocuments(letterId);
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        private string returnBaseFolder()
+        {
+            string folder = _cofigurator.GetSection("BaseFolder").AsEnumerable().FirstOrDefault().Value;
+            if (folder is null)
+                return "not found";
+            return folder;
+        }
+
+        public async Task ClearAboutDocuments(int letterId) {
+            var baseFolder = returnBaseFolder();
+
+            var documents = _repository.Document.GetDocumentsByLetterId(letterId);
+            if(documents.Count != 0)
+            {
+                for (int i = 0; i < documents.Count; i++) {
+                    var versions = _repository.DocumentVersion.
+                     GetAllVersionsByDocumentId(documents[i].Id).ToList();
+                    if (versions.Count != 0) {
+                        for(int j = 0; j < versions.Count; j++) 
+                        { 
+                            var path = Path.Combine(baseFolder, versions[j].Path);
+                            var isExcist = File.Exists(path);
+                            if (isExcist)
+                            {
+                                File.Delete(path);
+                            }
+                        }
+                    }
+                }
+            }
+            var letterEntity = await _repository.Letter.GetLetterById(letterId);
+            _repository.Letter.DeleteLetter(letterEntity);
+            _repository.Save();
         }
 
         public async Task<LetterDto> CreateLetterAsync(LetterForCreationDto letterForCreationDto)
@@ -124,39 +208,68 @@ namespace Service.DocsEntities
             return rolesDto;
         }
 
-        public async Task<IEnumerable<RecipientsForReportDto>> GetRecipientsForReportByLetterId(int letterId, int documentId)
+        public async Task<IEnumerable<RecipientsForReportDto>>
+          GetRecipientsForReportByVersionId(long versionId)
         {
-            var usersDto = await GetUsers(letterId, true);
-            var rolesDto = await GetRoles(letterId, true);
+            var versionEntity = await _repository.DocumentVersion
+                .GetVersionById(versionId);
+            if (versionEntity is null)
+                throw new Exception("no such version");
+            var letterEntity = await _repository.Letter
+                .GetLetterByDocumentId(versionEntity.DocumentId);
+            if (letterEntity is null)
+                throw new Exception("no such letter");
 
-            foreach(var role in rolesDto)
+            var usersDto = await GetUsers(letterEntity.Id, true);
+            var rolesDto = await GetRoles(letterEntity.Id, true);
+
+            foreach (var role in rolesDto)
             {
                 var usersByRole = await _repository.User.GetUsersByRoleId(role.Id);
                 var dto = _mapper.Map<IEnumerable<UserDto>>(usersByRole);
                 usersDto = usersDto.Concat(dto);
             }
 
-            usersDto = usersDto.DistinctBy(u=> u.Id).ToList();
+            usersDto = usersDto.DistinctBy(u => u.Id).ToList();
 
             var recipientsForReport = new List<RecipientsForReportDto>();
-            foreach(var user in usersDto)
+            foreach (var user in usersDto)
             {
-                var toCheck = "aa";//  await _repository.ToCheck.GetToCheckByUserAndDocumentIds(user.Id, documentId);
+                if (user.PositionId is not null)
+                {
+                    var position = await _repository.Position.GetPositionByIdAsync(user.PositionId.Value, false);
+                    user.PositionName = position.Name;
+                }
+
+                var toCheck = await _repository.ToCheck
+                    .GetToCheckByUserAndVersionId(user.Id, versionId);
                 if (toCheck is not null)
-                    recipientsForReport.Add(new RecipientsForReportDto() { User = user, DateChecked = DateTime.Now/*toCheck.DateChecked */});
+                    recipientsForReport.Add(new RecipientsForReportDto() { User = user, DateChecked = toCheck.DateChecked });
                 else
-                    recipientsForReport.Add(new RecipientsForReportDto() { User = user, DateChecked = null});
+                    recipientsForReport.Add(new RecipientsForReportDto() { User = user, DateChecked = null });
             }
             return recipientsForReport;
-           
+
         }
 
-        public async Task CreateReport(int documentId, int letterId)
+        public async Task CreateReport(long versionId)
         {
-            var document = _repository.Document.GetDocument(documentId, false);
-            var recipients = await GetRecipientsForReportByLetterId(letterId, documentId);
-            ReportGenerator reportGenerator = new ReportGenerator();
-            reportGenerator.CreateGeneralReport(recipients, document.Name ?? "");
+            var version = await _repository.DocumentVersion.GetVersionById(versionId);
+            if (version is null || version.Path is null)
+                throw new Exception("no such version or no path defined");
+
+            var document = _repository.Document.GetDocument(version.DocumentId, false);
+            if (document is null)
+                throw new Exception("no such document");
+
+            var recipients = await GetRecipientsForReportByVersionId(versionId);
+
+            var folder = _cofigurator.GetSection("BaseFolderReport").AsEnumerable().FirstOrDefault().Value;
+            if (folder is null)
+                throw new Exception("Cannot find folder in appsettings");
+
+            ReportGenerator reportGenerator = new ReportGenerator(folder);
+            reportGenerator.CreateGeneralReport(recipients, document.Name ?? "", version.Number, version.Path);
         }
     }
 }

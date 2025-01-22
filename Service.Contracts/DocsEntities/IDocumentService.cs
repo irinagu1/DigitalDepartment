@@ -18,7 +18,7 @@ namespace Service.Contracts.DocsEntities
             GetAllDocumentsForShowAsync
          (DocumentShowParameters documentParameters, bool trackChanges);
 
-        bool DeleteDocument(int documentId);
+        Task<bool> DeleteDocument(int documentId);
 
        DocumentDto ArchiveDocument(int id);
 

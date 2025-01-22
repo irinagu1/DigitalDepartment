@@ -9,6 +9,7 @@ namespace Contracts.DocsEntities
 {
     public interface ILetterRepository
     {
+        void DeleteLetter(Letter letter);
         Task<Letter> GetLetterById(int id);
         Task<Letter> GetLetterByDocumentId(int documentId); 
         void CreateLetter(Letter letter);

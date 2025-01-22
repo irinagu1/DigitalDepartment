@@ -55,7 +55,7 @@ namespace Service
                     filesService, 
                     documentVersionService));
             _letterService = new Lazy<ILetterService>
-                (() => new LetterService(repositoryManager, mapper));
+                (() => new LetterService(repositoryManager, mapper, configuration));
             _authenticationService = new Lazy<IAuthenticationService>(() =>
                 new AuthenticationService(mapper, userManager,
                     configuration));
@@ -68,7 +68,7 @@ namespace Service
             _permissionService = new Lazy<IPermissionService>(()=> 
             new PermissionService(repositoryManager, mapper));
             _documentVersionService = new Lazy<IDocumentVersionService>(() =>
-                new DocumentVersionService(repositoryManager, mapper, checker));
+                new DocumentVersionService(repositoryManager, mapper, checker, configuration));
         }
 
         public IPositionService PositionService =>

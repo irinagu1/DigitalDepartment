@@ -4,6 +4,7 @@ using Entities.Exceptions;
 using Entities.Exceptions.NotFound;
 using Entities.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Service.Contracts;
 using Service.Contracts.DocsEntities;
 //using Service.ReportsManipulation;
@@ -110,8 +111,13 @@ namespace Service.DocsEntities
             return documentDto;
         }
 
-        public bool DeleteDocument(int documentId)
+        public async Task<bool> DeleteDocument(int documentId)
         {
+            var versions = _repository.DocumentVersion.GetAllVersionsByDocumentId(documentId).ToList();
+            for(int i=0; i< versions.Count(); i++)
+            {
+                await _versions.DeleteFileWithVersion(versions[i].Id);
+            }
             _repository.Document.DeleteDocument(documentId);
             return true;
         }

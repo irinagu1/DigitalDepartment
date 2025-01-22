@@ -21,12 +21,27 @@ namespace Repository.Auth
             _context = repositoryContext;
         }
 
-        public async Task<List<Role>> GetAllRoles()
+        public async Task<List<Role>> GetAllRoles(RolesParameters rolesParameters)
         {
-            var roles = await _context.Roles.ToListAsync();
-            return roles;
+            if (rolesParameters.isActive is not null)
+            {
+                var roles = await _context.Roles.Where(r => r.IsActived == rolesParameters.isActive).ToListAsync();
+                return roles;
+            }
+            else
+            {
+                var roles = await _context.Roles.ToListAsync();
+                return roles;
+            }
         }
 
+        public async Task<List<Role>> GetAllRoles()
+        {
+          
+                var roles = await _context.Roles.ToListAsync();
+                return roles;
+            
+        }
         public Role GetRole(string id, bool trackChanges)
         {
             var role = FindByCondition(r => r.Id == id, trackChanges).SingleOrDefault();

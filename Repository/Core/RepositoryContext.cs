@@ -68,11 +68,12 @@ namespace Repository.Core
                                     t.PermissionId 
                 });
 
-            modelBuilder.ApplyConfiguration(new DocumentCategoryConfiguration());
-            modelBuilder.ApplyConfiguration(new DocumentStatusConfiguration());
-            modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new PermissionConfiguration());
-            modelBuilder.ApplyConfiguration(new PermissionsRolesConfiguration());
+        //    modelBuilder.ApplyConfiguration(new RoleConfiguration());
+        //    modelBuilder.ApplyConfiguration(new PermissionsRolesConfiguration());
+     //       modelBuilder.ApplyConfiguration(new PositionConfiguration());
+      //      modelBuilder.ApplyConfiguration(new UserConfiguration());
+        //    modelBuilder.ApplyConfiguration(new UsersRolesConfiguration());
         }
 
         public DbSet<Position>? Positions {  get; set; }

@@ -11,6 +11,7 @@ namespace Contracts.DocsEntities
 {
     public interface IDocumentRepository
     {
+        List<Document> GetDocumentsByLetterId(int letterId);
         PagedList<DocumentShowDto> GetAllDocumentsForShowAsync
               (DocumentShowParameters documentParameters, bool trackChanges);
 

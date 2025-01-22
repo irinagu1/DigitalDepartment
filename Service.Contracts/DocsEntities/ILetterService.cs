@@ -15,10 +15,11 @@ namespace Service.Contracts.DocsEntities
     public interface ILetterService
 
     {
-        Task CreateReport(int documentId, int letterId);
+        Task<bool> CheckAfterUploadingAndClearIfUncorrect(int letterId);
+        Task CreateReport(long versionId);
         Task<LetterDto> CreateLetterAsync(LetterForCreationDto letterForCreationDto);
         Task<string> StoreRecipients(RecipientsForCreationDto recipientsForCreationDto);
-        Task<IEnumerable<RecipientsForReportDto>> GetRecipientsForReportByLetterId(int LetterId, int documentId);
+        Task<IEnumerable<RecipientsForReportDto>> GetRecipientsForReportByVersionId(long versionId);
 
         Task<AllRecipientsByCategoryDto> GetRecipientsByLetterId(int letterId);
     }

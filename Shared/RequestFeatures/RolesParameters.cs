@@ -8,7 +8,7 @@ namespace Shared.RequestFeatures
 {
     public class RolesParameters
     {
-        public bool isActive { get; set; } = true;
-        public bool WithUsersAmount { get; set; } = false;
+        public bool? isActive { get; set; } = true;
+        public bool? WithUsersAmount { get; set; } = false;
     }
 }

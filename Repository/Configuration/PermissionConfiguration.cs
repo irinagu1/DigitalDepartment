@@ -18,31 +18,31 @@ namespace Repository.Configuration
                   new Permission
                   {
                       Id = 1,
+                      Name = "Просмотр справочников",
+                      Category = "Справочные данные",
+                  },
+                  new Permission
+                  {
+                      Id = 2,
+                      Name = "Редактирование справочников",
+                      Category = "Справочные данные",
+                  },
+                  new Permission
+                  {
+                      Id = 3,
+                      Name = "Управление ролями",
+                      Category = "Роли",
+                  },
+                  new Permission
+                  {
+                      Id = 4,
                       Name = "Просмотр пользователей",
                       Category = "Пользователи",
                   },
                   new Permission
                   {
-                      Id = 2,
-                      Name = "Добавление пользователей",
-                      Category = "Пользователи",
-                  },
-                  new Permission
-                  {
-                      Id = 3,
-                      Name = "Редактирование пользователей",
-                      Category = "Пользователи",
-                  },
-                  new Permission
-                  {
-                      Id = 4,
-                      Name = "Архивирование пользователей",
-                      Category = "Пользователи",
-                  },
-                  new Permission
-                  {
                       Id = 5,
-                      Name = "Удаление пользователей",
+                      Name = "Редактирование пользователей",
                       Category = "Пользователи",
                   },
                   new Permission
@@ -54,26 +54,32 @@ namespace Repository.Configuration
                   new Permission
                   {
                       Id = 7,
-                      Name = "Загрузка документов",
-                      Category = "Документы",
+                      Name = "Просмотр всех документов",
+                      Category = "Документы и архив",
                   },
                   new Permission
                   {
                       Id = 8,
-                      Name = "Просмотр архива документов",
+                      Name = "Редактирование всех документов",
                       Category = "Документы",
                   },
                   new Permission
                   {
                       Id = 9,
-                      Name = "Архивирование документов",
-                      Category = "Документы",
+                      Name = "Добавление документов",
+                      Category = "Общие возможности",
                   },
                    new Permission
                    {
                        Id = 10,
-                       Name = "Просмотр всех документов",
-                       Category = "Документы",
+                       Name = "Просмотр отправленных пользователю",
+                       Category = "Общие возможности",
+                   },
+                   new Permission
+                   {
+                       Id = 11,
+                       Name = "Просмотр созданных пользователем",
+                       Category = "Общие возможности",
                    }
 
             );

@@ -14,11 +14,14 @@ namespace Service.Reports
 {
     public class ReportGenerator
     {
+        public string baseFolder { get; set; }
+        public ReportGenerator(string folder) { baseFolder = folder; }
+
         public void CreateGeneralReport
             (IEnumerable<RecipientsForReportDto> recipients, 
-            string documentName)
+            string documentName, long versionNumber, string pathFromEntity)
         {
-            string path = GetFilePath(documentName);
+            string path = GetFilePath(pathFromEntity);
   
             using (WordprocessingDocument wordDocument 
                 = WordprocessingDocument.Create
@@ -31,9 +34,9 @@ namespace Service.Reports
 
                 body.AppendChild(CreateParagraph(
                     $"Лист ознакомления на " +
-                    $"{DateTime.Now.ToString("dd.mm.yyyy")}"));
+                    $"{DateTime.Now.ToLocalTime().ToString("dd.mm.yyyy")}"));
 
-                body.AppendChild(CreateParagraph($"Документ: {documentName}"));
+                body.AppendChild(CreateParagraph($"Документ: {documentName}. Версия: {versionNumber}"));
   
                 Table table = DesignTable();
 
@@ -43,6 +46,7 @@ namespace Service.Reports
                 table.AppendChild(CreateRow([
                        "№",
                         "ФИО",
+                        "Должность",
                         "Дата ознакомления"                      
                 ]));
                 foreach (var el in recipients)
@@ -50,6 +54,7 @@ namespace Service.Reports
                     table.AppendChild(CreateRow([
                         count++.ToString(),
                         el.User.FullName ?? "",
+                        el.User.PositionName ?? "",
                         el.DateChecked?.ToString("dd.mm.yyyy") ?? "Не ознакомлен"
                         ]));
                 }
@@ -66,13 +71,13 @@ namespace Service.Reports
             }
         }
 
-        private string GetFilePath(string fileName)
+        private string GetFilePath(string path)
         {
-            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            string folderPath = Path.Combine(documentsPath, "Reports");
-            Directory.CreateDirectory(folderPath);
-
-            string fullPath = Path.Combine(folderPath, fileName + ".docx");
+            bool exists = System.IO.Directory.Exists(baseFolder);
+            if (!exists)
+                System.IO.Directory.CreateDirectory(baseFolder);
+            string docName = path;
+            string fullPath = Path.Combine(baseFolder, path);
             return fullPath;
         }
 

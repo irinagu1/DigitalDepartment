@@ -20,6 +20,7 @@ namespace Repository.DocsEntities
         }
 
 
+
         public async Task<Letter> GetLetterByDocumentId(int documentId)
         {
             var letter = await _repositoryContext.Documents
@@ -28,6 +29,7 @@ namespace Repository.DocsEntities
                 .FirstOrDefaultAsync();
             return letter;
         }
+        public void DeleteLetter(Letter letter) => Delete(letter);
         public void CreateLetter(Letter letter) => Create(letter);
 
         public async Task<Letter> GetLetterById(int id) => 

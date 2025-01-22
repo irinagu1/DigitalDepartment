@@ -7,6 +7,7 @@ using Shared.DataTransferObjects.Letters;
 using Shared.DataTransferObjects.Recipients;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,18 +25,42 @@ namespace DigitalDepartment.Presentation.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetRecipients([FromQuery] int letterId, int documentId)
+        [HttpGet("CheckAfterUploading")]
+        public async Task<IActionResult> CheckAfterUploading([FromQuery] int letterId)
         {
-            var dtoToReturn = await _service.LetterService.GetRecipientsForReportByLetterId(letterId, documentId);
-
-            return Ok(dtoToReturn);
+            var result = await _service.LetterService
+                .CheckAfterUploadingAndClearIfUncorrect(letterId);
+            if (result)
+                return Ok(result);
+            else return BadRequest();
         }
 
         [HttpGet("CreateReport")]
-        public async Task<IActionResult> CreateReport([FromQuery] int letterId, int documentId)
+        public async Task<IActionResult> CreateReport([FromQuery] long versionId )
         {
-            await _service.LetterService.CreateReport(documentId, letterId);
+            await _service.LetterService.CreateReport(versionId);
+            return Ok();
+        }
+       
+        [HttpGet("DownloadReport")]
+        public async Task<IActionResult> DownloadReport([FromQuery] long versionId)
+        {
+            var baseFolder = _service.DocumentVersionService.returnBaseFolderReport();
+            var versionPath = await _service.DocumentVersionService.returnVersionPath(versionId);
+            var filePath = Path.Combine(baseFolder, versionPath);
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+            return File(fileBytes, "application/octet-stream", filePath);
+        }
+
+        [HttpGet("DeleteReport")]
+        public async Task<IActionResult> Delete([FromQuery] long versionId)
+        {
+            var baseFolder = _service.DocumentVersionService.returnBaseFolderReport();
+            var versionPath = await _service.DocumentVersionService.returnVersionPath(versionId);
+            var filePath = Path.Combine(baseFolder, versionPath);
+
+            System.IO.File.Delete(filePath);
             return Ok();
         }
 

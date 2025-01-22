@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Contracts.RepositoryCore;
 using Entities.Models;
+using Microsoft.Extensions.Configuration;
 using Service.Contracts;
 using Service.Contracts.DocsEntities;
 using Shared.DataTransferObjects.Documents;
@@ -21,17 +22,84 @@ namespace Service.DocsEntities
         private readonly IRepositoryManager _repository;
         private readonly IMapper _mapper;
         private readonly ICheckerService _checker;
+        private readonly IConfiguration _configuration;
 
         public DocumentVersionService(
             IRepositoryManager repository, 
             IMapper mapper, 
-            ICheckerService checker)
+            ICheckerService checker,
+            IConfiguration configuration)
         {
             _repository = repository;
             _mapper = mapper;
             _checker = checker;
+            _configuration = configuration;
         }
 
+        public async Task<string> NameForDownload(long versionId)
+        {
+            var version = await _repository.DocumentVersion.GetVersionById(versionId);
+            if (version is null)
+                throw new Exception("not found version with given id");
+            var document = await _repository.Document.GetDocumentAsync(version.DocumentId, false);
+            if (document is null)
+                throw new Exception("not found document with given id");
+            var typeVersion = version.Path.Split(".");
+            string name = $"{document.Name} версия {version.Number}.{typeVersion.Last()}";
+            return name;
+        }
+        public async Task<string> returnVersionPath(long versionId)
+        {
+            var version = await _repository.DocumentVersion.GetVersionById(versionId);
+            if (version is null)
+                throw new Exception("not found version with given id");
+            return version.Path;
+
+        }
+        public string returnBaseFolder()
+        {
+            string folder = _configuration.GetSection("BaseFolder").AsEnumerable().FirstOrDefault().Value;
+            if (folder is null)
+                throw new Exception("Cannot find folder in appsettings");
+            return folder;
+        }
+        public string returnBaseFolderReport()
+        {
+            string folder = _configuration.GetSection("BaseFolderReport").AsEnumerable().FirstOrDefault().Value;
+            if (folder is null)
+                throw new Exception("Cannot find folder in appsettings");
+            return folder;
+        }
+
+        public async Task<string> DownloadFile(long versionId)
+        {
+            var version = await _repository.DocumentVersion
+                .GetVersionById(versionId);
+            if (version is null)
+                throw new Exception("No such version");
+            string folder = returnBaseFolder();
+            
+            string filepath = Path.Combine(folder, version.Path);
+            if (System.IO.File.Exists(filepath))
+                return filepath; 
+            else
+                return "error";
+        }
+
+        public async Task DeleteFileWithVersion(long versionId)
+        {
+            var version = await _repository.DocumentVersion
+                .GetVersionById(versionId);
+            if (version is null)
+                throw new Exception("No such version");
+            try
+            {
+                string baseFolder = returnBaseFolder();
+                string fullPath = Path.Combine(baseFolder, version.Path);
+                System.IO.File.Delete(fullPath);
+            }
+            catch (Exception ex) { throw new Exception("cannot delete file in disk"); }
+        }
 
         public async Task<IEnumerable<RecipientsForReportDto>> 
             GetRecipientsForReportByVersionIs(long versionId)
@@ -60,10 +128,16 @@ namespace Service.DocsEntities
             var recipientsForReport = new List<RecipientsForReportDto>();
             foreach (var user in usersDto)
             {
+                if (user.PositionId is not null)
+                {
+                    var position = await _repository.Position.GetPositionByIdAsync(user.PositionId.Value, false);
+                    user.PositionName = position.Name;
+                }
+
                 var toCheck = await _repository.ToCheck
                     .GetToCheckByUserAndVersionId(user.Id, versionId);
                 if (toCheck is not null)
-                    recipientsForReport.Add(new RecipientsForReportDto() { User = user, DateChecked = DateTime.Now/*toCheck.DateChecked */});
+                    recipientsForReport.Add(new RecipientsForReportDto() { User = user, DateChecked = toCheck.DateChecked});
                 else
                     recipientsForReport.Add(new RecipientsForReportDto() { User = user, DateChecked = null });
             }
@@ -79,7 +153,11 @@ namespace Service.DocsEntities
             var recipientsUsersToShow = await _repository.Recipient.GetRecipientsByTypeAndLetterId("user", letterId, isToCheck);
             var usersIdsToShow = recipientsUsersToShow.Select(u => u.TypeId).ToList();
             var users = allUserEntities.Where(e => usersIdsToShow.Contains(e.Id));
+
+         
             var usersDto = _mapper.Map<IEnumerable<UserDto>>(users);
+
+
 
             return usersDto;
         }
@@ -108,8 +186,9 @@ namespace Service.DocsEntities
             return versionDto;
         }
 
-        public void DeleteDocumentVersion(long versionId)
+        public async Task DeleteDocumentVersion(long versionId)
         {
+            await DeleteFileWithVersion(versionId);
             _repository.DocumentVersion.DeleteDocumentVersion(versionId);
         }
 

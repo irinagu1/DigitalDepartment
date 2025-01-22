@@ -243,7 +243,10 @@ namespace Repository.DocsEntities
 
         public Task<Document> GetDocumentbyPathAsync(string path, bool trackChanges) =>
             FindByCondition(d => /*d.Path == path*/ d.isArchived == false, trackChanges).SingleOrDefaultAsync();
-            
+          
+        public List<Document> GetDocumentsByLetterId(int letterId) =>
+            FindByCondition(d=> d.LetterId == letterId, false).ToList();
+
 
         public int AmountOfConnectedDocumentsByCategoryId(int categoryId)
         {

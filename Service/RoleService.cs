@@ -61,6 +61,12 @@ namespace Service
 
         }
 
+        public async Task<List<RolesForLettersDto>> GetAllRolesForLetters(RolesParameters parameters)
+        {
+            var roles = await _repository.Role.GetAllRoles(parameters);
+            var rolesForLettersDto = _mapper.Map<List<RolesForLettersDto>>(roles);
+            return rolesForLettersDto;
+        }
         public async Task<List<RolesForLettersDto>> GetAllRolesForLetters()
         {
             var roles = await _repository.Role.GetAllRoles();
@@ -79,7 +85,7 @@ namespace Service
         {
             var roles = await _repository.Role.GetRolesWithParams(parameters, false);
             var rolesDto = _mapper.Map<List<RolesDto>>(roles);
-            if (parameters.WithUsersAmount)
+            if (parameters.WithUsersAmount.HasValue)
                 rolesDto = GetAmountofUsersForRoles(rolesDto);
             return rolesDto;
         }

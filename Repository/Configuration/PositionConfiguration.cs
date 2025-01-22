@@ -1,4 +1,5 @@
-﻿using Entities.Models.Auth;
+﻿using Entities.Models;
+using Entities.Models.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,18 +11,17 @@ using System.Threading.Tasks;
 
 namespace Repository.Configuration
 {
-    internal class RoleConfiguration : IEntityTypeConfiguration<Role>
+    internal class PositionConfiguration : IEntityTypeConfiguration<Position>
     {
-        public void Configure(EntityTypeBuilder<Role> builder)
+        public void Configure(EntityTypeBuilder<Position> builder)
         {
 
             builder.HasData(
-                 new Role
+                 new Position
                  {
-                     Id = "9365b6ea-c516-4174-a231-43c5975bb099",
-                     Name = "Administrator",
-                     NormalizedName = "ADMINISTRATOR", 
-                     IsActived=true
+                     Id = 1,
+                     Name = "FullAccessAdmin",
+                     isEnable = true
                  }
             );
         }

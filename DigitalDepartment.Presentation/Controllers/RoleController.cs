@@ -23,9 +23,9 @@ namespace DigitalDepartment.Presentation.Controllers
         }
         
         [HttpGet]
-        public async Task<IActionResult> GetAllRoles()
+        public async Task<IActionResult> GetAllRoles([FromQuery] RolesParameters rolesParameters)
         {
-            var roles = await _service.RoleService.GetAllRolesForLetters();
+            var roles = await _service.RoleService.GetAllRolesForLetters(rolesParameters);
             return Ok(roles);
         }
 

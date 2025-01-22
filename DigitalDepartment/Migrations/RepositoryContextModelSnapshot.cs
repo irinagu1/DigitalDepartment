@@ -40,7 +40,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permissions");
+                    b.ToTable("Permissions", (string)null);
 
                     b.HasData(
                         new
@@ -117,7 +117,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.ToTable("PermissionRoles");
+                    b.ToTable("PermissionRoles", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.Auth.Role", b =>
@@ -305,7 +305,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("LetterId");
 
-                    b.ToTable("Documents");
+                    b.ToTable("Documents", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.DocumentCategory", b =>
@@ -327,7 +327,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DocumentCategories");
+                    b.ToTable("DocumentCategories", (string)null);
 
                     b.HasData(
                         new
@@ -369,7 +369,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DocumentStatuses");
+                    b.ToTable("DocumentStatuses", (string)null);
 
                     b.HasData(
                         new
@@ -436,7 +436,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("DocumentId");
 
-                    b.ToTable("DocumentVersions");
+                    b.ToTable("DocumentVersions", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.Letter", b =>
@@ -462,7 +462,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Letters");
+                    b.ToTable("Letters", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.Position", b =>
@@ -484,7 +484,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Positions");
+                    b.ToTable("Positions", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.Recipient", b =>
@@ -514,7 +514,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("LetterId");
 
-                    b.ToTable("Recipients");
+                    b.ToTable("Recipients", (string)null);
                 });
 
             modelBuilder.Entity("Entities.Models.ToCheck", b =>
@@ -541,7 +541,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("VersionId");
 
-                    b.ToTable("ToChecks");
+                    b.ToTable("ToChecks", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -11,9 +11,15 @@ namespace Service.Contracts.DocsEntities
 {
     public interface IDocumentVersionService
     {
+        Task DeleteFileWithVersion(long versionId);
+        Task<string> returnVersionPath(long versionId);
+        Task<string> NameForDownload(long versionId);
+        string returnBaseFolderReport();
+        string returnBaseFolder();
+        Task<string> DownloadFile(long versionId);
         Task<IEnumerable<RecipientsForReportDto>> 
             GetRecipientsForReportByVersionIs(long versionId);
-        void DeleteDocumentVersion(long versionId);
+        Task DeleteDocumentVersion(long versionId);
         Task<VersionDto> GetVersionById(long versionId);
         DocumentVersionForCreationDto GetVersionForCreationDto(
             int number,

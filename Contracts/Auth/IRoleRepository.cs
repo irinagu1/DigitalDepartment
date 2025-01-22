@@ -11,6 +11,7 @@ namespace Contracts.Auth
     public interface IRoleRepository
     {
         Task<IEnumerable<Role>> GetByUserId(string  userId);
+        Task<List<Role>> GetAllRoles(RolesParameters rolesParameters);
         Task<List<Role>> GetAllRoles();
         Task<List<Role>> GetRolesWithParams(RolesParameters rolesParameters, bool trackChanges);
         Task<Role> GetRoleAsync(string id, bool trackChanges);
