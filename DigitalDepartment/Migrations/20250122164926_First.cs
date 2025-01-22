@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DigitalDepartment.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class First : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,6 +18,7 @@ namespace DigitalDepartment.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsActived = table.Column<bool>(type: "bit", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -25,36 +26,6 @@ namespace DigitalDepartment.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SecondName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,30 +57,31 @@ namespace DigitalDepartment.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Letters",
-                columns: table => new
-                {
-                    LetterId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Letters", x => x.LetterId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Permissions",
                 columns: table => new
                 {
                     PermissionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Permissions", x => x.PermissionId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Positions",
+                columns: table => new
+                {
+                    PositionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    isEnable = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Positions", x => x.PositionId);
                 });
 
             migrationBuilder.CreateTable(
@@ -131,6 +103,67 @@ namespace DigitalDepartment.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PermissionRoles",
+                columns: table => new
+                {
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PermissionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PermissionRoles", x => new { x.RoleId, x.PermissionId });
+                    table.ForeignKey(
+                        name: "FK_PermissionRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PermissionRoles_Permissions_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "Permissions",
+                        principalColumn: "PermissionId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SecondName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    isActive = table.Column<bool>(type: "bit", nullable: false),
+                    PositionId = table.Column<int>(type: "int", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Positions_PositionId",
+                        column: x => x.PositionId,
+                        principalTable: "Positions",
+                        principalColumn: "PositionId");
                 });
 
             migrationBuilder.CreateTable(
@@ -219,16 +252,37 @@ namespace DigitalDepartment.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Letters",
+                columns: table => new
+                {
+                    LetterId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Letters", x => x.LetterId);
+                    table.ForeignKey(
+                        name: "FK_Letters_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Documents",
                 columns: table => new
                 {
                     DocumentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Path = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DocumentStatusId = table.Column<int>(type: "int", nullable: false),
                     DocumentCategoryId = table.Column<int>(type: "int", nullable: false),
-                    LetterId = table.Column<int>(type: "int", nullable: false)
+                    LetterId = table.Column<int>(type: "int", nullable: false),
+                    isArchived = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -254,80 +308,99 @@ namespace DigitalDepartment.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PermissionRoles",
+                name: "Recipients",
                 columns: table => new
                 {
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PermissionId = table.Column<int>(type: "int", nullable: false)
+                    RecipientId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LetterId = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TypeId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ToCheck = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PermissionRoles", x => new { x.RoleId, x.PermissionId });
+                    table.PrimaryKey("PK_Recipients", x => x.RecipientId);
                     table.ForeignKey(
-                        name: "FK_PermissionRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
+                        name: "FK_Recipients_Letters_LetterId",
+                        column: x => x.LetterId,
+                        principalTable: "Letters",
+                        principalColumn: "LetterId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DocumentVersions",
+                columns: table => new
+                {
+                    DocumentVersionId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Number = table.Column<long>(type: "bigint", nullable: false),
+                    isLast = table.Column<bool>(type: "bit", nullable: false),
+                    DocumentId = table.Column<int>(type: "int", nullable: false),
+                    Path = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DocumentVersions", x => x.DocumentVersionId);
+                    table.ForeignKey(
+                        name: "FK_DocumentVersions_AspNetUsers_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_DocumentVersions_Documents_DocumentId",
+                        column: x => x.DocumentId,
+                        principalTable: "Documents",
+                        principalColumn: "DocumentId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ToChecks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    VersionId = table.Column<long>(type: "bigint", nullable: true),
+                    DateChecked = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ToChecks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ToChecks_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PermissionRoles_Permissions_PermissionId",
-                        column: x => x.PermissionId,
-                        principalTable: "Permissions",
-                        principalColumn: "PermissionId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[,]
-                {
-                    { "483d51a8-37f5-473c-a17a-0b0d175c1e7e", null, "Manager", "MANAGER" },
-                    { "9365b6ea-c516-4174-a231-43c5975bb099", null, "Administrator", "ADMINISTRATOR" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "DocumentCategories",
-                columns: new[] { "DocumentCategoryId", "Name", "isEnable" },
-                values: new object[,]
-                {
-                    { 1, "Schedule", true },
-                    { 2, "Report", true },
-                    { 3, "ThirdCategory", true }
-                });
-
-            migrationBuilder.InsertData(
-                table: "DocumentStatuses",
-                columns: new[] { "DocumentStatusId", "Name", "isEnable" },
-                values: new object[,]
-                {
-                    { 1, "New", true },
-                    { 2, "In process", true },
-                    { 3, "Finished", true },
-                    { 4, "Closed", true }
+                        name: "FK_ToChecks_DocumentVersions_VersionId",
+                        column: x => x.VersionId,
+                        principalTable: "DocumentVersions",
+                        principalColumn: "DocumentVersionId");
                 });
 
             migrationBuilder.InsertData(
                 table: "Permissions",
-                columns: new[] { "PermissionId", "Name" },
+                columns: new[] { "PermissionId", "Category", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Create" },
-                    { 2, "Read" },
-                    { 3, "Update" },
-                    { 4, "Delete" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "PermissionRoles",
-                columns: new[] { "PermissionId", "RoleId" },
-                values: new object[,]
-                {
-                    { 1, "483d51a8-37f5-473c-a17a-0b0d175c1e7e" },
-                    { 2, "483d51a8-37f5-473c-a17a-0b0d175c1e7e" },
-                    { 1, "9365b6ea-c516-4174-a231-43c5975bb099" },
-                    { 2, "9365b6ea-c516-4174-a231-43c5975bb099" },
-                    { 3, "9365b6ea-c516-4174-a231-43c5975bb099" }
+                    { 1, "Справочные данные", "Просмотр справочников" },
+                    { 2, "Справочные данные", "Редактирование справочников" },
+                    { 3, "Роли", "Управление ролями" },
+                    { 4, "Пользователи", "Просмотр пользователей" },
+                    { 5, "Пользователи", "Редактирование пользователей" },
+                    { 6, "Документы", "Просмотр своих документов" },
+                    { 7, "Документы и архив", "Просмотр всех документов" },
+                    { 8, "Документы", "Редактирование всех документов" },
+                    { 9, "Общие возможности", "Добавление документов" },
+                    { 10, "Общие возможности", "Просмотр отправленных пользователю" },
+                    { 11, "Общие возможности", "Просмотр созданных пользователем" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -363,6 +436,11 @@ namespace DigitalDepartment.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_PositionId",
+                table: "AspNetUsers",
+                column: "PositionId");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -385,9 +463,39 @@ namespace DigitalDepartment.Migrations
                 column: "LetterId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DocumentVersions_AuthorId",
+                table: "DocumentVersions",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DocumentVersions_DocumentId",
+                table: "DocumentVersions",
+                column: "DocumentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Letters_AuthorId",
+                table: "Letters",
+                column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PermissionRoles_PermissionId",
                 table: "PermissionRoles",
                 column: "PermissionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Recipients_LetterId",
+                table: "Recipients",
+                column: "LetterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ToChecks_UserId",
+                table: "ToChecks",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ToChecks_VersionId",
+                table: "ToChecks",
+                column: "VersionId");
         }
 
         /// <inheritdoc />
@@ -409,13 +517,25 @@ namespace DigitalDepartment.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Documents");
-
-            migrationBuilder.DropTable(
                 name: "PermissionRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Recipients");
+
+            migrationBuilder.DropTable(
+                name: "ToChecks");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Permissions");
+
+            migrationBuilder.DropTable(
+                name: "DocumentVersions");
+
+            migrationBuilder.DropTable(
+                name: "Documents");
 
             migrationBuilder.DropTable(
                 name: "DocumentCategories");
@@ -427,10 +547,10 @@ namespace DigitalDepartment.Migrations
                 name: "Letters");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Permissions");
+                name: "Positions");
         }
     }
 }

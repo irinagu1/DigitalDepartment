@@ -40,38 +40,38 @@ namespace DigitalDepartment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permissions", (string)null);
+                    b.ToTable("Permissions");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Category = "Пользователи",
-                            Name = "Просмотр пользователей"
+                            Category = "Справочные данные",
+                            Name = "Просмотр справочников"
                         },
                         new
                         {
                             Id = 2,
-                            Category = "Пользователи",
-                            Name = "Добавление пользователей"
+                            Category = "Справочные данные",
+                            Name = "Редактирование справочников"
                         },
                         new
                         {
                             Id = 3,
-                            Category = "Пользователи",
-                            Name = "Редактирование пользователей"
+                            Category = "Роли",
+                            Name = "Управление ролями"
                         },
                         new
                         {
                             Id = 4,
                             Category = "Пользователи",
-                            Name = "Архивирование пользователей"
+                            Name = "Просмотр пользователей"
                         },
                         new
                         {
                             Id = 5,
                             Category = "Пользователи",
-                            Name = "Удаление пользователей"
+                            Name = "Редактирование пользователей"
                         },
                         new
                         {
@@ -82,26 +82,32 @@ namespace DigitalDepartment.Migrations
                         new
                         {
                             Id = 7,
-                            Category = "Документы",
-                            Name = "Загрузка документов"
+                            Category = "Документы и архив",
+                            Name = "Просмотр всех документов"
                         },
                         new
                         {
                             Id = 8,
                             Category = "Документы",
-                            Name = "Просмотр архива документов"
+                            Name = "Редактирование всех документов"
                         },
                         new
                         {
                             Id = 9,
-                            Category = "Документы",
-                            Name = "Архивирование документов"
+                            Category = "Общие возможности",
+                            Name = "Добавление документов"
                         },
                         new
                         {
                             Id = 10,
-                            Category = "Документы",
-                            Name = "Просмотр всех документов"
+                            Category = "Общие возможности",
+                            Name = "Просмотр отправленных пользователю"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Category = "Общие возможности",
+                            Name = "Просмотр созданных пользователем"
                         });
                 });
 
@@ -117,7 +123,64 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.ToTable("PermissionRoles", (string)null);
+                    b.ToTable("PermissionRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 3
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 4
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 5
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 6
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 7
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 8
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 9
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 10
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 11
+                        });
                 });
 
             modelBuilder.Entity("Entities.Models.Auth.Role", b =>
@@ -152,15 +215,8 @@ namespace DigitalDepartment.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "483d51a8-37f5-473c-a17a-0b0d175c1e7e",
-                            IsActived = false,
-                            Name = "Manager",
-                            NormalizedName = "MANAGER"
-                        },
-                        new
-                        {
                             Id = "9365b6ea-c516-4174-a231-43c5975bb099",
-                            IsActived = false,
+                            IsActived = true,
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -255,6 +311,31 @@ namespace DigitalDepartment.Migrations
                     b.HasIndex("PositionId");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "9f8f4248-953c-409b-a048-ac08324f19fe",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "051f6ef9-eddb-47a5-929b-1a5be0796f53",
+                            Email = "superadming@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Full",
+                            LastName = "Administrator",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SUPERADMIN@GMAIL.COM",
+                            NormalizedUserName = "SUPERADMIN",
+                            PasswordHash = "AQAAAAIAAYagAAAAECaFM/EyVqmzR0nPT9SFF6qvDJkp2rURb83BDmBcrM/Lb0ya3JZtbNxZVOpflyWy0w==",
+                            PhoneNumber = "12345",
+                            PhoneNumberConfirmed = false,
+                            PositionId = 1,
+                            RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SecondName = "Access",
+                            SecurityStamp = "79b12de4-dc5f-4337-8a64-61c5c3c3ce53",
+                            TwoFactorEnabled = false,
+                            UserName = "superadmin",
+                            isActive = true
+                        });
                 });
 
             modelBuilder.Entity("Entities.Models.Auth.UserRole", b =>
@@ -270,6 +351,13 @@ namespace DigitalDepartment.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "9f8f4248-953c-409b-a048-ac08324f19fe",
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Models.Document", b =>
@@ -305,7 +393,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("LetterId");
 
-                    b.ToTable("Documents", (string)null);
+                    b.ToTable("Documents");
                 });
 
             modelBuilder.Entity("Entities.Models.DocumentCategory", b =>
@@ -327,27 +415,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DocumentCategories", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Schedule",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Report",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "ThirdCategory",
-                            isEnable = true
-                        });
+                    b.ToTable("DocumentCategories");
                 });
 
             modelBuilder.Entity("Entities.Models.DocumentStatus", b =>
@@ -369,33 +437,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DocumentStatuses", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "New",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "In process",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Finished",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Closed",
-                            isEnable = true
-                        });
+                    b.ToTable("DocumentStatuses");
                 });
 
             modelBuilder.Entity("Entities.Models.DocumentVersion", b =>
@@ -436,7 +478,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("DocumentId");
 
-                    b.ToTable("DocumentVersions", (string)null);
+                    b.ToTable("DocumentVersions");
                 });
 
             modelBuilder.Entity("Entities.Models.Letter", b =>
@@ -462,7 +504,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Letters", (string)null);
+                    b.ToTable("Letters");
                 });
 
             modelBuilder.Entity("Entities.Models.Position", b =>
@@ -484,7 +526,15 @@ namespace DigitalDepartment.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Positions", (string)null);
+                    b.ToTable("Positions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "FullAccessAdmin",
+                            isEnable = true
+                        });
                 });
 
             modelBuilder.Entity("Entities.Models.Recipient", b =>
@@ -514,7 +564,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("LetterId");
 
-                    b.ToTable("Recipients", (string)null);
+                    b.ToTable("Recipients");
                 });
 
             modelBuilder.Entity("Entities.Models.ToCheck", b =>
@@ -541,7 +591,7 @@ namespace DigitalDepartment.Migrations
 
                     b.HasIndex("VersionId");
 
-                    b.ToTable("ToChecks", (string)null);
+                    b.ToTable("ToChecks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

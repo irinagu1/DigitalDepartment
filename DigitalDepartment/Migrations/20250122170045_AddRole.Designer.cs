@@ -12,8 +12,8 @@ using Repository.Core;
 namespace DigitalDepartment.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20241008130131_AddCreationDateToDoc")]
-    partial class AddCreationDateToDoc
+    [Migration("20250122170045_AddRole")]
+    partial class AddRole
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,32 +49,32 @@ namespace DigitalDepartment.Migrations
                         new
                         {
                             Id = 1,
-                            Category = "Пользователи",
-                            Name = "Просмотр пользователей"
+                            Category = "Справочные данные",
+                            Name = "Просмотр справочников"
                         },
                         new
                         {
                             Id = 2,
-                            Category = "Пользователи",
-                            Name = "Добавление пользователей"
+                            Category = "Справочные данные",
+                            Name = "Редактирование справочников"
                         },
                         new
                         {
                             Id = 3,
-                            Category = "Пользователи",
-                            Name = "Редактирование пользователей"
+                            Category = "Роли",
+                            Name = "Управление ролями"
                         },
                         new
                         {
                             Id = 4,
                             Category = "Пользователи",
-                            Name = "Архивирование пользователей"
+                            Name = "Просмотр пользователей"
                         },
                         new
                         {
                             Id = 5,
                             Category = "Пользователи",
-                            Name = "Удаление пользователей"
+                            Name = "Редактирование пользователей"
                         },
                         new
                         {
@@ -85,26 +85,32 @@ namespace DigitalDepartment.Migrations
                         new
                         {
                             Id = 7,
-                            Category = "Документы",
-                            Name = "Загрузка документов"
+                            Category = "Документы и архив",
+                            Name = "Просмотр всех документов"
                         },
                         new
                         {
                             Id = 8,
                             Category = "Документы",
-                            Name = "Просмотр архива документов"
+                            Name = "Редактирование всех документов"
                         },
                         new
                         {
                             Id = 9,
-                            Category = "Документы",
-                            Name = "Архивирование документов"
+                            Category = "Общие возможности",
+                            Name = "Добавление документов"
                         },
                         new
                         {
                             Id = 10,
-                            Category = "Документы",
-                            Name = "Просмотр всех документов"
+                            Category = "Общие возможности",
+                            Name = "Просмотр отправленных пользователю"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Category = "Общие возможности",
+                            Name = "Просмотр созданных пользователем"
                         });
                 });
 
@@ -155,15 +161,8 @@ namespace DigitalDepartment.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "483d51a8-37f5-473c-a17a-0b0d175c1e7e",
-                            IsActived = false,
-                            Name = "Manager",
-                            NormalizedName = "MANAGER"
-                        },
-                        new
-                        {
                             Id = "9365b6ea-c516-4174-a231-43c5975bb099",
-                            IsActived = false,
+                            IsActived = true,
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -219,6 +218,9 @@ namespace DigitalDepartment.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("PositionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
 
@@ -252,6 +254,8 @@ namespace DigitalDepartment.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("PositionId");
+
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
@@ -279,9 +283,6 @@ namespace DigitalDepartment.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("CreationDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("DocumentCategoryId")
                         .HasColumnType("int");
 
@@ -292,10 +293,6 @@ namespace DigitalDepartment.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -333,26 +330,6 @@ namespace DigitalDepartment.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DocumentCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Schedule",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Report",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "ThirdCategory",
-                            isEnable = true
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.DocumentStatus", b =>
@@ -375,32 +352,47 @@ namespace DigitalDepartment.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DocumentStatuses");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "New",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "In process",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Finished",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Closed",
-                            isEnable = true
-                        });
+            modelBuilder.Entity("Entities.Models.DocumentVersion", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("DocumentVersionId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DocumentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Number")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isLast")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("DocumentId");
+
+                    b.ToTable("DocumentVersions");
                 });
 
             modelBuilder.Entity("Entities.Models.Letter", b =>
@@ -427,6 +419,28 @@ namespace DigitalDepartment.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Letters");
+                });
+
+            modelBuilder.Entity("Entities.Models.Position", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("PositionId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("isEnable")
+                        .IsRequired()
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Positions");
                 });
 
             modelBuilder.Entity("Entities.Models.Recipient", b =>
@@ -470,18 +484,18 @@ namespace DigitalDepartment.Migrations
                     b.Property<DateTime>("DateChecked")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DocumentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<long?>("VersionId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("DocumentId");
-
                     b.HasIndex("UserId");
+
+                    b.HasIndex("VersionId");
 
                     b.ToTable("ToChecks");
                 });
@@ -596,6 +610,15 @@ namespace DigitalDepartment.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Entities.Models.Auth.User", b =>
+                {
+                    b.HasOne("Entities.Models.Position", "Position")
+                        .WithMany()
+                        .HasForeignKey("PositionId");
+
+                    b.Navigation("Position");
+                });
+
             modelBuilder.Entity("Entities.Models.Auth.UserRole", b =>
                 {
                     b.HasOne("Entities.Models.Auth.Role", "Role")
@@ -642,6 +665,23 @@ namespace DigitalDepartment.Migrations
                     b.Navigation("Letter");
                 });
 
+            modelBuilder.Entity("Entities.Models.DocumentVersion", b =>
+                {
+                    b.HasOne("Entities.Models.Auth.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("Entities.Models.Document", "Document")
+                        .WithMany()
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Document");
+                });
+
             modelBuilder.Entity("Entities.Models.Letter", b =>
                 {
                     b.HasOne("Entities.Models.Auth.User", "Author")
@@ -666,19 +706,19 @@ namespace DigitalDepartment.Migrations
 
             modelBuilder.Entity("Entities.Models.ToCheck", b =>
                 {
-                    b.HasOne("Entities.Models.Document", "Document")
-                        .WithMany()
-                        .HasForeignKey("DocumentId");
-
                     b.HasOne("Entities.Models.Auth.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Document");
+                    b.HasOne("Entities.Models.DocumentVersion", "Version")
+                        .WithMany()
+                        .HasForeignKey("VersionId");
 
                     b.Navigation("User");
+
+                    b.Navigation("Version");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

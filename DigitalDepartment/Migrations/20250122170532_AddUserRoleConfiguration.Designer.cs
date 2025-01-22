@@ -12,8 +12,8 @@ using Repository.Core;
 namespace DigitalDepartment.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20240926165827_AddIsArchivedColumnToDocuments")]
-    partial class AddIsArchivedColumnToDocuments
+    [Migration("20250122170532_AddUserRoleConfiguration")]
+    partial class AddUserRoleConfiguration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,10 @@ namespace DigitalDepartment.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -45,22 +49,68 @@ namespace DigitalDepartment.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Create"
+                            Category = "Справочные данные",
+                            Name = "Просмотр справочников"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Read"
+                            Category = "Справочные данные",
+                            Name = "Редактирование справочников"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Update"
+                            Category = "Роли",
+                            Name = "Управление ролями"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Delete"
+                            Category = "Пользователи",
+                            Name = "Просмотр пользователей"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Category = "Пользователи",
+                            Name = "Редактирование пользователей"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Category = "Документы",
+                            Name = "Просмотр своих документов"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Category = "Документы и архив",
+                            Name = "Просмотр всех документов"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Category = "Документы",
+                            Name = "Редактирование всех документов"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Category = "Общие возможности",
+                            Name = "Добавление документов"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Category = "Общие возможности",
+                            Name = "Просмотр отправленных пользователю"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Category = "Общие возможности",
+                            Name = "Просмотр созданных пользователем"
                         });
                 });
 
@@ -81,16 +131,6 @@ namespace DigitalDepartment.Migrations
                     b.HasData(
                         new
                         {
-                            RoleId = "483d51a8-37f5-473c-a17a-0b0d175c1e7e",
-                            PermissionId = 1
-                        },
-                        new
-                        {
-                            RoleId = "483d51a8-37f5-473c-a17a-0b0d175c1e7e",
-                            PermissionId = 2
-                        },
-                        new
-                        {
                             RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
                             PermissionId = 1
                         },
@@ -103,6 +143,46 @@ namespace DigitalDepartment.Migrations
                         {
                             RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
                             PermissionId = 3
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 4
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 5
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 6
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 7
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 8
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 9
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 10
+                        },
+                        new
+                        {
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            PermissionId = 11
                         });
                 });
 
@@ -114,6 +194,9 @@ namespace DigitalDepartment.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActived")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
@@ -135,13 +218,8 @@ namespace DigitalDepartment.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "483d51a8-37f5-473c-a17a-0b0d175c1e7e",
-                            Name = "Manager",
-                            NormalizedName = "MANAGER"
-                        },
-                        new
-                        {
                             Id = "9365b6ea-c516-4174-a231-43c5975bb099",
+                            IsActived = true,
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -197,6 +275,9 @@ namespace DigitalDepartment.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("PositionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
 
@@ -217,6 +298,9 @@ namespace DigitalDepartment.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -227,7 +311,34 @@ namespace DigitalDepartment.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("PositionId");
+
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "9f8f4248-953c-409b-a048-ac08324f19fe",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "051f6ef9-eddb-47a5-929b-1a5be0796f53",
+                            Email = "superadming@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Full",
+                            LastName = "Administrator",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SUPERADMIN@GMAIL.COM",
+                            NormalizedUserName = "SUPERADMIN",
+                            PasswordHash = "AQAAAAIAAYagAAAAECaFM/EyVqmzR0nPT9SFF6qvDJkp2rURb83BDmBcrM/Lb0ya3JZtbNxZVOpflyWy0w==",
+                            PhoneNumber = "12345",
+                            PhoneNumberConfirmed = false,
+                            PositionId = 1,
+                            RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SecondName = "Access",
+                            SecurityStamp = "79b12de4-dc5f-4337-8a64-61c5c3c3ce53",
+                            TwoFactorEnabled = false,
+                            UserName = "superadmin",
+                            isActive = true
+                        });
                 });
 
             modelBuilder.Entity("Entities.Models.Auth.UserRole", b =>
@@ -243,6 +354,13 @@ namespace DigitalDepartment.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "9f8f4248-953c-409b-a048-ac08324f19fe",
+                            RoleId = "9365b6ea-c516-4174-a231-43c5975bb099"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Models.Document", b =>
@@ -264,10 +382,6 @@ namespace DigitalDepartment.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -305,26 +419,6 @@ namespace DigitalDepartment.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DocumentCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Schedule",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Report",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "ThirdCategory",
-                            isEnable = true
-                        });
                 });
 
             modelBuilder.Entity("Entities.Models.DocumentStatus", b =>
@@ -347,32 +441,47 @@ namespace DigitalDepartment.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("DocumentStatuses");
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "New",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "In process",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Finished",
-                            isEnable = true
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Closed",
-                            isEnable = true
-                        });
+            modelBuilder.Entity("Entities.Models.DocumentVersion", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("DocumentVersionId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DocumentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Number")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isLast")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("DocumentId");
+
+                    b.ToTable("DocumentVersions");
                 });
 
             modelBuilder.Entity("Entities.Models.Letter", b =>
@@ -399,6 +508,36 @@ namespace DigitalDepartment.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Letters");
+                });
+
+            modelBuilder.Entity("Entities.Models.Position", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("PositionId");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("isEnable")
+                        .IsRequired()
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Positions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "FullAccessAdmin",
+                            isEnable = true
+                        });
                 });
 
             modelBuilder.Entity("Entities.Models.Recipient", b =>
@@ -442,18 +581,18 @@ namespace DigitalDepartment.Migrations
                     b.Property<DateTime>("DateChecked")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DocumentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<long?>("VersionId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("DocumentId");
-
                     b.HasIndex("UserId");
+
+                    b.HasIndex("VersionId");
 
                     b.ToTable("ToChecks");
                 });
@@ -568,6 +707,15 @@ namespace DigitalDepartment.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Entities.Models.Auth.User", b =>
+                {
+                    b.HasOne("Entities.Models.Position", "Position")
+                        .WithMany()
+                        .HasForeignKey("PositionId");
+
+                    b.Navigation("Position");
+                });
+
             modelBuilder.Entity("Entities.Models.Auth.UserRole", b =>
                 {
                     b.HasOne("Entities.Models.Auth.Role", "Role")
@@ -614,6 +762,23 @@ namespace DigitalDepartment.Migrations
                     b.Navigation("Letter");
                 });
 
+            modelBuilder.Entity("Entities.Models.DocumentVersion", b =>
+                {
+                    b.HasOne("Entities.Models.Auth.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("Entities.Models.Document", "Document")
+                        .WithMany()
+                        .HasForeignKey("DocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Document");
+                });
+
             modelBuilder.Entity("Entities.Models.Letter", b =>
                 {
                     b.HasOne("Entities.Models.Auth.User", "Author")
@@ -638,19 +803,19 @@ namespace DigitalDepartment.Migrations
 
             modelBuilder.Entity("Entities.Models.ToCheck", b =>
                 {
-                    b.HasOne("Entities.Models.Document", "Document")
-                        .WithMany()
-                        .HasForeignKey("DocumentId");
-
                     b.HasOne("Entities.Models.Auth.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Document");
+                    b.HasOne("Entities.Models.DocumentVersion", "Version")
+                        .WithMany()
+                        .HasForeignKey("VersionId");
 
                     b.Navigation("User");
+
+                    b.Navigation("Version");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

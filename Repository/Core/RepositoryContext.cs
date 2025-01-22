@@ -69,11 +69,11 @@ namespace Repository.Core
                 });
 
             modelBuilder.ApplyConfiguration(new PermissionConfiguration());
-        //    modelBuilder.ApplyConfiguration(new RoleConfiguration());
-        //    modelBuilder.ApplyConfiguration(new PermissionsRolesConfiguration());
-     //       modelBuilder.ApplyConfiguration(new PositionConfiguration());
-      //      modelBuilder.ApplyConfiguration(new UserConfiguration());
-        //    modelBuilder.ApplyConfiguration(new UsersRolesConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new PermissionsRolesConfiguration());
+            modelBuilder.ApplyConfiguration(new PositionConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new UsersRolesConfiguration());
         }
 
         public DbSet<Position>? Positions {  get; set; }
