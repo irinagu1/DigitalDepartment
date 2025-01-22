@@ -18,7 +18,7 @@ namespace DigitalDepartment.Presentation.Controllers
 {
     [Route("api/versions")]
     [ApiController]
-
+    [Authorize]
     public class VersionController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -81,7 +81,7 @@ namespace DigitalDepartment.Presentation.Controllers
 
         [HttpGet("forUser")]
         public IActionResult GetAllVersionsWhereAuthorIsUser
-       ([FromQuery] VersionParameters versionParameters)
+           ([FromQuery] VersionParameters versionParameters)
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == "userId").Value.ToString();
             var pagedResult = _service.DocumentVersionService

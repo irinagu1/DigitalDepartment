@@ -11,7 +11,7 @@ namespace DigitalDepartment.Presentation.Controllers
 
     [Route("api/documentcategories")]
     [ApiController]
-  //  [Authorize]
+    [Authorize]
     public class DocumentCategoriesController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -26,7 +26,6 @@ namespace DigitalDepartment.Presentation.Controllers
         /// <param name="documentCategoryParameters"></param>
         /// <returns>The document categories list</returns>
         [HttpGet]
-        //    [Authorize(Policy = "ReadDocumentStatuses")]
         public async Task<IActionResult> GetDocumentCategories(
             [FromQuery] DocumentCategoryParameters documentCategoryParameters)
         {
@@ -41,7 +40,6 @@ namespace DigitalDepartment.Presentation.Controllers
 
     
         [HttpGet("{id:int}", Name = "DocumentCategoryById")]
-        //   [Authorize(Policy = "CreateDocumentStatus")]
         public async Task<IActionResult> GetDocumentCategory(int id)
         {
             var dc = await

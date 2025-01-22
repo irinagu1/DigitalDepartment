@@ -22,22 +22,10 @@ namespace Service.Contracts.DocsEntities
 
        DocumentDto ArchiveDocument(int id);
 
-
-        //CHECKED
-
         Task<(IEnumerable<DocumentDto> documents, MetaData metaData)>
            GetAllDocumentsAsync(
                DocumentParameters documentParameters,
                bool trackChanges);
-
-
-        Task<(IEnumerable<DocumentForShowDto> documents, MetaData metaData)>
-            GetDocumentsForShowAsync(string userId, DocumentParameters documentParameters, bool trackChanges);
-
-        Task<(IEnumerable<DocumentForShowDto> documents, MetaData metaData)>
-            GetAllDocumentsWithParametersNamesAsync(IEnumerable<DocumentDto> documents, MetaData metaData, string userId);
-
-     
 
         Task<DocumentDto> GetDocumentByPathAsync(string path, bool trackChanges);
         Task<DocumentDto> GetDocumentByIdAsync(int id, bool trackChanges);

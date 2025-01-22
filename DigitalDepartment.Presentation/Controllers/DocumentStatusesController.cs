@@ -15,6 +15,7 @@ namespace DigitalDepartment.Presentation.Controllers
 {
     [Route("api/documentstatuses")]
     [ApiController]
+    [Authorize]
     public class DocumentStatusesController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -38,8 +39,6 @@ namespace DigitalDepartment.Presentation.Controllers
         [HttpGet("{id:int}", Name = "DocumentStatusById")]
         public async Task<IActionResult> GetDocumentStatus(int id) 
         {
-            //new test comment 
-            //for check sth on github
             var dc = await 
                 _service.DocumentStatusService.GetDocumentStatusAsync(id, trackChanges: false);
             return Ok(dc);
@@ -51,7 +50,6 @@ namespace DigitalDepartment.Presentation.Controllers
         public async Task<IActionResult> CreateDocumentStatus([FromBody] DocumentStatusForCreationDto documentStatus)
         {
             var createdDocumentStatus = await _service.DocumentStatusService.CreateDocumentStatusAsync(documentStatus);
-            //search this
             return CreatedAtRoute("DocumentStatusById", new {id = createdDocumentStatus.Id}, createdDocumentStatus);
         }
 

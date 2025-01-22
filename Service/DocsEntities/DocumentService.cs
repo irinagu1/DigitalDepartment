@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Service.Contracts;
 using Service.Contracts.DocsEntities;
-//using Service.ReportsManipulation;
 using Shared.DataTransferObjects.Documents;
 using Shared.DataTransferObjects.DocumentVersion;
 using Shared.RequestFeatures;
@@ -122,95 +121,6 @@ namespace Service.DocsEntities
             return true;
         }
 
-        //CHECKEED
-
-
-
-        public async Task<(IEnumerable<DocumentForShowDto> documents, MetaData metaData)>
-            GetDocumentsForShowAsync(string userId, DocumentParameters documentParameters, bool trackChanges)
-        {
-            bool toCheck = true;
-            if (documentParameters.WhatType == "Для просмотра") toCheck = false;
-
-            var document = new PagedList<Entities.Models.Document>();
-            if (documentParameters.ForWho == "Общие")
-            {
-                HashSet<string> uniqueRoles = await _repository.User.GetUserRolesIds(userId);
-                document = await _repository.Document.GetAllDocumentsForRolesAsync
-                    (userId, uniqueRoles, toCheck, documentParameters, trackChanges);
-               
-            }
-            else if (documentParameters.ForWho == "Лично мне")
-            {
-                document = await _repository.Document.GetAllDocumentsForUserAsync
-                    (userId, toCheck, documentParameters, trackChanges);
-            }
-
-            var documentsDto = _mapper.Map<IEnumerable<DocumentDto>>(document);
-            var allDocsWithParams = await GetAllDocumentsWithParametersNamesAsync
-                (documents: documentsDto, metaData: document.MetaData, userId: userId);
-
-            foreach(var el in allDocsWithParams.documents)
-            {
-                var author = _repository.User.GetUserByLetterIdAsync(el.LetterId);
-                if (author is not null)
-                    el.Author = author.FirstName + " " + author.SecondName + " " + author.LastName;
-                else el.Author = "";
-            }
-
-
-            return (allDocsWithParams.documents, allDocsWithParams.metaData);
-        }
-
-        public async Task<(IEnumerable<DocumentForShowDto> documents, MetaData metaData)> 
-            GetAllDocumentsWithParametersNamesAsync
-            (IEnumerable<DocumentDto> documents, MetaData metaData, string userId)
-        {
-            List<DocumentForShowDto> documentsForShowDto = new List<DocumentForShowDto>();   
-            foreach(var doc in documents)
-            {
-                var docCat = await _repository.DocumentCategory.GetDocumentCategoryAsync(doc.DocumentCategoryId, false);
-                var docStat = await _repository.DocumentStatus.GetDocumentStatusAsync(doc.DocumentStatusId, false);
-                var letter = await GetLetterById(doc.LetterId);
-                var isSigned = await GetToCheckByUserAndDocumentId(userId, doc.Id);
-                //var creationdate
-                //var is signed
-                var newDocForShowDto = new DocumentForShowDto()
-                {
-                    Id = doc.Id,
-                    Name = doc.Name,
-                    DocumentCategoryId = doc.DocumentCategoryId,
-                    DocumentCategoryName = docCat.Name,
-                    DocumentStatusId = doc.DocumentStatusId,
-                    DocumentStatusName = docStat.Name,
-                    isArchived = doc.isArchived,
-                    LetterId = doc.LetterId,
-                    DateCreation = letter.CreationDate.Value,
-                    isSigned = isSigned != null ? true : false,
-                    DateSigned = isSigned != null ? isSigned.DateChecked : null,
-                    Author = doc.Author
-                };
-                documentsForShowDto.Add(newDocForShowDto);
-            }
-
-            return (documents: documentsForShowDto, metaData);
-        }
-
-        private async Task<Letter> GetLetterById(int id)
-        {
-            var letter = await _repository.Letter.GetLetterById(id);
-            return letter;
-        }
-
-        private async Task<ToCheck> GetToCheckByUserAndDocumentId(string userId, int documentId)
-        {
-            //    var isSigned = await _repository.ToCheck.GetToCheckByUserAndDocumentIds(userId, documentId);
-
-            var isSigned = await _repository.ToCheck
-                .GetToCheckByUserAndVersionId(userId, 13);
-            return isSigned;
-        }
-
         public async Task<(IEnumerable<DocumentDto> documents, MetaData metaData)> GetAllDocumentsAsync(DocumentParameters documentParameters, bool trackChanges)
         {
             var docsWithMetaData = await _repository.Document.GetAllDocumentsAsync(documentParameters, trackChanges);
@@ -232,8 +142,6 @@ namespace Service.DocsEntities
             var documentDto = _mapper.Map<DocumentDto>(document);
             return documentDto;
         }
-
-
 
         public DocumentDto UpdateDocument(DocumentForUpdateDto documentForUpdateDto)
         {

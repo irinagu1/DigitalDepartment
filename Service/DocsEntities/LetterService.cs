@@ -68,7 +68,7 @@ namespace Service.DocsEntities
                 {
                     for (int j = 0; j < versions.Count; j++)
                     {
-                        var path = Path.Combine(baseFolder, versions[i].Path);
+                        var path = Path.Combine(baseFolder, versions[j].Path);
                         var isExcist = File.Exists(path);
                         if (!isExcist)
                         {

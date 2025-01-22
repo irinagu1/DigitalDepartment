@@ -17,7 +17,7 @@ namespace DigitalDepartment.Presentation.Controllers
 {
     [Route("api/users")]
     [ApiController]
-   // [Authorize]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -94,14 +94,5 @@ namespace DigitalDepartment.Presentation.Controllers
             return Ok(ifOk);
         }
      
-        [HttpPut("password")]
-        public async Task<IActionResult> ChangePassword(
-         [FromBody] PasswordToChangeDto changeDto)
-        {
-            //var result = _service.UserService.UpdateUser(userForUpdateDto);
-         //   if (result)
-                return NoContent();
-
-        }
     }
 }

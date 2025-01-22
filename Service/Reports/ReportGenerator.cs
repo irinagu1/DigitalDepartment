@@ -21,20 +21,27 @@ namespace Service.Reports
             (IEnumerable<RecipientsForReportDto> recipients, 
             string documentName, long versionNumber, string pathFromEntity)
         {
-            string path = GetFilePath(pathFromEntity);
-  
+            string newName = pathFromEntity.Substring(0, pathFromEntity.LastIndexOf(".")) +".docx";
+
+            string path = GetFilePath(newName);
+
             using (WordprocessingDocument wordDocument 
                 = WordprocessingDocument.Create
                 (path, WordprocessingDocumentType.Document))
             {
-                MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+             MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
 
-                mainPart.Document = new Document();
+                   mainPart.Document = new Document();
                 Body body = mainPart.Document.AppendChild(new Body());
+             //   var paragraph = CreateParagraph("БГУИР \n кафедра ИСИТ");
+                
+                body.AppendChild(CreateParagraph("БГУИР \r кафедра ИСИТ"));
 
                 body.AppendChild(CreateParagraph(
                     $"Лист ознакомления на " +
                     $"{DateTime.Now.ToLocalTime().ToString("dd.mm.yyyy")}"));
+
+
 
                 body.AppendChild(CreateParagraph($"Документ: {documentName}. Версия: {versionNumber}"));
   

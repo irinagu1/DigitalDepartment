@@ -152,21 +152,68 @@ namespace DigitalDepartment.Extensions
 
             services.AddAuthorization(opt =>
                 {
-                    opt.AddPolicy("ReadDocumentStatuses", 
+                    opt.AddPolicy("Просмотр справочников", 
                                   policy => policy.AddRequirements
                                   (
-                                     new PermissionRequirement("ReadDocumentStatuses")
+                                     new PermissionRequirement("Просмотр справочников")
                                   ));
-                    opt.AddPolicy("CreateDocumentStatus", 
+                    opt.AddPolicy("Редактирование справочников", 
                                   policy => policy.AddRequirements
                                   (
-                                      new PermissionRequirement("CreateDocumentStatus")
+                                      new PermissionRequirement("Редактирование справочников")
                                   ));
-                    opt.AddPolicy("Create",
+                    opt.AddPolicy("Управление ролями",
                                  policy => policy.AddRequirements
                                  (
-                                    new PermissionRequirement("Create")
+                                    new PermissionRequirement("Управление ролями")
                                  ));
+                    opt.AddPolicy("Просмотр пользователей",
+                                 policy => policy.AddRequirements
+                                 (
+                                    new PermissionRequirement("Просмотр пользователей")
+                                 ));
+                    opt.AddPolicy("Редактирование пользователей",
+                                 policy => policy.AddRequirements
+                                 (
+                                    new PermissionRequirement("Редактирование пользователей")
+                                 ));
+                    opt.AddPolicy("Управление ролями",
+                                 policy => policy.AddRequirements
+                                 (
+                                    new PermissionRequirement("Управление ролями")
+                                 ));
+                    opt.AddPolicy("Просмотр своих документов",
+                                 policy => policy.AddRequirements
+                                 (
+                                    new PermissionRequirement("Просмотр своих документов")
+                                 ));
+                    opt.AddPolicy("Просмотр всех документов",
+                                 policy => policy.AddRequirements
+                                 (
+                                    new PermissionRequirement("Просмотр всех документов")
+                                 ));
+                    opt.AddPolicy("Редактирование всех документов",
+                                 policy => policy.AddRequirements
+                                 (
+                                    new PermissionRequirement("Редактирование всех документов")
+                                 ));
+                    opt.AddPolicy("Добавление документов",
+                                 policy => policy.AddRequirements
+                                 (
+                                    new PermissionRequirement("Добавление документов")
+                                 ));
+                    opt.AddPolicy("Просмотр отправленных пользователю",
+                                 policy => policy.AddRequirements
+                                 (
+                                    new PermissionRequirement("Просмотр отправленных пользователю")
+                                 ));
+
+                    opt.AddPolicy("Просмотр созданных пользователем",
+                                 policy => policy.AddRequirements
+                                 (
+                                    new PermissionRequirement("Просмотр созданных пользователем")
+                                 ));
+
                 }
             );
         }

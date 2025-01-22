@@ -17,8 +17,6 @@ namespace DigitalDepartment.Authorzation
 
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
         {
-           // WindowsPrincipal wp = new WindowsPrincipal(WindowsIdentity.GetCurrent());
-         //   var userId = wp.Claims.FirstOrDefault(c => c.Type == "userId");
             var userId = context.User.Claims.FirstOrDefault(c=> c.Type == "userId");
 
             if (userId == null || !Guid.TryParse(userId.Value, out var id)) 

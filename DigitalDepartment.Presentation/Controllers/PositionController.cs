@@ -1,4 +1,5 @@
 ﻿using DigitalDepartment.Presentation.ActionFilters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects.DocumentCategories;
@@ -15,6 +16,7 @@ namespace DigitalDepartment.Presentation.Controllers
 {
     [Route("api/positions")]
     [ApiController]
+    [Authorize]
     public class PositionController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -52,7 +54,6 @@ namespace DigitalDepartment.Presentation.Controllers
         {
             var createdPosition =
                 await _service.PositionService.CreatePositionAsync(position);
-            //search this
             return CreatedAtRoute("PositionById",
                 new { id = createdPosition.Id },
                 createdPosition);

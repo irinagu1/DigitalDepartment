@@ -1,4 +1,5 @@
 ﻿using DigitalDepartment.Presentation.ActionFilters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects.Roles;
@@ -14,6 +15,7 @@ namespace DigitalDepartment.Presentation.Controllers
 {
     [Route("api/roles")]
     [ApiController]
+    [Authorize]
     public class RoleController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -75,7 +77,7 @@ namespace DigitalDepartment.Presentation.Controllers
             var role = _service.RoleService.UpdateRole(roleId);
             return Ok(role);
         }
-        //delete
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRole(string id)
         {

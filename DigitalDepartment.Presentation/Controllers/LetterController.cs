@@ -1,5 +1,6 @@
 ﻿using DigitalDepartment.Presentation.ActionFilters;
 using Entities.Exceptions.NotFound;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects.DocumentStatuses;
@@ -17,6 +18,7 @@ namespace DigitalDepartment.Presentation.Controllers
 
     [Route("api/letters")]
     [ApiController]
+    [Authorize]
     public class LetterController : ControllerBase
     {
         private readonly IServiceManager _service;
@@ -83,11 +85,6 @@ namespace DigitalDepartment.Presentation.Controllers
             letterForCreationDto.AuthorId = userId;
             var createdLetter = await _service.LetterService.CreateLetterAsync(letterForCreationDto);
             return Ok(createdLetter);
-
-            //   var createdDocumentStatus = await _service.DocumentStatusService.CreateDocumentStatusAsync(documentStatus);
-            //search this
-//            return Ok();
-           // return CreatedAtRoute("DocumentStatusById", new { id = createdDocumentStatus.Id }, createdDocumentStatus);
         }
         
 
@@ -97,16 +94,7 @@ namespace DigitalDepartment.Presentation.Controllers
         {
             var createdRecipients = await _service.LetterService.StoreRecipients(recipientsForCreation);
             return Ok("success");
-
-            //   var createdDocumentStatus = await _service.DocumentStatusService.CreateDocumentStatusAsync(documentStatus);
-            //search this
-            //            return Ok();
-            // return CreatedAtRoute("DocumentStatusById", new { id = createdDocumentStatus.Id }, createdDocumentStatus);
         }
-
-
-      
-
 
     }
 }

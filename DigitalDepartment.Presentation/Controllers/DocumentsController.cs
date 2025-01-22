@@ -19,23 +19,16 @@ namespace DigitalDepartment.Presentation.Controllers
 {
     [Route("api/documents")]
     [ApiController]
-  //  [Authorize]
+    [Authorize]
     public class DocumentsController : ControllerBase
     {
         private readonly IServiceManager _service;
 
-        public int chunkSize;
-        private string tempFolder;
-        private readonly ResponseContext _responseData;
-
         public DocumentsController(IServiceManager service)
         {
             _service = service;
-            chunkSize = 1048576 * 3;
-            tempFolder = "D:\\CoreFiles";
-            _responseData = new ResponseContext();
-        }
 
+        }
 
         [HttpGet("byIdForVersion")]
         public async Task<IActionResult> GetDocumentByIdForVersion(
@@ -45,7 +38,6 @@ namespace DigitalDepartment.Presentation.Controllers
                 .GetDocumentByIdForVersion(documentId);
             return Ok(dto);
         }
-
 
         [HttpPost("CreateDocument")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
@@ -60,7 +52,7 @@ namespace DigitalDepartment.Presentation.Controllers
         public IActionResult GetAllDocuments(
            [FromQuery] DocumentShowParameters documentParameters)
         {
-            var pagedResult =  _service.DocumentService.GetAllDocumentsForShowAsync(
+            var pagedResult = _service.DocumentService.GetAllDocumentsForShowAsync(
                     documentParameters, false);
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
             return Ok(pagedResult.documents);
@@ -80,58 +72,9 @@ namespace DigitalDepartment.Presentation.Controllers
         public async Task<IActionResult> DeleteDocument(int documentId)
         {
             var result = await _service.DocumentService.DeleteDocument(documentId);
-            if(result)
+            if (result)
                 return NoContent();
             throw new Exception("cannot delete document");
-        }
-        //CHECKEDD
-
-
-        [HttpGet]
-        public async Task<IActionResult> GetDocuments(
-         [FromQuery] DocumentParameters documentParameters)
-        {
-            var pagedResult = await
-                _service.DocumentService.GetAllDocumentsAsync(
-                    documentParameters, trackChanges: false);
-            Response.Headers.Add("X-Pagination",
-                JsonSerializer.Serialize(pagedResult.metaData));
-            return Ok(pagedResult.documents);
-        }
-
-        [HttpGet("ForShow")]
-     //   [Authorize(Policy = "Create")]
-        public async Task<IActionResult> GetDocumentsForShow(
-        [FromQuery] DocumentParameters documentParameters)
-        {
-          //  if (!HttpContext.User.Identity.IsAuthenticated) throw new Exception("no user");
-            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userId").Value.ToString();
-            
-            var pagedResult = await
-                _service.DocumentService.GetDocumentsForShowAsync(userId,
-                    documentParameters, false);
-            Response.Headers.Add("X-Pagination",
-                JsonSerializer.Serialize(pagedResult.metaData));
-            return Ok(pagedResult.documents);
-        }
-
-        [HttpGet("ForReport")]
-        //   [Authorize(Policy = "Create")]
-        public async Task<IActionResult> GetDocumentsForReport(
-       [FromQuery] int documentId)
-        {
-         //
-            return Ok();
-        }
-
-
-        [HttpPost("SignDocument")]
-        public async Task<IActionResult> SignDocument(string documentId)
-        {
-            var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "userId").Value.ToString();
-            var toCheckDto = await _service.ToCheckService.Create(userId, int.Parse(documentId));
-
-            return NoContent();
         }
 
         [HttpPut("UpdateDocument")]
@@ -143,14 +86,6 @@ namespace DigitalDepartment.Presentation.Controllers
             throw new Exception("document is null");
         }
 
-
-
-
-
-
-        #region Uploading
-
-      
         [HttpPost("uploadfile")]
         public async Task<IActionResult> UploadFile(IFormFile file, IFormCollection formCollection)
 
@@ -175,96 +110,8 @@ namespace DigitalDepartment.Presentation.Controllers
 
             return Ok("File uploaded successfully.");
         }
-    
-
-
-        //NOT USED
-
-    [HttpPost("UploadChunks")]
- //       [Authorize(Policy = "Create")]
-        public async Task<IActionResult> UploadChunks(string id, string fileName)
-        {
-            try
-            {
-                var chunkNumber = id;
-                string newpath = Path.Combine(tempFolder + "/Temp", fileName + chunkNumber);
-                using (FileStream fs = System.IO.File.Create(newpath))
-                {
-                    byte[] bytes = new byte[chunkSize];
-                    int bytesRead = 0;
-                    
-                    while ((bytesRead = await Request.Body.ReadAsync(bytes, 0, bytes.Length)) > 0)
-                    {
-                        fs.Write(bytes, 0, bytesRead);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _responseData.ErrorMessage = ex.Message;
-                _responseData.IsSuccess = false;
-            }
-            return Ok(_responseData);
-        }
-
-
-        [HttpPost("UploadComplete")]
-   //     [Authorize(Policy = "Create")]
-        public IActionResult UploadComplete(string fileName)
-        {
-            try
-            {
-                string tempPath = tempFolder + "/Temp";
-                string newPath = Path.Combine(tempPath, fileName);
-                string[] filePaths = Directory.GetFiles(tempPath).Where(p => p.Contains(fileName)).OrderBy(p => Int32.Parse(p.Replace(fileName, "$").Split('$')[1])).ToArray();
-                foreach (string filePath in filePaths)
-                {
-                    MergeChunks(newPath, filePath);
-                }
-                System.IO.File.Move(Path.Combine(tempPath, fileName), Path.Combine(tempFolder, fileName));
-            }
-            catch (Exception ex)
-            {
-                _responseData.ErrorMessage = ex.Message;
-                _responseData.IsSuccess = false;
-            }
-            return Ok(_responseData);
-        }
-
-   //     [Authorize(Policy = "Create")]
-        private static void MergeChunks(string chunk1, string chunk2)
-        {
-            FileStream fs1 = null;
-            FileStream fs2 = null;
-            try
-            {
-                fs1 = System.IO.File.Open(chunk1, FileMode.Append);
-                fs2 = System.IO.File.Open(chunk2, FileMode.Open);
-                byte[] fs2Content = new byte[fs2.Length];
-                fs2.Read(fs2Content, 0, (int)fs2.Length);
-                fs1.Write(fs2Content, 0, (int)fs2.Length);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message + " : " + ex.StackTrace);
-            }
-            finally
-            {
-                if (fs1 != null) fs1.Close();
-                if (fs2 != null) fs2.Close();
-                System.IO.File.Delete(chunk2);
-            }
-        }
-
-        #endregion
 
 
     }
 
-    public class ResponseContext
-    {
-        public dynamic Data { get; set; }
-        public bool IsSuccess { get; set; } = true;
-        public string ErrorMessage { get; set; }
-    }
 }

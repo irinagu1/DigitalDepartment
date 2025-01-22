@@ -1,5 +1,6 @@
 ﻿using DigitalDepartment.Presentation.ActionFilters;
 using Entities.Models.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +55,7 @@ namespace DigitalDepartment.Presentation.Controllers
 
         }
 
+        [Authorize]
         [HttpPut("password")]
         public async Task<IActionResult> ChangePassword(
         [FromBody] PasswordToChangeDto changeDto)
@@ -64,6 +66,7 @@ namespace DigitalDepartment.Presentation.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> DeleteUser(string userId)
         {

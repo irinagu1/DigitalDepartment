@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.RequestFeatures;
 using System;
@@ -11,6 +12,7 @@ namespace DigitalDepartment.Presentation.Controllers
 {
     [Route("api/permissions")]
     [ApiController]
+    [Authorize]
     public class PermissionController : ControllerBase
     {
         private readonly IServiceManager _service;
