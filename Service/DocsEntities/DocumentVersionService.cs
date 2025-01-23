@@ -86,6 +86,14 @@ namespace Service.DocsEntities
                 return "error";
         }
 
+        public string GetReportTemplatePath()
+        {
+            var folderForTemplate = _configuration.GetSection("ReportTemplate").AsEnumerable().FirstOrDefault().Value;
+            if (folderForTemplate is null)
+                return "error";
+            return folderForTemplate;
+        }
+
         public async Task DeleteFileWithVersion(long versionId)
         {
             var version = await _repository.DocumentVersion

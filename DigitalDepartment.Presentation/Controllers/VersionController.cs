@@ -1,5 +1,6 @@
 ﻿using DigitalDepartment.Presentation.ActionFilters;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects.DocumentCategories;
@@ -51,6 +52,47 @@ namespace DigitalDepartment.Presentation.Controllers
             }
         }
 
+
+        [HttpGet]
+        [Route("downloadReportTemplate")]
+        public IActionResult DownloadReportTemplate()
+        {
+            var path = _service.DocumentVersionService.GetReportTemplatePath();
+            if (path == "error")
+                return NotFound("not found path in directory");
+            var fullPath = Path.Combine(path, "Template.docx");
+            var excist = System.IO.File.Exists(fullPath);
+            if (!excist)
+                return NotFound("Not found file with name Template.docx");
+            else
+            {
+                byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
+                return File(fileBytes, "application/octet-stream", fullPath);
+            }
+        }
+
+        [HttpPost("uploadReportTemplate")]
+        public async Task<IActionResult> UploadFile(IFormFile file)
+
+        {
+            if (file == null)
+            {
+                return BadRequest("No file was provided.");
+            }
+            var baseFolder = _service.DocumentVersionService.GetReportTemplatePath();
+            bool exists = Directory.Exists(baseFolder);
+            if (!exists)
+                Directory.CreateDirectory(baseFolder);
+
+            var filePath = Path.Combine(baseFolder, "Template.docx");
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return Ok("File uploaded successfully.");
+        }
 
         [HttpGet("forReport")]
         public async Task<IActionResult> GetRecipientsForReport

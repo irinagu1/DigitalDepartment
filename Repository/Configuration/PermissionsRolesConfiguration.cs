@@ -69,7 +69,12 @@ namespace Repository.Configuration
                  {
                      RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
                      PermissionId = 11
-                 }
+                 },
+                  new PermissionRole
+                  {
+                      RoleId = "9365b6ea-c516-4174-a231-43c5975bb099",
+                      PermissionId = 12
+                  }
 
             );
         }

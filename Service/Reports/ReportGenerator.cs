@@ -19,31 +19,33 @@ namespace Service.Reports
 
         public void CreateGeneralReport
             (IEnumerable<RecipientsForReportDto> recipients, 
-            string documentName, long versionNumber, string pathFromEntity)
+            string documentName, long versionNumber, string pathFromEntity, string templateFilePath)
         {
+
+            var now = DateTime.Now.ToLocalTime();
             string newName = pathFromEntity.Substring(0, pathFromEntity.LastIndexOf(".")) +".docx";
 
             string path = GetFilePath(newName);
 
+            File.Copy(templateFilePath, path);
+
             using (WordprocessingDocument wordDocument 
-                = WordprocessingDocument.Create
-                (path, WordprocessingDocumentType.Document))
+                = WordprocessingDocument.Open
+                (path, true))
             {
-             MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
 
-                   mainPart.Document = new Document();
-                Body body = mainPart.Document.AppendChild(new Body());
-             //   var paragraph = CreateParagraph("БГУИР \n кафедра ИСИТ");
-                
-                body.AppendChild(CreateParagraph("БГУИР \r кафедра ИСИТ"));
-
-                body.AppendChild(CreateParagraph(
+                if (wordDocument.MainDocumentPart is null || wordDocument.MainDocumentPart.Document.Body is null)
+                {
+                    throw new ArgumentNullException("MainDocumentPart and/or Body is null.");
+                }
+                wordDocument.MainDocumentPart.Document.Body.AppendChild(CreateParagraph(
                     $"Лист ознакомления на " +
-                    $"{DateTime.Now.ToLocalTime().ToString("dd.mm.yyyy")}"));
+                    $"{now.Day}.{now.Month}.{now.Year}"));
 
 
 
-                body.AppendChild(CreateParagraph($"Документ: {documentName}. Версия: {versionNumber}"));
+                wordDocument.MainDocumentPart.Document.Body
+                    .AppendChild(CreateParagraph($"Документ: {documentName}. Версия: {versionNumber}"));
   
                 Table table = DesignTable();
 
@@ -58,22 +60,26 @@ namespace Service.Reports
                 ]));
                 foreach (var el in recipients)
                 {
+                    var isChecked = el.DateChecked.HasValue ? true : false;
+                    var cellValue = "Не ознакомлен";
+                    if(isChecked)
+                    {
+                        var date = el.DateChecked?.ToLocalTime();
+                        cellValue = $"{date.Value.Day}.{date.Value.Month}.{date.Value.Year}";
+                    }
+
                     table.AppendChild(CreateRow([
                         count++.ToString(),
                         el.User.FullName ?? "",
                         el.User.PositionName ?? "",
-                        el.DateChecked?.ToString("dd.mm.yyyy") ?? "Не ознакомлен"
+                        cellValue
                         ]));
                 }
 
-                if (wordDocument.MainDocumentPart is null || wordDocument.MainDocumentPart.Document.Body is null)
-                {
-                    throw new ArgumentNullException("MainDocumentPart and/or Body is null.");
-                }
+              
 
                 wordDocument.MainDocumentPart.Document.Body.AppendChild(table);
-
-                mainPart.Document.Save();
+            
                 wordDocument.Save();
             }
         }

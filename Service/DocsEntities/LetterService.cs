@@ -267,9 +267,16 @@ namespace Service.DocsEntities
             var folder = _cofigurator.GetSection("BaseFolderReport").AsEnumerable().FirstOrDefault().Value;
             if (folder is null)
                 throw new Exception("Cannot find folder in appsettings");
+            var templateFolder = _cofigurator.GetSection("ReportTemplate").AsEnumerable().FirstOrDefault().Value;
+            if (templateFolder is null)
+                throw new Exception("Cannot find folder with template in appsettings");
+            var templateFilePath = Path.Combine(templateFolder, "Template.docx");
+            if (!File.Exists(templateFilePath))
+                throw new Exception("No file with template on server");
 
             ReportGenerator reportGenerator = new ReportGenerator(folder);
-            reportGenerator.CreateGeneralReport(recipients, document.Name ?? "", version.Number, version.Path);
+            reportGenerator.CreateGeneralReport(recipients, document.Name ?? "", 
+                version.Number, version.Path, templateFilePath);
         }
     }
 }

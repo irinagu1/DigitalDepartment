@@ -11,6 +11,7 @@ namespace Service.Contracts.DocsEntities
 {
     public interface IDocumentVersionService
     {
+        string GetReportTemplatePath();
         Task DeleteFileWithVersion(long versionId);
         Task<string> returnVersionPath(long versionId);
         Task<string> NameForDownload(long versionId);

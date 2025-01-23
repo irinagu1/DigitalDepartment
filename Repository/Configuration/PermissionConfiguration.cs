@@ -48,8 +48,8 @@ namespace Repository.Configuration
                   new Permission
                   {
                       Id = 6,
-                      Name = "Просмотр своих документов",
-                      Category = "Документы",
+                      Name = "Просмотр информации о себе",
+                      Category = "О себе",
                   },
                   new Permission
                   {
@@ -80,7 +80,13 @@ namespace Repository.Configuration
                        Id = 11,
                        Name = "Просмотр созданных пользователем",
                        Category = "Общие возможности",
-                   }
+                   },
+                    new Permission
+                    {
+                        Id = 12,
+                        Name = "Редактирование шаблона отчета",
+                        Category = "Шаблон отчета",
+                    }
 
             );
         }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repository.Core;
 
@@ -11,9 +12,11 @@ using Repository.Core;
 namespace DigitalDepartment.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20250123113820_AddPermissionAboutTemplateReport")]
+    partial class AddPermissionAboutTemplateReport
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,8 +79,8 @@ namespace DigitalDepartment.Migrations
                         new
                         {
                             Id = 6,
-                            Category = "О себе",
-                            Name = "Просмотр информации о себе"
+                            Category = "Документы",
+                            Name = "Просмотр своих документов"
                         },
                         new
                         {
@@ -328,7 +331,7 @@ namespace DigitalDepartment.Migrations
                         {
                             Id = "9f8f4248-953c-409b-a048-ac08324f19fe",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b989b76f-4edc-4373-a760-75d93eb217a5",
+                            ConcurrencyStamp = "843a53db-b8a3-40fc-92df-f8cc47b18de0",
                             Email = "superadming@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Full",
@@ -342,7 +345,7 @@ namespace DigitalDepartment.Migrations
                             PositionId = 1,
                             RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             SecondName = "Access",
-                            SecurityStamp = "11348704-a015-46a7-9cf6-dd9d625f7e64",
+                            SecurityStamp = "c6f693ed-2cd3-42f7-9a50-f7b9ba25143b",
                             TwoFactorEnabled = false,
                             UserName = "superadmin",
                             isActive = true

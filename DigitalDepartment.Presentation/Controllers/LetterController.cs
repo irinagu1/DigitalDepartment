@@ -49,7 +49,8 @@ namespace DigitalDepartment.Presentation.Controllers
         {
             var baseFolder = _service.DocumentVersionService.returnBaseFolderReport();
             var versionPath = await _service.DocumentVersionService.returnVersionPath(versionId);
-            var filePath = Path.Combine(baseFolder, versionPath);
+            var withCorrectType = versionPath.Substring(0, versionPath.LastIndexOf("."));
+            var filePath = Path.Combine(baseFolder, withCorrectType + ".docx");
 
             byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
             return File(fileBytes, "application/octet-stream", filePath);
@@ -60,7 +61,8 @@ namespace DigitalDepartment.Presentation.Controllers
         {
             var baseFolder = _service.DocumentVersionService.returnBaseFolderReport();
             var versionPath = await _service.DocumentVersionService.returnVersionPath(versionId);
-            var filePath = Path.Combine(baseFolder, versionPath);
+            var withCorrectType = versionPath.Substring(0, versionPath.LastIndexOf("."));
+            var filePath = Path.Combine(baseFolder, withCorrectType + ".docx");
 
             System.IO.File.Delete(filePath);
             return Ok();

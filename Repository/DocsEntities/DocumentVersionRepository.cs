@@ -82,7 +82,7 @@ namespace Repository.DocsEntities
             GetAllVersionsByRolesList
             (HashSet<string> rolesIds, VersionParameters parameters)
         {
-            var versions = from v in _repositoryContext.DocumentVersions
+            var versions =( from v in _repositoryContext.DocumentVersions
                            join u in _repositoryContext.Users
                                on v.AuthorId equals u.Id
                            join d in _repositoryContext.Documents
@@ -117,7 +117,7 @@ namespace Repository.DocsEntities
                                documentCategoryName = cat.Name,
                                letterId = d.LetterId,
                                toCheck = parameters.ToCheck
-                           };
+                           }).Distinct();
             return ApplyParameters(versions, parameters);
         }
 
@@ -125,7 +125,7 @@ namespace Repository.DocsEntities
             GetAllVersionsByUser
             (string userId, VersionParameters parameters)
         {
-            var versions = from v in _repositoryContext.DocumentVersions
+            var versions =( from v in _repositoryContext.DocumentVersions
                             join u in _repositoryContext.Users
                                 on v.AuthorId equals u.Id
                             join d in _repositoryContext.Documents
@@ -159,7 +159,7 @@ namespace Repository.DocsEntities
                                 documentCategoryName = cat.Name,
                                 letterId = d.LetterId,
                                 toCheck = parameters.ToCheck
-                            };
+                            }).Distinct();
 
             return ApplyParameters(versions, parameters);
         }
